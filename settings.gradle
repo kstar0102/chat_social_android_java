@@ -1,0 +1,2 @@
+include ':app', ':chatkitlib'
+project(':chatkitlib').projectDir = new File('chatkit')

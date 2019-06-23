@@ -1,0 +1,20 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">15dp</dimen>
+    <dimen name="Btn_S">50dp</dimen>
+
+    <!-- Medium Dimensions -->
+    <dimen name="Btn_M">50dp</dimen>
+
+    <!-- Large Dimensions = "Medium Dimensions * 1.5" For Example: 210*1.5 = 315 -->
+    <dimen name="Btn_L">85dp</dimen>
+
+    <!-- XLarge Dimensions = "Medium Dimensions * 2" For Example: 210*1.5 = 420 -->
+    <dimen name="Btn_XL">100dp</dimen>
+
+
+</resources>

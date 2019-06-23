@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "517739949054",
+    "firebase_url": "https://plax-chat.firebaseio.com",
+    "project_id": "plax-chat",
+    "storage_bucket": "plax-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517739949054:android:fddf5ec14678d7f4",
+        "android_client_info": {
+          "package_name": "ar.codeslu.plax"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517739949054-k6bpn1jh2pkk8a85gj4k5c2d36obi2ao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ar.codeslu.plax",
+            "certificate_hash": "0792c6db3270b82322d458be487541ed9cdd4f33"
+          }
+        },
+        {
+          "client_id": "517739949054-pf9fshfmgf2nbuh8rijpdm6sqfcqmghe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY8IJL6WcCaHRKUVV0r8PCPqheA7ghWe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517739949054-pf9fshfmgf2nbuh8rijpdm6sqfcqmghe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

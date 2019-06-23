@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary">
+
+
+
+    <com.vanniktech.emoji.EmojiEditText
+        android:id="@+id/searchE"
+        android:singleLine="true"
+        android:background="@drawable/btndark"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:focusable="true"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:focusableInTouchMode="true"
+        android:textColor="@color/white"
+        android:hint="@string/search_on_name_and_phone"
+        android:maxLines="1"
+        android:textColorHint="#d2d2d2"
+        android:maxLength="50"
+        android:layout_weight="1"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_refresh_b"
+        android:id="@+id/refreshC"
+        android:layout_gravity="center_vertical"/>
+</LinearLayout>

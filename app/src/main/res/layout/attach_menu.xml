@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:gravity="center_horizontal"
+android:layout_width="275dp"
+    android:id="@+id/reactD"
+android:layout_height="wrap_content"
+android:layout_gravity="center_horizontal"
+android:background="@drawable/react_bg"
+android:visibility="visible"
+android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="12dp"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/gallery"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/attach_gallery" />
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="11sp"
+            android:text="@string/menu_gallery" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/audio"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/attach_audio" />
+
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="11sp"
+                android:text="@string/menu_audio" />
+        </LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profileAttach"
+            android:layout_width="80dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="80dp"
+            android:src="@drawable/profile"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/colorPrimaryDark"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            android:layout_marginStart="25dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/video"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/attach_video" />
+
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="11sp"
+                android:text="@string/video" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingEnd="20dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/file"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/attach_file" />
+
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="11sp"
+                android:text="@string/file" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingStart="20dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/location"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/attach_location" />
+
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="11sp"
+                android:text="@string/menu_location" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
+

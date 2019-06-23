@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ar.codeslu.plax.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_main" />
+
+    <eu.long1.spacetablayout.SpaceTabLayout
+        android:id="@+id/spaceTabLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:number_of_tabs="three"
+        app:starting_position="two"
+        app:tab_color="@color/colorPrimaryDark2awy"
+        app:button_color="@color/colorPrimary"
+        app:text_color="@color/white"
+        app:layout_behavior="eu.long1.spacetablayout.SpaceTabLayoutBehavior"
+        app:icon_one="@drawable/ic_call"
+        app:icon_two="@drawable/ic_chat"
+        app:text_one="@string/calls"
+        app:text_two="@string/chats"
+        app:text_three="@string/groups"
+        app:icon_three="@drawable/ic_group" />
+
+</android.support.design.widget.CoordinatorLayout>
