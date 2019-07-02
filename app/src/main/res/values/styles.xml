@@ -6,12 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:typeface">serif</item>
 
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:typeface">serif</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -24,24 +26,34 @@
         <item name="android:windowBackground">@null</item>
         <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 
     <style name="My_Dialog">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 
     <style name="CustomDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/translate_left_side</item>
         <item name="android:windowExitAnimation">@anim/translate_right_side</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 
     <style name="darkDialog" parent="android:Theme.DeviceDefault.Dialog">
@@ -49,6 +61,7 @@
         <item name="DialogTitleText">Loading…</item>
         <item name="DialogSpotColor">@color/colorPrimary</item>
         <item name="DialogSpotCount">5</item>
+        <item name="android:typeface">serif</item>
     </style>
 
 </resources>

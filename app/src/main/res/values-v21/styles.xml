@@ -4,11 +4,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:typeface">serif</item>
     </style>
     <style name="darkDialog" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
         <item name="DialogTitleText">Loading…</item>
         <item name="DialogSpotColor">@color/colorPrimary</item>
         <item name="DialogSpotCount">5</item>
+        <item name="android:typeface">serif</item>
+
     </style>
 </resources>

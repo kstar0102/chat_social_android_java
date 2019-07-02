@@ -54,21 +54,21 @@ public final class DialogData {
         {
 
             return new DefaultDialog(
-                    userList.get(i).getId(),userList.get(i).getName(),userList.get(i).getAvatar(),userList,getMessage(i,time),99,userList.get(i).getPhone());
+                    userList.get(i).getId(),userList.get(i).getName(),userList.get(i).getAvatar(),userList,getMessage(i,time),99,userList.get(i).getPhone(),userList.get(i).isScreen());
 
         }
         else
         {
 
             return new DefaultDialog(
-                    userList.get(i).getId(),userList.get(i).getName(),userList.get(i).getAvatar(),userList,getMessage(i,time),userList.get(i).getNoOfUnread(),userList.get(i).getPhone());
+                    userList.get(i).getId(),userList.get(i).getName(),userList.get(i).getAvatar(),userList,getMessage(i,time),userList.get(i).getNoOfUnread(),userList.get(i).getPhone(),userList.get(i).isScreen());
 
         }
     }
     //get last sender
     private static UserIn getUser(int i) {
            return new UserIn(
-                   userList.get(i).getLastsender(), userList.get(i).getNameL(),userList.get(i).getLastsenderava());
+                   userList.get(i).getLastsender(), userList.get(i).getNameL(),userList.get(i).getLastsenderava(),userList.get(i).isScreen());
 
     }
     //get last message

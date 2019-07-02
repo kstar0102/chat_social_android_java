@@ -30,8 +30,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".settingsitems.TestWall"></activity>
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:appComponentFactory"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity
+            android:name=".Stories"
+            android:label="@string/title_activity_stories"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".LockScreen" />
+        <activity
+            android:name=".settingsitems.SecuSetting"
+            android:label="@string/title_activity_secu_setting"
+            android:parentActivityName=".Setting"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".settingsitems.TestWall" />
         <activity
             android:name=".settingsitems.ChatSettings"
             android:label="@string/title_activity_setting"

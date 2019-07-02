@@ -15,12 +15,13 @@ public class DefaultDialog implements IDialog<Message> {
     private String dialogPhoto;
     private String dialogName;
     private String dialogPhone;
+    private boolean dialogscreen;
     private ArrayList<UserIn> users;
     private Message lastMessage;
     private int unreadCount;
 
     public DefaultDialog(String id, String name, String photo,
-                         ArrayList<UserIn> users,Message lastMessageP, int unreadCount,String dialogPhone) {
+                         ArrayList<UserIn> users,Message lastMessageP, int unreadCount,String dialogPhone,boolean screen) {
 
         this.id = id;
         this.dialogName = name;
@@ -29,6 +30,7 @@ public class DefaultDialog implements IDialog<Message> {
         this.unreadCount = unreadCount;
         this.lastMessage = lastMessageP;
         this.dialogPhone = dialogPhone;
+        this.dialogscreen = screen;
     }
 
     @Override
@@ -75,4 +77,11 @@ public class DefaultDialog implements IDialog<Message> {
         this.unreadCount = unreadCount;
     }
 
+    public boolean isDialogscreen() {
+        return dialogscreen;
+    }
+
+    public void setDialogscreen(boolean dialogscreen) {
+        this.dialogscreen = dialogscreen;
+    }
 }

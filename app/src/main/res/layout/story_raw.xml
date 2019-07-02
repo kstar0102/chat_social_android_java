@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <xute.storyview.StoryView
+        android:id="@+id/storyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:pendingIndicatorColor="@color/colorPrimary"
+        app:visitedIndicatorColor="@color/grey"
+        app:spaceBetweenImageAndIndicator="1dp"
+        app:storyImageRadius="8dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:storyItemIndicatorWidth="1dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="User Name "
+            android:textStyle="bold"
+            android:gravity="center|start"
+            android:layout_marginStart="5dp"
+            android:id="@+id/username"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="23 minute ago"
+            android:gravity="center|start"
+            android:id="@+id/timeS"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/grey_hex_2d"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -58,6 +58,7 @@ import java.util.Map;
 import ar.codeslu.plax.adapters.Vpadapter;
 import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.auth.Login;
+import ar.codeslu.plax.custom.BadgedDrawerArrowDrawable;
 import ar.codeslu.plax.fragments.Calls;
 import ar.codeslu.plax.fragments.Chats;
 import ar.codeslu.plax.fragments.Groups;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     FirebaseAuth mAuth;
     DatabaseReference mData;
     //views
+    DrawerLayout drawer;
+    ActionBarDrawerToggle toggle;
     ViewPager vp;
     SpaceTabLayout tabs;
     EmojiTextView nameNav, statueNav;
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         if(mAuth.getCurrentUser() != null)
         checkData();
+
         //app global
         appback = (AppBack) getApplication();
         //Shared pref
@@ -131,13 +135,16 @@ public class MainActivity extends AppCompatActivity
         } catch (NullPointerException e) {
             //nothing
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        toggle.setDrawerArrowDrawable(new BadgedDrawerArrowDrawable(MainActivity.this));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 //Tab layout init
-//Initializing..
+        //Initializing..
         vp = findViewById(R.id.Vp);
         vpa = new Vpadapter(getSupportFragmentManager(), this);
         tabs = findViewById(R.id.spaceTabLayout);
@@ -285,6 +292,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_stories) {
+            startActivity(new Intent(MainActivity.this,Stories.class));
 
         } else if (id == R.id.nav_favM) {
 
@@ -427,6 +435,8 @@ public class MainActivity extends AppCompatActivity
             map.put(Global.Online, true);
             mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }
         //clear all notifications
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -445,7 +455,6 @@ public class MainActivity extends AppCompatActivity
 
 
         myApp.stopActivityTransitionTimer();
-
 
     }
 
@@ -604,6 +613,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+
 
 }
 

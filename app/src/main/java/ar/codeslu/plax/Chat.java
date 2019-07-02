@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -222,6 +223,8 @@ public class Chat extends AppCompatActivity
     AttachMenu cdd;
     CircleImageView attachmenuP;
     LinearLayout reactD;
+    //screenshot
+    boolean screen = true;
     //record delete on pause
     private boolean pausebreak = false;
     Boolean canScroll = false;
@@ -229,9 +232,24 @@ public class Chat extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent() != null) {
+            Intent intent = getIntent();
+            Global.currscreen = intent.getExtras().getBoolean("screen");
+            Global.myscreen = ((AppBack) getApplication()).shared().getBoolean("screenP", false);
+            if (Global.myscreen && Global.currscreen)
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
+
         setContentView(R.layout.activity_chat);
         Global.conA = this;
         Global.chatactivity = this;
+        //firebase
+        mAuth = FirebaseAuth.getInstance();
+        mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+        type = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+        mDataget = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        mdatagetme = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
         //init Arrays
         fileA = new ArrayList<>();
         imageA = new ArrayList<>();
@@ -257,12 +275,7 @@ public class Chat extends AppCompatActivity
         downdown = findViewById(R.id.downdown);
         downdown.setVisibility(View.GONE);
         overdark.setVisibility(View.GONE);
-        mAuth = FirebaseAuth.getInstance();
-        mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
-        type = FirebaseDatabase.getInstance().getReference(Global.CHATS);
-        mDataget = FirebaseDatabase.getInstance().getReference(Global.USERS);
-        mdatagetme = FirebaseDatabase.getInstance().getReference(Global.USERS);
-        mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
+
 //set Wallpapers
         if(!((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
            String pathW =  ((AppBack) getApplication()).shared().getString("wall", "no");
@@ -270,7 +283,6 @@ public class Chat extends AppCompatActivity
             Drawable d = Drawable.createFromPath(f.getAbsolutePath());
             ly.setBackground(d);
         }
-
         //clear all notifications
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         try {
@@ -428,6 +440,7 @@ public class Chat extends AppCompatActivity
                     Global.currtime = userData.getTime();
                     Global.currstatue = userData.getStatue();
                     Global.currphone = userData.getPhone();
+                    Global.currscreen = userData.isScreen();
                     editInf();
                 }
 
@@ -454,6 +467,7 @@ public class Chat extends AppCompatActivity
                 Global.currname = intent.getExtras().getString("name");
                 Global.currAva = intent.getExtras().getString("ava");
                 Global.currphone = intent.getExtras().getString("phone");
+                Global.currscreen = intent.getExtras().getBoolean("screen");
             }
             name.setText(Global.currname);
             if (String.valueOf(Global.currAva).equals("no")) {
@@ -515,6 +529,7 @@ public class Chat extends AppCompatActivity
                 myD userData = dataSnapshot.getValue(myD.class);
                 Global.myname = userData.getNameL();
                 Global.myava = userData.getAvatar();
+                Global.myscreen = userData.isScreen();
                 Global.myonstate = userData.isOnstatue();
                 //attach menu photo
                 if (String.valueOf(Global.myava).equals("no")) {
@@ -682,6 +697,7 @@ public class Chat extends AppCompatActivity
                     map.put("nameL", data.getNameL());
                     map.put("phone", data.getPhone());
                     map.put("id", mAuth.getCurrentUser().getUid());
+                    map.put("screen",Global.myscreen);
                     map.put("lastmessage", encrypM);
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
                     map.put("lastsenderava", data.getAvatar());
@@ -704,7 +720,7 @@ public class Chat extends AppCompatActivity
                     //update last message if dialog exist
                     Chats chat = new Chats();
                     //update dialog if not exist
-                    UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+                    UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0,Global.currscreen);
                     ArrayList<UserIn> tempoo = new ArrayList<>();
                     tempoo.clear();
                     tempoo.add(dialog);
@@ -764,6 +780,7 @@ public class Chat extends AppCompatActivity
                                 map.put("nameL", data.getNameL());
                                 map.put("phone", data.getPhone());
                                 map.put("id", mAuth.getCurrentUser().getUid());
+                                map.put("screen",Global.myscreen);
                                 map.put("lastmessage", encrypM);
                                 map.put("lastsender", mAuth.getCurrentUser().getUid());
                                 map.put("lastsenderava", data.getAvatar());
@@ -786,7 +803,7 @@ public class Chat extends AppCompatActivity
                                 //update last message if dialog exist
                                 Chats chat = new Chats();
                                 //update dialog if not exist
-                                UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+                                UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0,Global.currscreen);
                                 ArrayList<UserIn> tempoo = new ArrayList<>();
                                 tempoo.clear();
                                 tempoo.add(dialog);
@@ -927,6 +944,7 @@ public class Chat extends AppCompatActivity
                             map.put("nameL", data.getNameL());
                             map.put("phone", data.getPhone());
                             map.put("id", mAuth.getCurrentUser().getUid());
+                            map.put("screen",Global.myscreen);
                             map.put("lastmessage", encrypMap);
                             map.put("lastsender", mAuth.getCurrentUser().getUid());
                             map.put("lastsenderava", data.getAvatar());
@@ -947,7 +965,7 @@ public class Chat extends AppCompatActivity
                             //update last message if dialog exist
                             Chats chat = new Chats();
                             //update dialog if not exist
-                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
                             ArrayList<UserIn> tempoo = new ArrayList<>();
                             tempoo.clear();
                             tempoo.add(dialog);
@@ -989,6 +1007,7 @@ public class Chat extends AppCompatActivity
                         map.put("nameL", data.getNameL());
                         map.put("phone", data.getPhone());
                         map.put("id", mAuth.getCurrentUser().getUid());
+                        map.put("screen",Global.myscreen);
                         map.put("lastmessage", encrypMap);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -1009,7 +1028,7 @@ public class Chat extends AppCompatActivity
                         //update last message if dialog exist
                         Chats chat = new Chats();
                         //update dialog if not exist
-                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
                         ArrayList<UserIn> tempoo = new ArrayList<>();
                         tempoo.clear();
                         tempoo.add(dialog);
@@ -1335,6 +1354,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypM);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -1390,6 +1410,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypMap);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -1692,7 +1713,7 @@ public class Chat extends AppCompatActivity
             //update dialog if not exist
             encrypF = "File " + filename + filetype;
             encrypF = encryption.encryptOrNull(encrypF);
-            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
             ArrayList<UserIn> tempoo = new ArrayList<>();
             tempoo.clear();
             tempoo.add(dialog);
@@ -1726,6 +1747,7 @@ public class Chat extends AppCompatActivity
                                 map.put("nameL", data.getNameL());
                                 map.put("phone", data.getPhone());
                                 map.put("id", mAuth.getCurrentUser().getUid());
+                                map.put("screen",Global.myscreen);
                                 map.put("lastmessage", encrypF);
                                 map.put("lastsender", mAuth.getCurrentUser().getUid());
                                 map.put("lastsenderava", data.getAvatar());
@@ -1773,7 +1795,7 @@ public class Chat extends AppCompatActivity
         //update dialog if not exist
         encrypV = "Voice " + getHumanTimeText(time);
         encrypV = encryption.encryptOrNull(encrypV);
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -1807,6 +1829,7 @@ public class Chat extends AppCompatActivity
                             map.put("nameL", data.getNameL());
                             map.put("phone", data.getPhone());
                             map.put("id", mAuth.getCurrentUser().getUid());
+                            map.put("screen",Global.myscreen);
                             map.put("lastmessage", encrypV);
                             map.put("lastsender", mAuth.getCurrentUser().getUid());
                             map.put("lastsenderava", data.getAvatar());
@@ -1846,7 +1869,7 @@ public class Chat extends AppCompatActivity
         //update dialog if not exist
         encrypVideo = "Video " + getHumanTimeText(time);
         encrypVideo = encryption.encryptOrNull(encrypVideo);
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -1879,6 +1902,7 @@ public class Chat extends AppCompatActivity
                             map.put("nameL", data.getNameL());
                             map.put("phone", data.getPhone());
                             map.put("id", mAuth.getCurrentUser().getUid());
+                            map.put("screen",Global.myscreen);
                             map.put("lastmessage", encrypVideo);
                             map.put("lastsender", mAuth.getCurrentUser().getUid());
                             map.put("lastsenderava", data.getAvatar());
@@ -1987,7 +2011,7 @@ public class Chat extends AppCompatActivity
         encrypI = "Image";
         encrypI = encryption.encryptOrNull(encrypI);
 
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -2034,6 +2058,7 @@ public class Chat extends AppCompatActivity
                             map.put("nameL", data.getNameL());
                             map.put("phone", data.getPhone());
                             map.put("id", mAuth.getCurrentUser().getUid());
+                            map.put("screen",Global.myscreen);
                             map.put("lastmessage", encrypI);
                             map.put("lastsender", mAuth.getCurrentUser().getUid());
                             map.put("lastsenderava", data.getAvatar());
@@ -2079,6 +2104,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypI);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -2148,6 +2174,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypF);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -2215,6 +2242,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypV);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -2269,6 +2297,7 @@ public class Chat extends AppCompatActivity
                         map.put("name", userData.getName());
                         map.put("nameL", userData.getNameL());
                         map.put("phone", userData.getPhone());
+                        map.put("screen",Global.currscreen);
                         map.put("lastmessage", encrypVideo);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
                         map.put("lastsenderava", data.getAvatar());
@@ -2480,6 +2509,8 @@ public class Chat extends AppCompatActivity
             map.put(Global.Online, true);
             myData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }
         myApp.stopActivityTransitionTimer();
         Global.currentpageid = friendId;

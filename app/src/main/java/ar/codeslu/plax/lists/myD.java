@@ -6,7 +6,7 @@ package ar.codeslu.plax.lists;
 
 public class myD {
     private String name, nameL, statue, avatar, phone, lastOn, id;
-    private boolean onstatue;
+    private boolean onstatue,screen;
     private long time, timeC;
 
     public myD() {
@@ -134,4 +134,11 @@ public class myD {
         this.timeC = timeC;
     }
 
+    public boolean isScreen() {
+        return screen;
+    }
+
+    public void setScreen(boolean screen) {
+        this.screen = screen;
+    }
 }

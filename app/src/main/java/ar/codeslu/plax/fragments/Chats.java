@@ -315,6 +315,7 @@ public class Chats extends Fragment
         intent.putExtra("name", dialog.getDialogName());
         intent.putExtra("ava", dialog.getDialogPhoto());
         intent.putExtra("phone", dialog.getDialogPhone());
+        intent.putExtra("screen", dialog.isDialogscreen());
         Global.currphone = dialog.getDialogPhone();
         Global.mainActivity.startActivity(intent);
     }

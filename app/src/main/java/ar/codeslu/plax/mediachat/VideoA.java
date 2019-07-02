@@ -213,6 +213,8 @@ AlertDialog dialog;
             map.put(Global.Online, true);
             mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }
 
         myApp.stopActivityTransitionTimer();

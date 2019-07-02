@@ -5,40 +5,31 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import ar.codeslu.plax.Chat;
-import ar.codeslu.plax.EditProfile;
 import ar.codeslu.plax.R;
-import ar.codeslu.plax.Setting;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
-import ar.codeslu.plax.settings.SettingAdapter;
 
 public class ChatSettings extends AppCompatActivity {
 
@@ -49,6 +40,7 @@ public class ChatSettings extends AppCompatActivity {
     AlertDialog.Builder dialog;
 String choosenFont;
 ImageView delete;
+    DatabaseReference mData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +73,7 @@ delete.setOnClickListener(new View.OnClickListener() {
     }
 });
         mAuth = FirebaseAuth.getInstance();
+        mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false))
             {
@@ -180,12 +173,32 @@ soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", fals
         }
     }
 
+
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if(((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
             delete.setVisibility(View.GONE);
         else
             delete.setVisibility(View.VISIBLE);
+        Global.currentactivity = this;
+        AppBack myApp = (AppBack) this.getApplication();
+        if (myApp.wasInBackground) {
+            //init data
+            Map<String, Object> map = new HashMap<>();
+            map.put(Global.Online, true);
+            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
+        }
+
+        myApp.stopActivityTransitionTimer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AppBack) this.getApplication()).startActivityTransitionTimer();
     }
 }

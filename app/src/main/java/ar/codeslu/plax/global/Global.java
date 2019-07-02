@@ -86,6 +86,7 @@ public class Global {
     public static String currstatue = "";
     public static String currphone = "";
     public static boolean onstate;
+    public static boolean currscreen;
     public static long currtime = 0;
 
     //me
@@ -93,6 +94,7 @@ public class Global {
     public static String myava = "";
     public static String myname = "";
     public static boolean myonstate;
+    public static boolean myscreen;
 
     //dialog update message
     public static MessageIn DialogM;

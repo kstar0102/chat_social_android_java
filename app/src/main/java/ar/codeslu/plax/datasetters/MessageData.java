@@ -103,10 +103,10 @@ public class MessageData {
 
         if (id.equals(FirebaseAuth.getInstance().getUid())) {
             return new UserIn(
-                    id, Global.myname, Global.myava);
+                    id, Global.myname, Global.myava,Global.myscreen);
         } else {
             return new UserIn(
-                    id, Global.currname, Global.currAva);
+                    id, Global.currname, Global.currAva,Global.currscreen);
 
         }
 

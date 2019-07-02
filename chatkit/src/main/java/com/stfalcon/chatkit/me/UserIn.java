@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class UserIn  implements IUser {
     String nameL, statue, avatar, phone, lastOn,id,lastmessage,lastsender,lastsenderava;
-    boolean onstatue,typing,audio;
+    boolean onstatue,typing,audio,screen;
     long timeC,messDate;
     int noOfUnread;
 
@@ -19,18 +19,20 @@ public class UserIn  implements IUser {
     }
 
 
-    public UserIn(String id, String nameL, String avatar) {
+    public UserIn(String id, String nameL, String avatar,boolean screen) {
         this.nameL = nameL;
         this.avatar = avatar;
         this.id = id;
+        this.screen = screen;
     }
-    public UserIn(String id, String avatar) {
+    public UserIn(String id, String avatar,boolean screen) {
         this.nameL = nameL;
         this.avatar = avatar;
         this.id = id;
+        this.screen = screen;
     }
 
-    public UserIn(String nameL, String statue, String avatar, String phone, String id, String lastmessage, String lastsender, String lastsenderava, long messDate, int noOfUnread) {
+    public UserIn(String nameL, String statue, String avatar, String phone, String id, String lastmessage, String lastsender, String lastsenderava, long messDate, int noOfUnread,boolean screen) {
         this.nameL = nameL;
         this.statue = statue;
         this.avatar = avatar;
@@ -41,6 +43,7 @@ public class UserIn  implements IUser {
         this.lastsenderava = lastsenderava;
         this.messDate = messDate;
         this.noOfUnread = noOfUnread;
+        this.screen = screen;
     }
 
     public boolean isAudio() {
@@ -174,5 +177,13 @@ public class UserIn  implements IUser {
 
     public void setMessDate(long messDate) {
         this.messDate = messDate;
+    }
+
+    public boolean isScreen() {
+        return screen;
+    }
+
+    public void setScreen(boolean screen) {
+        this.screen = screen;
     }
 }

@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -204,7 +205,7 @@ public class Contacts extends AppCompatActivity {
                     @Override
                     public void run() {
                         for (int i = 0; i < localContacts.size(); i++) {
-                            UserData mContact = new UserData("", "", "", "", localContacts.get(i), false);
+                            UserData mContact = new UserData("", "", "", "", localContacts.get(i), false,false);
                             contactList.add(mContact);
                             getUserDetails(mContact);
                         }
@@ -225,7 +226,7 @@ public class Contacts extends AppCompatActivity {
                     String phone = "",
                             name = "", ava = "",
                             statue = "";
-                    boolean online = false;
+                    boolean online=false,screen = false;
                     secN++;
                     if (secN == contactList.size())
                         dialog.dismiss();
@@ -245,13 +246,16 @@ public class Contacts extends AppCompatActivity {
                             statue = childSnapshot.child("statue").getValue().toString();
                         if (childSnapshot.child("Onstatue").getValue() != null)
                             online = (boolean) childSnapshot.child("Onstatue").getValue();
-                        UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online);
+                        if (childSnapshot.child("screen").getValue() != null)
+                            screen = (boolean) childSnapshot.child("screen").getValue();
+                        UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online,screen);
                         if (name.equals(phone))
                             for (UserData mContactIterator : contactList) {
                                 if (mContactIterator.getPhone().equals(mUser.getPhone())) {
                                     mUser.setNameL(getContactName(mUser.getPhone(), Contacts.this));
                                     mUser.setAvatar(mContactIterator.getAvatar());
                                     mUser.setStatue(mContactIterator.getStatue());
+                                    mUser.setScreen(mContactIterator.isScreen());
 
                                 }
                             }
@@ -369,6 +373,8 @@ public class Contacts extends AppCompatActivity {
             map.put(Global.Online, true);
             mUserDB.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }
 
         myApp.stopActivityTransitionTimer();

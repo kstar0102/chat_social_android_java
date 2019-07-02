@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
                 intent.putExtra("ava", userList.get(position).getAvatar());
                 intent.putExtra("phone", userList.get(position).getPhone());
                 intent.putExtra("ccode", 1);
+                intent.putExtra("screen", userList.get(position).isScreen());
                 context.startActivity(intent);
             }
         });
@@ -121,6 +123,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
                 intent.putExtra("ava", userList.get(position).getAvatar());
                 intent.putExtra("phone", userList.get(position).getPhone());
                 intent.putExtra("ccode", 1);
+                intent.putExtra("screen", userList.get(position).isScreen());
                 context.startActivity(intent);
             }
         });
@@ -143,7 +146,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
             @Override
             public void onClick(View view) {
                 if (Global.check_int(context))
-                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "A", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(context, R.string.check_int, Toast.LENGTH_SHORT).show();
             }

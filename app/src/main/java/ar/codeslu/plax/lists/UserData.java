@@ -6,54 +6,23 @@ package ar.codeslu.plax.lists;
 
 public class UserData  {
     String name,nameL, statue, avatar, phone, lastOn,id;
-    boolean onstatue;
+    boolean onstatue,screen;
     long time,timeC;
 
     public UserData() {
     }
 
-    public UserData(String id,String ava, String name,String statue, String phone,boolean online) {
+    public UserData(String id,String ava, String name,String statue, String phone,boolean online,boolean screen) {
         this.nameL = name;
         this.statue = statue;
         this.phone = phone;
         this.id = id;
         this.avatar = ava;
         onstatue = online;
-
-
-
-    }
-
-    public UserData(String name, String nameL, String statue, String avatar, String phone, String lastOn, String id, boolean onstatue, long time, long timeC) {
-        this.name = name;
-        this.nameL = nameL;
-        this.statue = statue;
-        this.avatar = avatar;
-        this.phone = phone;
-        this.lastOn = lastOn;
-        this.id = id;
-        onstatue = onstatue;
-        this.time = time;
-        this.timeC = timeC;
-    }
-
-    public UserData(String id, String ava, String phone) {
-        this.phone = phone;
-        this.id = id;
-        this.avatar = ava;
+        screen = screen;
 
     }
-    public UserData(String name, String nameL, String statue, String avatar, String phone, String lastOn, String id, boolean onstatue, long time) {
-        this.name = name;
-        this.nameL = nameL;
-        this.statue = statue;
-        this.avatar = avatar;
-        this.phone = phone;
-        this.lastOn = lastOn;
-        this.id = id;
-        onstatue = onstatue;
-        this.time = time;
-    }
+
 
     public String getName() {
         return name;
@@ -134,4 +103,11 @@ public class UserData  {
         this.timeC = timeC;
     }
 
+    public boolean isScreen() {
+        return screen;
+    }
+
+    public void setScreen(boolean screen) {
+        this.screen = screen;
+    }
 }

@@ -2,6 +2,7 @@ package ar.codeslu.plax.global;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -18,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.instacart.library.truetime.TrueTime;
-import com.thefinestartist.utils.etc.TypefaceUtil;
+import com.thefinestartist.Base;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.ios.IosEmojiProvider;
 
@@ -29,12 +30,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ar.codeslu.plax.LockScreen;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.db.TinyDB;
-import io.github.inflationx.calligraphy3.CalligraphyConfig;
-import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
-import io.github.inflationx.viewpump.ViewPump;
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import in.myinnos.customfontlibrary.TypefaceUtil;
+
+import static com.thefinestartist.Base.getContext;
+
 
 /**
  * Created by mostafa on 29/10/18.
@@ -52,7 +54,10 @@ public class AppBack extends Application {
     //shared
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+    //vars
+    String choosenFont,choosenLang;
     TinyDB tinydb ;
+    boolean lockState;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -71,6 +76,17 @@ public class AppBack extends Application {
         //chat saver
         tinydb = new TinyDB(this);
 
+        //change app lang
+         choosenLang = shared().getString("lang", "en");
+         choosenFont = shared().getString("font", "8");
+         lockState =   shared().getBoolean("lock", false);
+        changelang(choosenLang);
+        changefont(Integer.parseInt(choosenFont));
+        if(shared().getBoolean("lock", false) && mAuth.getCurrentUser() != null)
+        {
+            //lock screen
+            lockscreen(shared().getBoolean("lock", false));
+        }
     }
 
 
@@ -79,19 +95,11 @@ public class AppBack extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
 
-       // super.attachBaseContext(ViewPumpContextWrapper.wrap(base));
-
 
     }
 
     public void startOnline() {
-        //change app lang
-        String choosenLang = shared().getString("lang", "en");
-        String choosenFont = shared().getString("font", "8");
-        changelang(choosenLang);
-       // changefont(Integer.parseInt(choosenFont));
         if (mAuth.getCurrentUser() != null) {
-
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
@@ -212,13 +220,7 @@ public class AppBack extends Application {
         res.updateConfiguration(conf, dm);
     }
     public void changefont(int i) {
-        ViewPump.init(ViewPump.builder()
-                .addInterceptor(new CalligraphyInterceptor(
-                        new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/"+i+".ttf")
-                                .setFontAttrId(R.attr.fontPath)
-                                .build()))
-                .build());
+        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/"+i+".ttf");
         editSharePrefs().putString("font", String.valueOf(i));
         editSharePrefs().apply();
     }
@@ -240,6 +242,23 @@ public class AppBack extends Application {
     {
         Global.diaG = tinydb.getListDialog(userId);
     }
+    public  void lockscreenE()
+    {
+        Intent intent = new Intent(this,LockScreen.class);
+        intent.putExtra("typeL",0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+    public  void lockscreen(boolean locked)
+    {
+        if(locked) {
+            Intent intent = new Intent(this, LockScreen.class);
+            intent.putExtra("typeL", 1);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
 
 }
 

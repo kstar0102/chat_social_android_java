@@ -6,23 +6,13 @@ package ar.codeslu.plax.lists;
 
 public class senderD  {
     String name,nameL, statue, avatar, phone, lastOn,id;
-    boolean onstatue;
+    boolean onstatue,screen;
     long time,timeC;
 
     public senderD() {
     }
 
-    public senderD(String id,String ava, String name, String phone,boolean online) {
-        this.nameL = name;
-        this.phone = phone;
-        this.id = id;
-        this.avatar = ava;
-        onstatue = online;
-
-
-    }
-
-    public senderD(String name, String nameL, String statue, String avatar, String phone, String lastOn, String id, boolean onstatue, long time, long timeC) {
+    public senderD(String name, String nameL, String statue, String avatar, String phone, String lastOn, String id, boolean onstatue, boolean screen, long time, long timeC) {
         this.name = name;
         this.nameL = nameL;
         this.statue = statue;
@@ -30,27 +20,10 @@ public class senderD  {
         this.phone = phone;
         this.lastOn = lastOn;
         this.id = id;
-        onstatue = onstatue;
+        this.onstatue = onstatue;
+        this.screen = screen;
         this.time = time;
         this.timeC = timeC;
-    }
-
-    public senderD(String id, String ava, String phone) {
-        this.phone = phone;
-        this.id = id;
-        this.avatar = ava;
-
-    }
-    public senderD(String name, String nameL, String statue, String avatar, String phone, String lastOn, String id, boolean onstatue, long time) {
-        this.name = name;
-        this.nameL = nameL;
-        this.statue = statue;
-        this.avatar = avatar;
-        this.phone = phone;
-        this.lastOn = lastOn;
-        this.id = id;
-        onstatue = onstatue;
-        this.time = time;
     }
 
     public String getName() {
@@ -132,4 +105,11 @@ public class senderD  {
         this.timeC = timeC;
     }
 
+    public boolean isScreen() {
+        return screen;
+    }
+
+    public void setScreen(boolean screen) {
+        this.screen = screen;
+    }
 }

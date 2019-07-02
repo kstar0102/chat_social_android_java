@@ -147,27 +147,28 @@
     <string-array name="font">
         <item>Chapinero Blackletter</item>
         <item>Wake The Warrior</item>
-        <item>Cartoon</item>
+        <item>Historea</item>
         <item>FunSized</item>
         <item>Thundergood</item>
         <item>Elmira</item>
-        <item>Zenzai Itacha</item>
+        <item>Squizers Marker</item>
         <item>Default</item>
     </string-array>
     <string-array name="fontCodes">
         <item>ch</item>
         <item>wa</item>
-        <item>car</item>
+        <item>hi</item>
         <item>fun</item>
         <item>th</item>
         <item>el</item>
-        <item>zen</item>
+        <item>squ</item>
         <item>def</item>
     </string-array>
 
 
     <string-array name="settingmain">
         <item>Chat Settings</item>
+        <item>Security</item>
         <item>Notifications Settings</item>
         <item>Change Language</item>
         <item>Delete Account</item>
@@ -413,9 +414,24 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="set_wallpaper">Set wallpaper</string>
     <string name="hi">Hi</string>
     <string name="username1">UserName</string>
-<string name="wallsucc">The wallpaper changed successfully</string>
+    <string name="wallsucc">The wallpaper changed successfully</string>
     <string name="walldsucc">The wallpaper deleted successfully</string>
     <string name="click_enter_to_send">Click enter to send</string>
     <string name="new_message_sound">New Message sound</string>
+    <string name="title_activity_secu_setting">Security Setting</string>
+    <string name="prevent_chat_screen_shot">Prevent chat Screen shot (β)</string>
+    <string name="screen_lock">Screen Lock</string>
+    <string name="change_passcode">Change PassCode</string>
+    <string name="patt_set">Pattern set</string>
+    <string name="chnge_pattern">Your pattern has been changed</string>
+    <string name="welcome">Welcome</string>
+    <string name="clear_pattern">Clear pattern</string>
+    <string name="this_feature_only">This feature only works when the two sides enable it</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_stories">Stories</string>
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="logout_forgot">If you forgot the pattern you can click OK ,The account will be logout and the lock will be disabled.</string>
 
 </resources>
