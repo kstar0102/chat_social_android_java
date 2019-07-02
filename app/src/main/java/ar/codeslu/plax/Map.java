@@ -1,7 +1,7 @@
 package ar.codeslu.plax;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 

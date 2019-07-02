@@ -20,31 +20,33 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+
+import com.fxn.pix.Options;
+import com.fxn.pix.Pix;
+import com.fxn.utility.ImageQuality;
+import com.fxn.utility.PermUtil;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devlomi.record_view.OnBasketAnimationEnd;
@@ -1642,17 +1644,17 @@ public class Chat extends AppCompatActivity
     }
 
     public void uploadI() {
-        if (ActivityCompat.checkSelfPermission(Chat.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Chat.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Chat.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(Chat.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    801);
-        } else {
-            Intent intent1 = new Intent(this, ImagePickActivity.class);
-            intent1.putExtra(IS_NEED_CAMERA, true);
-            intent1.putExtra(IS_NEED_FOLDER_LIST, true);
-            intent1.putExtra(Constant.MAX_NUMBER, Global.photoS);
-            startActivityForResult(intent1, Constant.REQUEST_CODE_PICK_IMAGE);
-        }
+        Options options = Options.init()
+                .setRequestCode(100)                                                 //Request code for activity results
+                .setCount(Global.photoS)                                                         //Number of images to restict selection count
+                .setFrontfacing(false)                                                //Front Facing camera on start
+                .setImageQuality(ImageQuality.REGULAR)                                  //Image Quality
+                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT);        //Orientaion
+
+        Pix.start(Chat.this, options);
+
+
 
 
     }
@@ -1939,16 +1941,16 @@ public class Chat extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
         switch (requestCode) {
-            case Constant.REQUEST_CODE_PICK_IMAGE:
+            case 100:
                 if (resultCode == RESULT_OK) {
                     if (Global.check_int(Chat.this)) {
                         iqb = false;
                         imageA.clear();
                         iq = 0;
                     }
-                    ArrayList<ImageFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
+                    ArrayList<String> list = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                     for (int i = 0; i < list.size(); i++) {
-                        String path = list.get(i).getPath();
+                        String path = list.get(i);
                         afterCompress(path);
                     }
                 }
@@ -2673,6 +2675,20 @@ public class Chat extends AppCompatActivity
             cursor.moveToFirst();
             int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
             return cursor.getString(idx);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(this, Options.init().setRequestCode(100));
+                } else {
+                    Toast.makeText(Chat.this, getResources().getString(R.string.approve_upload), Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
         }
     }
 }

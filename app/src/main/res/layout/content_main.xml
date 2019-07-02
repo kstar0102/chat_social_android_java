@@ -9,10 +9,10 @@
     tools:context="ar.codeslu.plax.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/Vp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

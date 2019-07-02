@@ -3,15 +3,14 @@ package ar.codeslu.plax;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -28,8 +27,6 @@ import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.settings.SettingList;
 import ar.codeslu.plax.settingsitems.ChatSettings;
 import ar.codeslu.plax.settingsitems.SecuSetting;
-import xute.storyview.StoryModel;
-import xute.storyview.StoryView;
 
 public class Setting extends AppCompatActivity {
     //view

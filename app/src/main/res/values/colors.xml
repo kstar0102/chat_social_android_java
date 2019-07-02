@@ -13,6 +13,10 @@
     <color name="transparent">#00000000</color>
     <color name="gradStart">#19AA8B</color>
     <color name="gradStop">#23A7D8</color>
+<!--Photo picker colors-->
+    <color name="colorPrimaryPix">#03a9f4</color>
+    <color name="colorPrimaryLightPix">#8003a9f4</color>
+
 
     <color name="grey">#cecece</color>
     <color name="dark_gray_unread">#1b1c1d</color>

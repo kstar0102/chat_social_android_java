@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.instacart.library.truetime.TrueTime;
-import com.thefinestartist.Base;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.ios.IosEmojiProvider;
 
@@ -31,11 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ar.codeslu.plax.LockScreen;
-import ar.codeslu.plax.R;
 import ar.codeslu.plax.db.TinyDB;
 import in.myinnos.customfontlibrary.TypefaceUtil;
-
-import static com.thefinestartist.Base.getContext;
 
 
 /**

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 
 import ar.codeslu.plax.R;
 
