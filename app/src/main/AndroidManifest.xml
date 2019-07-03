@@ -32,9 +32,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AddStory"></activity>
         <activity
-            android:name=".Stories"
+            android:name=".story.Stories"
             android:label="@string/title_activity_stories"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -102,13 +101,6 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <service
-            android:name=".notify.FB_ID"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <service
             android:name=".notify.FCMR"
             android:exported="false">
             <intent-filter>
@@ -140,6 +132,9 @@
             android:name=".mediachat.Photoa"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Chat" />
+        <activity
+            android:name=".story.AddStory"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".Setting"
             android:configChanges="keyboardHidden|orientation|screenSize"

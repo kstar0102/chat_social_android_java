@@ -53,6 +53,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
         layoutView.setLayoutParams(lp);
         context = parent.getContext();
         mAuth = FirebaseAuth.getInstance();
+
         UserListViewHolder rcv = new UserListViewHolder(layoutView);
         return rcv;
     }

@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.instacart.library.truetime.TrueTime;
 import com.stfalcon.chatkit.me.Message;
@@ -31,15 +35,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.global.GetTime;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMresp;
 import ar.codeslu.plax.notify.Sender;
+import ar.codeslu.plax.story.Stories;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import se.simbio.encryption.Encryption;
+import xute.storyview.StoryModel;
 
 /**
  * Created by mostafa on 05/03/19.
@@ -111,16 +118,28 @@ public class MessageSelectD extends Dialog {
             delete.setVisibility(View.GONE);
             deleteall.setVisibility(View.GONE);
         } else {
-            long now = 0;
-            try {
-                now = TrueTime.now().getTime();
-            } catch (IllegalStateException e) {
-                now = 32535036000000L;
-                Toast.makeText(c, c.getResources().getString(R.string.timeerror) + " " + c.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-            }
-            int hours = (int) TimeUnit.MILLISECONDS.toHours(now - time);
-            if (hours >= 24)
-                deleteall.setVisibility(View.GONE);
+            deleteall.setVisibility(View.GONE);
+
+            FirebaseFunctions.getInstance().getHttpsCallable("getTime")
+                    .call().addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+                @Override
+                public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                    long now = (long) httpsCallableResult.getData();
+                    int hours = (int) TimeUnit.MILLISECONDS.toHours(now - time);
+                    if (hours >= 24)
+                        deleteall.setVisibility(View.GONE);
+                    else
+                        deleteall.setVisibility(View.VISIBLE);
+
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(c, c.getResources().getString(R.string.timeerror) + " " + c.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
+
+                }
+            });
 
             if (deleted) {
                 deleteall.setVisibility(View.GONE);

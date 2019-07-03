@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.view.View;
+
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -66,6 +68,7 @@ import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.lists.UserData;
+import ar.codeslu.plax.story.Stories;
 import de.hdodenhof.circleimageview.CircleImageView;
 import eu.long1.spacetablayout.SpaceTabLayout;
 import id.zelory.compressor.Compressor;
@@ -292,7 +295,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_stories) {
-            startActivity(new Intent(MainActivity.this,Stories.class));
+            startActivity(new Intent(MainActivity.this, Stories.class));
 
         } else if (id == R.id.nav_favM) {
 
@@ -504,51 +507,58 @@ public class MainActivity extends AppCompatActivity
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
-        riversRef.putBytes(thumbData)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Map<String, Object> map = new HashMap<>();
-                        map.put(Global.avatar, String.valueOf(downloadUrl));
-                        mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    if (String.valueOf(downloadUrl).equals("no")) {
-                                        Picasso.get()
-                                                .load(R.drawable.profile)
-                                                .error(R.drawable.errorimg)
-                                                .into(avatarNav);
-                                    } else {
-                                        Picasso.get()
-                                                .load(downloadUrl)
-                                                .error(R.drawable.errorimg)
-                                                .into(avatarNav);
-                                    }
-                                    editor.putString("ava_" + mAuth.getCurrentUser().getUid(), String.valueOf(downloadUrl));
-                                    editor.apply();
-                                    Toast.makeText(MainActivity.this, R.string.image_update, Toast.LENGTH_SHORT).show();
-                                } else
-                                    Toast.makeText(MainActivity.this, R.string.image_fail, Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
+        UploadTask uploadTask =  riversRef.putBytes(thumbData);
 
-                                    }
-                                });
 
-                    }
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
 
-                })
-                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(Global.avatar, String.valueOf(downloadUrl));
+                    mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                if (String.valueOf(downloadUrl).equals("no")) {
+                                    Picasso.get()
+                                            .load(R.drawable.profile)
+                                            .error(R.drawable.errorimg)
+                                            .into(avatarNav);
+                                } else {
+                                    Picasso.get()
+                                            .load(downloadUrl)
+                                            .error(R.drawable.errorimg)
+                                            .into(avatarNav);
+                                }
+                                editor.putString("ava_" + mAuth.getCurrentUser().getUid(), String.valueOf(downloadUrl));
+                                editor.apply();
+                                Toast.makeText(MainActivity.this, R.string.image_update, Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(MainActivity.this, R.string.image_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
 
-                    }
-                });
+                                }
+                            });
+
+                }
+            }
+        });
 
     }
 

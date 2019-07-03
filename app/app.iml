@@ -134,17 +134,18 @@
     <orderEntry type="library" name="Gradle: androidx.documentfile:documentfile:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: de.hdodenhof:circleimageview:3.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.firebase:geofire-android:2.3.1@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid:19.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:disklrucache:4.9.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.exifinterface:exifinterface:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl:11.4.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: pub.devrel:easypermissions:0.3.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-places:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.customview:customview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:gifdecoder:4.9.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.oauth-client:google-oauth-client:1.23.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.vanniktech:emoji-ios:0.6.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.asynclayoutinflater:asynclayoutinflater:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.core:core:1.2.0-alpha02@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.vanniktech:emoji:0.6.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.makeramen:roundedimageview:2.3.0@aar" level="project" />
@@ -153,7 +154,6 @@
     <orderEntry type="library" name="Gradle: androidx.media:media:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable:1.1.0-rc01@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-connection:11.4.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: id.zelory:compressor:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxjava:2.1.0@jar" level="project" />
@@ -163,10 +163,12 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.fragment:fragment:1.1.0-alpha02@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: net.sf.kxml:kxml2:2.3.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-stats:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.viewpager:viewpager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.klinkerapps:simple_videoview:1.2.4@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-ads-identifier:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.2.2@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.11.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-idling-resource:3.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: me.leolin:ShortcutBadger:1.1.22@aar" level="project" />
@@ -176,6 +178,7 @@
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout:1.1.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.http-client:google-http-client-jackson2:1.23.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.bm.photoview:library:1.4.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.auto.value:auto-value-annotations:1.6.3@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-utils:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.print:print:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-solver:1.1.3@jar" level="project" />
@@ -187,20 +190,26 @@
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.2.2@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage-common:11.4.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.googlecode.libphonenumber:libphonenumber:7.3.1@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-places-placereport:17.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-base:17.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-impl:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.recyclerview:recyclerview:1.1.0-alpha01@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-api:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.armcha:AutoLinkTextView:0.3.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-collection:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: eu.long1:spacetablayout:1.0.4@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava-jdk5:17.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.15.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.material:material:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.drawerlayout:drawerlayout:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-interop:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.localbroadcastmanager:localbroadcastmanager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:annotations:4.9.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:monitor:1.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.multidex:multidex:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.nightonke:jellytogglebutton:1.0.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.12.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.ozodrukh:CircularReveal:1.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.cardview:cardview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.7@jar" level="project" />
@@ -213,27 +222,27 @@
     <orderEntry type="library" name="Gradle: com.github.chathuralakmal:AndroidImagePopup:1.2.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable:1.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.3.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.interpolator:interpolator:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.firebase:geofire-common:2.3.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth:11.4.2@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-core:11.4.2@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.14.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-measurement-connector:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.core:core-ktx:1.2.0-alpha02@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.31@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-base:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.quentin7b:android-location-tracker:3.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-functions:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.1.0-alpha01@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.bxute:StoryView:v1.1@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common:11.4.2@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-base:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.linsea:universalvideoview:1.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: net.the4thdimension:audio-wife:1.0.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.myinnos:AlphabetIndex-Fast-Scroll-RecyclerView:1.0.92@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-messaging:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-messaging:19.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.instacart.truetime-android:library:3.3@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:runner:1.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-sdk:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.davemorrissey.labs:subsampling-scale-image-view:3.10.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-maps:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: ja.burhanrashid52:photoeditor:0.4.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.firebase:tubesock:0.0.12@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.tapadoo.android:alerter:3.0.0@aar" level="project" />
@@ -243,28 +252,32 @@
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.loader:loader:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-scalars:2.3.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-location:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-core:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.activity:activity:1.0.0-alpha02@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.devlomi.record-view:record-view:2.0.1@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks:11.4.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android:flexbox:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable-animated:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.myinnos:AppFontChanger:1.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-maps:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.api-client:google-api-client:1.23.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-common:2.0.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth-interop:18.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-viewmodel:2.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-location:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.http-client:google-http-client:1.23.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.transition:transition:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.firebase:firebase-client-android:2.5.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.simbiose:Encryption:2.0.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement:17.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-core:3.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-flags:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.vincent.filepicker:MultiTypeFilePicker:1.0.8@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.2.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.iceteck.silicompressorr:silicompressor:2.2.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.maps.android:android-maps-utils:0.5@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-library:1.3@jar" level="project" />
@@ -273,8 +286,9 @@
     <orderEntry type="library" name="Gradle: com.thefinestartist:finestwebview:1.2.7@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.multidex:multidex-instrumentation:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.theartofdev.edmodo:android-image-cropper:2.7.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-places:11.4.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-sdk-api:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.jorgecastilloprz:fillableloaders:1.03@aar" level="project" />
     <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
   </component>
 </module>

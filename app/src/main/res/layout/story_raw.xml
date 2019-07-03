@@ -44,7 +44,7 @@
             android:gravity="center|start"
             android:id="@+id/timeS"
             android:layout_marginStart="5dp"
-            android:textColor="@color/grey_hex_2d"
+            android:textColor="@color/mid_grey"
             android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

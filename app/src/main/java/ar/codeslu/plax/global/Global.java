@@ -45,6 +45,7 @@ public class Global {
 
     //Storage Constants
     public final static String AvatarS = "Avatar";
+    public final static String StoryS = "Stories";
     public final static String Mess = "Message";
 
 

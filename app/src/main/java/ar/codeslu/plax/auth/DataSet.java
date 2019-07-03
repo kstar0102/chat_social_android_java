@@ -9,10 +9,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -154,37 +157,47 @@ public class DataSet extends AppCompatActivity {
                         ////
                         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
                         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
-                        riversRef.putBytes(thumbData)
-                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("name", nameS);
-                                        statueS = statueS.trim();
-                                        map.put("statue", statueS);
-                                        map.put("avatar", String.valueOf(downloadUrl));
-                                        map.put("id", mAuth.getCurrentUser().getUid());
-                                        mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    startActivity(new Intent(DataSet.this, MainActivity.class));
-                                                    finish();
-                                                    Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
-                                                } else
-                                                    Toast.makeText(DataSet.this, R.string.error, Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
+                        UploadTask uploadTask =    riversRef.putBytes(thumbData);
 
-                                    }
-                                });
 
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+
+                                // Continue with the task to get the download URL
+                                return riversRef.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Uri downloadUrl = task.getResult();
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("name", nameS);
+                                    statueS = statueS.trim();
+                                    map.put("statue", statueS);
+                                    map.put("avatar", String.valueOf(downloadUrl));
+                                    map.put("id", mAuth.getCurrentUser().getUid());
+                                    mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                startActivity(new Intent(DataSet.this, MainActivity.class));
+                                                finish();
+                                                Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
+                                            } else
+                                                Toast.makeText(DataSet.this, R.string.error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                } else {
+
+                                }
+                            }
+                        });
                     }
 
                 } else {

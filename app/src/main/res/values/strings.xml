@@ -435,4 +435,25 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="logout_forgot">If you forgot the pattern you can click OK ,The account will be logout and the lock will be disabled.</string>
     <string name="approve_upload">Approve permissions to upload photos</string>
 
+
+    <string name="label_brush">Brush</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Eraser</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
+    <string name="add_to_my_story">Add to my story</string>
+    <string name="my_statue">My statue</string>
+    <string name="saving">Saving...</string>
+    <string name="save_succ">Image Saved Successfully</string>
+    <string name="save_fail">Failed to save Image</string>
+    <string name="story_add">Story added</string>
+    <string name="select">Select Picture</string>
+    <string name="exitq">Are you want to exit without saving image ?</string>
+    <string name="save">Save</string>
+    <string name="disc">Discard</string>
+    <string name="ups">Uploading</string>
+    <string name="me">Me</string>
+
 </resources>

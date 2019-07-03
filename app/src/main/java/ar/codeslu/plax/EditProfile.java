@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -257,72 +258,82 @@ public class EditProfile extends AppCompatActivity {
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
          StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
-        riversRef.putBytes(thumbData)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        final Map<String, Object> map = new HashMap<>();
-                        map.put(Global.avatar, String.valueOf(downloadUrl));
-                        mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    if (String.valueOf(downloadUrl).equals("no")) {
-                                        Picasso.get()
-                                                .load(R.drawable.profile)
-                                                .error(R.drawable.errorimg)
-                                                .into(avatar);
-                                    } else {
-                                        Picasso.get()
-                                                .load(downloadUrl)
-                                                .error(R.drawable.errorimg)
-                                                .into(avatar);
-                                    }
-                                    if(Global.diaG != null) {
-                                        for (int i = 0; i < Global.diaG.size(); i++) {
-                                            mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                }
-                                            })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
+        UploadTask uploadTask = riversRef.putBytes(thumbData);
 
-                                        }
-                                    }
-                                    Toast.makeText(EditProfile.this, R.string.image_update, Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
 
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    final Map<String, Object> map = new HashMap<>();
+                    map.put(Global.avatar, String.valueOf(downloadUrl));
+                    mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                if (String.valueOf(downloadUrl).equals("no")) {
+                                    Picasso.get()
+                                            .load(R.drawable.profile)
+                                            .error(R.drawable.errorimg)
+                                            .into(avatar);
                                 } else {
-                                    Toast.makeText(EditProfile.this, R.string.image_fail, Toast.LENGTH_SHORT).show();
+                                    Picasso.get()
+                                            .load(downloadUrl)
+                                            .error(R.drawable.errorimg)
+                                            .into(avatar);
+                                }
+                                if(Global.diaG != null) {
+                                    for (int i = 0; i < Global.diaG.size(); i++) {
+                                        mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                }
+                                Toast.makeText(EditProfile.this, R.string.image_update, Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+
+                            } else {
+                                Toast.makeText(EditProfile.this, R.string.image_fail, Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
                                     dialog.dismiss();
 
                                 }
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        dialog.dismiss();
+                            });
 
-                                    }
-                                });
+                }
+                    dialog.dismiss();
 
-                    }
 
-                })
-                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        dialog.dismiss();
-
-                    }
-                });
+            }
+        });
     }
 
     @Override

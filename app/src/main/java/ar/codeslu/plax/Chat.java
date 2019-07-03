@@ -26,6 +26,9 @@ import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
 import com.fxn.utility.PermUtil;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -1733,44 +1736,57 @@ public class Chat extends AppCompatActivity
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
             StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Files/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + filetype);
             final String finalFiletype = filetype;
-            riversRef.putFile(linkL)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            {
-                                message.setText("");
-                                currTime = ServerValue.TIMESTAMP;
-                                //send owner data to friend
-                                mAuth = FirebaseAuth.getInstance();
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("avatar", data.getAvatar());
-                                map.put("name", data.getName());
-                                map.put("nameL", data.getNameL());
-                                map.put("phone", data.getPhone());
-                                map.put("id", mAuth.getCurrentUser().getUid());
-                                map.put("screen",Global.myscreen);
-                                map.put("lastmessage", encrypF);
-                                map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                map.put("lastsenderava", data.getAvatar());
-                                map.put("messDate", currTime);
-                                mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
+            UploadTask uploadTask = riversRef.putFile(linkL);
 
-                                        sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
-                                    }
-                                })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
-                                            }
-                                        });
+                    // Continue with the task to get the download URL
+                    return riversRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUrl = task.getResult();
+                        message.setText("");
+                        currTime = ServerValue.TIMESTAMP;
+                        //send owner data to friend
+                        mAuth = FirebaseAuth.getInstance();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("avatar", data.getAvatar());
+                        map.put("name", data.getName());
+                        map.put("nameL", data.getNameL());
+                        map.put("phone", data.getPhone());
+                        map.put("id", mAuth.getCurrentUser().getUid());
+                        map.put("screen",Global.myscreen);
+                        map.put("lastmessage", encrypF);
+                        map.put("lastsender", mAuth.getCurrentUser().getUid());
+                        map.put("lastsenderava", data.getAvatar());
+                        map.put("messDate", currTime);
+                        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
                             }
+                        })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
 
-                        }
-                    });
+                                    }
+                                });
+
+
+                    }
+                }
+            });
+
         }
 
 
@@ -1814,39 +1830,49 @@ public class Chat extends AppCompatActivity
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Audio/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + ".m4a");
-        riversRef.putFile(linkL)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        mOutputFile.delete();
-                        {
-                            message.setText("");
-                            currTime = ServerValue.TIMESTAMP;
-                            //send owner data to friend
-                            mAuth = FirebaseAuth.getInstance();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("avatar", data.getAvatar());
-                            map.put("name", data.getName());
-                            map.put("nameL", data.getNameL());
-                            map.put("phone", data.getPhone());
-                            map.put("id", mAuth.getCurrentUser().getUid());
-                            map.put("screen",Global.myscreen);
-                            map.put("lastmessage", encrypV);
-                            map.put("lastsender", mAuth.getCurrentUser().getUid());
-                            map.put("lastsenderava", data.getAvatar());
-                            map.put("messDate", currTime);
-                            mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    sendVpre(String.valueOf(downloadUrl), time);
-                                }
-                            });
+        UploadTask uploadTask =  riversRef.putFile(linkL);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    mOutputFile.delete();
+                    message.setText("");
+                    currTime = ServerValue.TIMESTAMP;
+                    //send owner data to friend
+                    mAuth = FirebaseAuth.getInstance();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("avatar", data.getAvatar());
+                    map.put("name", data.getName());
+                    map.put("nameL", data.getNameL());
+                    map.put("phone", data.getPhone());
+                    map.put("id", mAuth.getCurrentUser().getUid());
+                    map.put("screen",Global.myscreen);
+                    map.put("lastmessage", encrypV);
+                    map.put("lastsender", mAuth.getCurrentUser().getUid());
+                    map.put("lastsenderava", data.getAvatar());
+                    map.put("messDate", currTime);
+                    mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            sendVpre(String.valueOf(downloadUrl), time);
                         }
+                    });
 
-                    }
-                });
-
+                }
+            }
+        });
 
     }
 
@@ -1888,52 +1914,79 @@ public class Chat extends AppCompatActivity
         final String videoidtemp = System.currentTimeMillis() + "";
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Video/" + mAuth.getCurrentUser().getUid() + friendId + videoidtemp + ".mp4");
-        riversRef.putFile(linkL)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        {
-                            message.setText("");
-                            currTime = ServerValue.TIMESTAMP;
-                            //send owner data to friend
-                            mAuth = FirebaseAuth.getInstance();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("avatar", data.getAvatar());
-                            map.put("name", data.getName());
-                            map.put("nameL", data.getNameL());
-                            map.put("phone", data.getPhone());
-                            map.put("id", mAuth.getCurrentUser().getUid());
-                            map.put("screen",Global.myscreen);
-                            map.put("lastmessage", encrypVideo);
-                            map.put("lastsender", mAuth.getCurrentUser().getUid());
-                            map.put("lastsenderava", data.getAvatar());
-                            map.put("messDate", currTime);
-                            mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+        UploadTask uploadTask =  riversRef.putFile(linkL);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    message.setText("");
+                    currTime = ServerValue.TIMESTAMP;
+                    //send owner data to friend
+                    mAuth = FirebaseAuth.getInstance();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("avatar", data.getAvatar());
+                    map.put("name", data.getName());
+                    map.put("nameL", data.getNameL());
+                    map.put("phone", data.getPhone());
+                    map.put("id", mAuth.getCurrentUser().getUid());
+                    map.put("screen",Global.myscreen);
+                    map.put("lastmessage", encrypVideo);
+                    map.put("lastsender", mAuth.getCurrentUser().getUid());
+                    map.put("lastsenderava", data.getAvatar());
+                    map.put("messDate", currTime);
+                    mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            thumb = ThumbnailUtils.createVideoThumbnail(local, MediaStore.Video.Thumbnails.MINI_KIND);
+                            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+                            thumb.compress(Bitmap.CompressFormat.PNG, 100, bao);
+                            byte[] byteArray = bao.toByteArray();
+                            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+                            StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Video/" + "Thumb/" + mAuth.getCurrentUser().getUid() + friendId + videoidtemp + ".png");
+                            UploadTask uploadTask =   riversRef.putBytes(byteArray);
+
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    thumb = ThumbnailUtils.createVideoThumbnail(local, MediaStore.Video.Thumbnails.MINI_KIND);
-                                    ByteArrayOutputStream bao = new ByteArrayOutputStream();
-                                    thumb.compress(Bitmap.CompressFormat.PNG, 100, bao);
-                                    byte[] byteArray = bao.toByteArray();
-                                    StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-                                    StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Video/" + "Thumb/" + mAuth.getCurrentUser().getUid() + friendId + videoidtemp + ".png");
-                                    riversRef.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            final Uri thumbD = taskSnapshot.getDownloadUrl();
-                                            sendVideopre(String.valueOf(downloadUrl), time, String.valueOf(thumbD));
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
 
-                                        }
-                                    });
+                                    // Continue with the task to get the download URL
+                                    return riversRef.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        Uri thumbD = task.getResult();
+                                        sendVideopre(String.valueOf(downloadUrl), time, String.valueOf(thumbD));
 
 
+                                    }
                                 }
                             });
-                        }
 
-                    }
-                });
+                        }
+                    });
+
+                }
+            }
+        });
+
+
 
 
     }
@@ -2044,37 +2097,48 @@ public class Chat extends AppCompatActivity
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Images/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + ".jpg");
-        riversRef.putBytes(thumbData)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        {
-                            message.setText("");
-                            currTime = ServerValue.TIMESTAMP;
-                            //send owner data to friend
-                            mAuth = FirebaseAuth.getInstance();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("avatar", data.getAvatar());
-                            map.put("name", data.getName());
-                            map.put("nameL", data.getNameL());
-                            map.put("phone", data.getPhone());
-                            map.put("id", mAuth.getCurrentUser().getUid());
-                            map.put("screen",Global.myscreen);
-                            map.put("lastmessage", encrypI);
-                            map.put("lastsender", mAuth.getCurrentUser().getUid());
-                            map.put("lastsenderava", data.getAvatar());
-                            map.put("messDate", currTime);
-                            mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    sendIpre(String.valueOf(downloadUrl));
-                                }
-                            });
-                        }
+        UploadTask uploadTask =   riversRef.putBytes(thumbData);
 
-                    }
-                });
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    message.setText("");
+                    currTime = ServerValue.TIMESTAMP;
+                    //send owner data to friend
+                    mAuth = FirebaseAuth.getInstance();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("avatar", data.getAvatar());
+                    map.put("name", data.getName());
+                    map.put("nameL", data.getNameL());
+                    map.put("phone", data.getPhone());
+                    map.put("id", mAuth.getCurrentUser().getUid());
+                    map.put("screen",Global.myscreen);
+                    map.put("lastmessage", encrypI);
+                    map.put("lastsender", mAuth.getCurrentUser().getUid());
+                    map.put("lastsenderava", data.getAvatar());
+                    map.put("messDate", currTime);
+                    mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            sendIpre(String.valueOf(downloadUrl));
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     private void sendIpre(String link) {

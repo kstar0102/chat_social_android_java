@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -37,6 +38,7 @@ import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.OnlineGetter;
+import ar.codeslu.plax.lists.Tokens;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import se.simbio.encryption.Encryption;
 
@@ -63,6 +65,11 @@ public class FCMR extends FirebaseMessagingService {
     String notifiID[];
     //firebase
     FirebaseAuth mAuth;
+    @Override
+    public void onNewToken(String s) {
+        String refreshToken = FirebaseInstanceId.getInstance().getToken();
+        updateToken(refreshToken);
+    }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData() != null) {
@@ -516,6 +523,16 @@ public class FCMR extends FirebaseMessagingService {
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    private void updateToken(String refreshToken) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = database.getReference(Global.tokens);
+        Tokens tk = new Tokens(refreshToken);
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+        {
+            tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(tk);
+
         }
     }
 }
