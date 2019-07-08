@@ -1,5 +1,6 @@
 package ar.codeslu.plax;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,11 +31,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.codeslu.plax.adapters.ContactsU;
@@ -42,6 +49,7 @@ import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.CountryToPhonePrefix;
 import ar.codeslu.plax.lists.UserData;
+import ar.codeslu.plax.story.Stories;
 import dmax.dialog.SpotsDialog;
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 
@@ -141,7 +149,25 @@ public class Contacts extends AppCompatActivity {
         });
 
         Global.currentactivity = this;
-        getContactList();
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if(report.areAllPermissionsGranted())
+                            getContactList();
+
+                        else
+                            Toast.makeText(Contacts.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
                 contact.setTextColor(Global.conMain.getResources().getColor(R.color.black));

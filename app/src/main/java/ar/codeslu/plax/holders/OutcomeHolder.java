@@ -10,11 +10,20 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.stfalcon.chatkit.link.AutoLinkMode;
 import com.stfalcon.chatkit.link.AutoLinkOnClickListener;
 import com.stfalcon.chatkit.link.AutoLinkTextView;
@@ -23,9 +32,11 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.stfalcon.chatkit.me.Message;
 
+import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.global.Global;
@@ -38,6 +49,8 @@ public class OutcomeHolder
         extends MessagesListAdapter.OutcomingMessageViewHolder<Message> {
     private ImageView retry;
     private ProgressBar sending;
+    private LinearLayout ly;
+    private  AutoLinkTextView autoLinkTextView;
 
     public OutcomeHolder(View itemView, Object payload) {
         super(itemView);
@@ -49,6 +62,7 @@ public class OutcomeHolder
         super.onBind(message);
         //react
         ImageView react = itemView.findViewById(R.id.react);
+        ly = itemView.findViewById(R.id.all);
         if (message.isDeleted()) {
             react.setVisibility(View.GONE);
         } else {
@@ -100,7 +114,8 @@ public class OutcomeHolder
             sending.setVisibility(View.GONE);
         }
 
-        AutoLinkTextView autoLinkTextView = (AutoLinkTextView) itemView.findViewById(R.id.messageText);
+
+         autoLinkTextView = (AutoLinkTextView) itemView.findViewById(R.id.messageText);
         autoLinkTextView.addAutoLinkMode(
                 AutoLinkMode.MODE_PHONE,
                 AutoLinkMode.MODE_URL, AutoLinkMode.MODE_EMAIL);
@@ -110,38 +125,47 @@ public class OutcomeHolder
         autoLinkTextView.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
         autoLinkTextView.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
         if (message.getText() != null) {
-            autoLinkTextView.setAutoLinkText(message.getText());
+            autoLinkTextView.setAutoLinkText(message.getText().toLowerCase());
             autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
                 @Override
                 public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {
                     switch (autoLinkMode) {
                         case MODE_URL:
-                            if (matchedText.startsWith("w"))
+                            if (matchedText.toLowerCase().startsWith("w"))
                                 matchedText = "http://" + matchedText;
-                           // new FinestWebView.Builder(Global.conA).show(matchedText);
 
-//                            Intent intent = new Intent(Intent.ACTION_VIEW);
-//                            intent.setData(Uri.parse(matchedText));
-//                            String title = matchedText;
-//                            Intent chooser = Intent.createChooser(intent, title);
-//                            Global.conA.startActivity(chooser);
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(matchedText));
+                            String title = matchedText;
+                            Intent chooser = Intent.createChooser(intent, title);
+                            Global.conA.startActivity(chooser);
                             break;
                         case MODE_PHONE:
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (ActivityCompat.checkSelfPermission(Global.conA, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Global.conA, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions((Activity) Global.conA, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE},
-                                            804);
-                                } else {
-                                    Intent intent2 = new Intent(Intent.ACTION_DIAL);
-                                    intent2.setData(Uri.parse("tel:" + matchedText));
-                                    Global.conA.startActivity(intent2);
-                                }
-                            } else {
-                                Intent intent2 = new Intent(Intent.ACTION_DIAL);
-                                intent2.setData(Uri.parse("tel:" + matchedText));
-                                Global.conA.startActivity(intent2);
-                            }
 
+                            String finalMatchedText = matchedText;
+                            Dexter.withActivity(Global.chatactivity)
+                                    .withPermissions(Manifest.permission.CALL_PHONE,Manifest.permission.READ_PHONE_STATE)
+                                    .withListener(new MultiplePermissionsListener() {
+                                        @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                            if(report.areAllPermissionsGranted())
+                                            {
+                                                Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                                                intent2.setData(Uri.parse("tel:" + finalMatchedText));
+                                                Global.conA.startActivity(intent2);
+                                            }
+
+                                            else
+                                                Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                        @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                            token.continuePermissionRequest();
+
+                                        }
+                                    }).check();
 
                             break;
                         case MODE_EMAIL:
@@ -186,6 +210,22 @@ public class OutcomeHolder
             bubble.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
+                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                    cdd.show();
+                    return true;
+                }
+            });
+            ly.setOnClickListener((View.OnClickListener) view -> {
+                MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
+                cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                cdd.show();
+            });
+            autoLinkTextView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
                     MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
                     cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;

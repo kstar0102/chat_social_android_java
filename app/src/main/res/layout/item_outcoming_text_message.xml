@@ -3,61 +3,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginStart="@dimen/message_outcoming_bubble_margin_left"
     android:layout_marginTop="8dp"
-    android:orientation="horizontal"
-    android:layout_gravity="end"
-    android:gravity="end">
-    <ImageView
-        android:id="@+id/react"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginStart="@dimen/message_outcoming_bubble_margin_left"
-        android:src="@drawable/emoji_blue" />
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@id/bubble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
-        android:gravity="end"
-        android:layout_marginStart="8dp"
-        app:alignContent="stretch"
-        app:alignItems="stretch"
-        app:flexWrap="wrap"
-        app:justifyContent="flex_end">
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:orientation="vertical"
+    android:layout_gravity="end|center_vertical"
+    android:gravity="end|center_vertical">
 
-        <com.stfalcon.chatkit.link.AutoLinkTextView
-            android:id="@id/messageText"
-            android:autoLink="web"
-            android:linksClickable="true"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/all"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/react"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical|end"
+            android:src="@drawable/emoji_blue" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignWithParentIfMissing="true"/>
+            android:layout_gravity="end|center_vertical"
+            android:gravity="end"
+            android:layout_marginStart="8dp"
+            app:alignContent="stretch"
+            app:alignItems="stretch"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_end">
+
+            <com.stfalcon.chatkit.link.AutoLinkTextView
+                android:id="@id/messageText"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"/>
+
+        </com.google.android.flexbox.FlexboxLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="end|center_vertical"
+        android:layout_height="wrap_content">
         <TextView
             android:id="@id/messageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:gravity="center_vertical|end"
-
+            android:layout_gravity="end|center_vertical"
             />
-    </com.google.android.flexbox.FlexboxLayout>
         <ProgressBar
             android:id="@+id/sending"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical|end"
+            android:gravity="center_vertical|end"
             android:indeterminate="true" />
-    <ImageView
-        android:layout_width="25dp"
-        android:id="@+id/retry"
-        android:layout_marginStart="5dp"
-        android:layout_height="25dp"
-        android:src="@drawable/errorimg"
-        android:layout_gravity="center_vertical|end" />
+        <ImageView
+            android:layout_width="25dp"
+            android:id="@+id/retry"
+            android:layout_marginStart="5dp"
+            android:layout_height="25dp"
+            android:src="@drawable/errorimg"
+            android:gravity="center_vertical|end"
+            android:layout_gravity="center_vertical|end" />
+    </LinearLayout>
+
 
 </LinearLayout>

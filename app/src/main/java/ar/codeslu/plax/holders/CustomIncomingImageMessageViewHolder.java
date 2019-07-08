@@ -6,16 +6,26 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import androidx.core.app.ActivityCompat;
+
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.stfalcon.chatkit.messages.MessageHolders;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import ar.codeslu.plax.Contacts;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.custom.ReactCustom;
@@ -38,6 +48,22 @@ public class CustomIncomingImageMessageViewHolder
         super.onBind(message);
         //react
         ImageView react = itemView.findViewById(R.id.react);
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        Global.chatactivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int imagewidth = (int) Math.round(displaymetrics.widthPixels * 0.68);
+        int imageheight = (int) Math.round(imagewidth * 0.6);
+        image.getLayoutParams().width = imagewidth;
+        image.getLayoutParams().height = imageheight;
+
+        int profileWH = (int) Math.round(displaymetrics.widthPixels * 0.11);
+        userAvatar.getLayoutParams().width = profileWH;
+        userAvatar.getLayoutParams().height = profileWH;
+
+        int reactWH = (int) Math.round(displaymetrics.widthPixels * 0.069);
+        react.getLayoutParams().width = reactWH;
+        react.getLayoutParams().height = reactWH;
+
         if (message.isDeleted()) {
             react.setVisibility(View.GONE);
         } else {
@@ -131,19 +157,35 @@ public class CustomIncomingImageMessageViewHolder
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission(Global.conA, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Global.conA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Global.conA, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(Global.chatactivity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK},
-                            804);
-                } else {
-                    Intent intent = new Intent(Global.conA, Photoa.class);
-                    intent.putExtra("url", message.getImageUrl());
-                    intent.putExtra("from", message.getId());
-                    intent.putExtra("Mid", message.getMessid());
-                    intent.putExtra("ava", Global.currAva);
-                    intent.putExtra("name", Global.currname);
-                    Global.conA.startActivity(intent);
-                }
+                Dexter.withActivity(Global.chatactivity)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    Intent intent = new Intent(Global.conA, Photoa.class);
+                                    intent.putExtra("url", message.getImageUrl());
+                                    intent.putExtra("from", message.getId());
+                                    intent.putExtra("Mid", message.getMessid());
+                                    intent.putExtra("ava", Global.currAva);
+                                    intent.putExtra("name", Global.currname);
+                                    Global.conA.startActivity(intent);
+                                }
+
+                                else
+                                    Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
+
             }
         });
 

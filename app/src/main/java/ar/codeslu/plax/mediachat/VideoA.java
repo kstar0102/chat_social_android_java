@@ -1,5 +1,6 @@
 package ar.codeslu.plax.mediachat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,11 @@ import com.downloader.Progress;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 import com.universalvideoview.UniversalMediaController;
 import com.universalvideoview.UniversalVideoView;
@@ -35,6 +41,7 @@ import com.vanniktech.emoji.EmojiTextView;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.codeslu.plax.Profile;
@@ -154,8 +161,29 @@ AlertDialog dialog;
 
         } else {
             if (Global.check_int(VideoA.this)) {
-                downloadP();
-                setVideoAreaSize(urlS);
+
+                Dexter.withActivity(VideoA.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    downloadP();
+                                    setVideoAreaSize(urlS);
+                                }
+
+                                else
+                                    Toast.makeText(VideoA.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
             } else
                 Toast.makeText(VideoA.this, R.string.check_conn, Toast.LENGTH_SHORT).show();
 
@@ -172,31 +200,73 @@ AlertDialog dialog;
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadPD();
+                Dexter.withActivity(VideoA.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    downloadPD();
+                                }
+
+                                else
+                                    Toast.makeText(VideoA.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
             }
         });
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DIR_NAME = getResources().getString(R.string.app_name);
-                filename = mAuth.getCurrentUser().getUid() + Global.currentpageid + MidS + ".mp4";
-                direct =
-                        new File(Environment
-                                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                                .getAbsolutePath() + "/" + DIR_NAME + "/");
-                if (!direct.exists()) {
-                    direct.mkdir();
-                }
-                File file = new File(direct.getPath() + "/" + filename);
-                if (file.exists())
-                {
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("video/mp4");
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse(direct.getPath() + "/" + filename));
-                    startActivity(Intent.createChooser(share, getString(R.string.shareimage)));
-                }
-                else
-                    Toast.makeText(VideoA.this,getString(R.string.download),Toast.LENGTH_LONG).show();
+
+                Dexter.withActivity(VideoA.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    DIR_NAME = getResources().getString(R.string.app_name);
+                                    filename = mAuth.getCurrentUser().getUid() + Global.currentpageid + MidS + ".mp4";
+                                    direct =
+                                            new File(Environment
+                                                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                                                    .getAbsolutePath() + "/" + DIR_NAME + "/");
+                                    if (!direct.exists()) {
+                                        direct.mkdir();
+                                    }
+                                    File file = new File(direct.getPath() + "/" + filename);
+                                    if (file.exists())
+                                    {
+                                        Intent share = new Intent(Intent.ACTION_SEND);
+                                        share.setType("video/mp4");
+                                        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(direct.getPath() + "/" + filename));
+                                        startActivity(Intent.createChooser(share, getString(R.string.shareimage)));
+                                    }
+                                    else
+                                        Toast.makeText(VideoA.this,getString(R.string.download),Toast.LENGTH_LONG).show();
+                                }
+
+                                else
+                                    Toast.makeText(VideoA.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
+
             }
         });
     }

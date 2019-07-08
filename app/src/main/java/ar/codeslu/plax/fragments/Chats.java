@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
@@ -37,10 +43,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ar.codeslu.plax.Chat;
 import ar.codeslu.plax.Contacts;
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.custom.ChatCelect;
 import ar.codeslu.plax.datasetters.DialogData;
 import ar.codeslu.plax.global.AppBack;
@@ -49,6 +57,8 @@ import ar.codeslu.plax.holders.DialogHolder;
 import ar.codeslu.plax.models.DefaultDialog;
 
 import com.stfalcon.chatkit.me.UserIn;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,23 +93,9 @@ public class Chats extends Fragment
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_chats, container, false);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(Global.mainActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(Global.mainActivity, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-                    } else {
-                        startActivity(new Intent(Global.mainActivity, Contacts.class));
-                    }
-                } else
-                    startActivity(new Intent(Global.mainActivity, Contacts.class));
-            }
-        });
         dialogs = new ArrayList<>();
         //chat screen list
         dialogsList = (DialogsList) view.findViewById(R.id.dialogsList);
-
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url, Object payload) {
@@ -121,6 +117,30 @@ public class Chats extends Fragment
         if (mAuth.getCurrentUser() != null)
             getChats();
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dexter.withActivity(getActivity())
+                        .withPermissions(Manifest.permission.READ_CONTACTS)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                    startActivity(new Intent(Global.mainActivity, Contacts.class));
+
+                                else
+                                    Toast.makeText(getActivity(), getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
+            }
+        });
         return view;
     }
 

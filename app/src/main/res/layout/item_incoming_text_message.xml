@@ -1,46 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="start"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_gravity="start|center_vertical"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
     android:gravity="start"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@id/messageUserAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="start|bottom"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="start"
-        android:scaleType="fitXY"
-        app:riv_corner_radius_bottom_left="15dip"
-        app:riv_corner_radius_bottom_right="15dip"
-        app:riv_corner_radius_top_left="15dip"
-        app:riv_corner_radius_top_right="15dp"
-        app:riv_mutate_background="true"
-        app:riv_oval="false"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@id/messageUserAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|bottom"
+            android:layout_marginEnd="8dp"
+            android:gravity="start"
+            android:scaleType="fitXY"
+            app:riv_corner_radius_bottom_left="15dip"
+            app:riv_corner_radius_bottom_right="15dip"
+            app:riv_corner_radius_top_left="15dip"
+            app:riv_corner_radius_top_right="15dp"
+            app:riv_mutate_background="true"
+            app:riv_oval="false" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
         <com.google.android.flexbox.FlexboxLayout
             android:id="@id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginEnd="8dp"
             android:layout_toEndOf="@id/messageUserAvatar"
+            android:layout_weight="1"
             android:gravity="start"
             android:orientation="vertical"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
+            android:layout_marginEnd="8dp"
+            app:alignContent="flex_start"
+            app:alignItems="flex_start"
             app:flexWrap="wrap"
             app:justifyContent="flex_start">
 
@@ -49,20 +49,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:linksClickable="true" />
-
-            <TextView
-                android:id="@id/messageTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|end" />
+                android:linksClickable="true"/>
         </com.google.android.flexbox.FlexboxLayout>
-    <ImageView
-        android:id="@+id/react"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="center_vertical|start"
-        android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
-        android:src="@drawable/emoji_blue" />
-</LinearLayout>
+
+        <ImageView
+            android:id="@+id/react"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical|start"
+            android:src="@drawable/emoji_blue" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@id/messageTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="33dp"
+        android:gravity="center_vertical|end" />
+
 </LinearLayout>

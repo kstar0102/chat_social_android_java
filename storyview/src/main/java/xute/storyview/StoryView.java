@@ -120,7 +120,7 @@ public class StoryView extends View {
         return true;
     }
 
-    private void navigateToStoryPlayerPage() {
+    public void navigateToStoryPlayerPage() {
         Intent intent = new Intent(mContext, StoryPlayer.class);
         intent.putParcelableArrayListExtra(StoryPlayer.STORY_IMAGE_KEY,storyImageUris);
         mContext.startActivity(intent);

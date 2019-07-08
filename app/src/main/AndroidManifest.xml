@@ -109,6 +109,9 @@
         </service>
 
         <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/provider_paths" />
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
@@ -120,10 +123,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map" />
         <activity
-            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/FinestWebViewTheme.Light" />
+            android:name="com.github.bkhezry.extrawebview.ItemActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mediachat.VideoA"
             android:configChanges="keyboardHidden|orientation|screenSize"

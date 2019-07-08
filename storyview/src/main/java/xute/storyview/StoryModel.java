@@ -7,11 +7,13 @@ public class StoryModel implements Parcelable {
     public String imageUri;
     public String name;
     public String time;
+    public long timeL;
 
-    public StoryModel(String imageUri, String name, String time) {
+    public StoryModel(String imageUri, String name, String time,long timeL) {
         this.imageUri = imageUri;
         this.name = name;
         this.time = time;
+        this.timeL = timeL;
     }
 
     public String getImageUri() {
@@ -40,6 +42,14 @@ public class StoryModel implements Parcelable {
 
     public static Creator<StoryModel> getCREATOR() {
         return CREATOR;
+    }
+
+    public long getTimeL() {
+        return timeL;
+    }
+
+    public void setTimeL(long timeL) {
+        this.timeL = timeL;
     }
 
     protected StoryModel(Parcel in) {

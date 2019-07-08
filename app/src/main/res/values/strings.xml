@@ -455,5 +455,6 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="disc">Discard</string>
     <string name="ups">Uploading</string>
     <string name="me">Me</string>
+    <string name="acc_per">Please accept the permission</string>
 
 </resources>

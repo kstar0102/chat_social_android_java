@@ -92,7 +92,7 @@
                 android:text="@string/this_feature_only"
                 android:gravity="center|start"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/grey_hex_2d"
+                android:textColor="@color/greystory"
                 android:textSize="14sp"/>
         </LinearLayout>
 

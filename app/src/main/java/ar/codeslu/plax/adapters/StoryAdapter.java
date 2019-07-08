@@ -3,9 +3,12 @@ package ar.codeslu.plax.adapters;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +47,13 @@ ArrayList<StoryListRetr> array;
         holder.storyView.setImageUris(array.get(position).getListS(),context);
         holder.username.setText(array.get(position).getName());
         holder.time.setText(array.get(position).getListS().get(position).time);
+        holder.ly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoryView vw = new StoryView(context);
+                vw.navigateToStoryPlayerPage();
+            }
+        });
     }
 
     @Override
@@ -55,11 +65,13 @@ ArrayList<StoryListRetr> array;
     {
         StoryView storyView;
         TextView username,time;
+        LinearLayout ly;
         Holder(View itemView) {
             super(itemView);
             storyView = itemView.findViewById(R.id.storyView);
             username = itemView.findViewById(R.id.username);
             time = itemView.findViewById(R.id.timeS);
+            ly = itemView.findViewById(R.id.allS);
         }
     }
 

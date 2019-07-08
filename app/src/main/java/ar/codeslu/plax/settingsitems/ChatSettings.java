@@ -1,5 +1,6 @@
 package ar.codeslu.plax.settingsitems;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,14 +21,21 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 
@@ -117,15 +125,29 @@ fontL.setOnClickListener(new View.OnClickListener() {
         wallL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(ChatSettings.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ChatSettings.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ChatSettings.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(ChatSettings.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            801);
-                } else {
-                    CropImage.activity()
-                            .setGuidelines(CropImageView.Guidelines.ON)
-                            .start(ChatSettings.this);
-                }
+                Dexter.withActivity(ChatSettings.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    CropImage.activity()
+                                            .setGuidelines(CropImageView.Guidelines.ON)
+                                            .start(ChatSettings.this);
+                                }
+                                else
+                                    Toast.makeText(ChatSettings.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
             }
         });
         //toggles

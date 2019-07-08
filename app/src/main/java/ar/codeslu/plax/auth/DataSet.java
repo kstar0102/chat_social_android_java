@@ -1,13 +1,17 @@
 package ar.codeslu.plax.auth;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.service.autofill.Dataset;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +33,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -38,12 +47,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.UserData;
+import ar.codeslu.plax.mediachat.Photoa;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
@@ -80,9 +91,10 @@ public class DataSet extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserData userData = dataSnapshot.getValue(UserData.class);
                 if (userData.getName() != null) {
-                name.setText(userData.getName());
-                statue.setText(userData.getStatue());
-                avaS = userData.getAvatar();
+                    Global.phoneLocal = userData.getPhone();
+                    name.setText(userData.getName());
+                    statue.setText(userData.getStatue());
+                    avaS = userData.getAvatar();
                     if (avaS.equals("no")) {
                         Picasso.get()
                                 .load(R.drawable.profile)
@@ -117,7 +129,7 @@ public class DataSet extends AppCompatActivity {
                         statueS = Global.DEFAULT_STATUE;
 
 
-                    if (avaS == null||!avaS.contains("file://")) {
+                    if (avaS == null || !avaS.contains("file://")) {
                         statueS = statueS.trim();
                         Map<String, Object> map = new HashMap<>();
                         map.put("name", nameS);
@@ -157,7 +169,7 @@ public class DataSet extends AppCompatActivity {
                         ////
                         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
                         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
-                        UploadTask uploadTask =    riversRef.putBytes(thumbData);
+                        UploadTask uploadTask = riversRef.putBytes(thumbData);
 
 
                         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -210,17 +222,32 @@ public class DataSet extends AppCompatActivity {
     }
 
     public void changeprofile(View view) {
-        if (ActivityCompat.checkSelfPermission(DataSet.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(DataSet.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(DataSet.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(DataSet.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    801);
-        } else {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setMinCropResultSize(400, 400)
-                    .setAspectRatio(1, 1)
-                    .start(DataSet.this);
-        }
+        Dexter.withActivity(DataSet.this)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if (report.areAllPermissionsGranted()) {
+                            CropImage.activity()
+                                    .setGuidelines(CropImageView.Guidelines.ON)
+                                    .setMinCropResultSize(400, 400)
+                                    .setAspectRatio(1, 1)
+                                    .start(DataSet.this);
+                        } else
+                            Toast.makeText(DataSet.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
     }
 
     @Override

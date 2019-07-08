@@ -1115,7 +1115,7 @@ public class MessageHolders {
         @Override
         public void applyStyle(MessagesListStyle style) {
             if (time != null) {
-                time.setTextColor(style.getOutcomingTimeTextColor());
+                time.setTextColor(style.getOutcomingImageTimeTextColor());
                 time.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getOutcomingTimeTextSize());
                 time.setTypeface(time.getTypeface(), style.getOutcomingTimeTextStyle());
             }

@@ -330,6 +330,7 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
                                         final Map<String, Object> map = new HashMap<>();
                                         map.put("time", ServerValue.TIMESTAMP);
                                         map.put("link", encryption.encryptOrNull(String.valueOf(downloadUrl)));
+                                        map.put("id",mAuth.getCurrentUser().getUid()+"_"+System.currentTimeMillis());
 
                                         mData.child(mAuth.getCurrentUser().getUid()).child(Global.StoryS).push().updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override

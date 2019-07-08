@@ -73,6 +73,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.me.UserIn;
@@ -87,6 +92,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -95,6 +101,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.custom.AttachMenu;
 import ar.codeslu.plax.datasetters.MessageData;
 import ar.codeslu.plax.fragments.Chats;
@@ -115,6 +122,8 @@ import ar.codeslu.plax.lists.senderD;
 
 import com.stfalcon.chatkit.me.Message;
 import com.stfalcon.chatkit.me.MessageIn;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.EmojiTextView;
@@ -233,6 +242,9 @@ public class Chat extends AppCompatActivity
     //record delete on pause
     private boolean pausebreak = false;
     Boolean canScroll = false;
+    //vars
+    String filetype = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -924,137 +936,87 @@ public class Chat extends AppCompatActivity
                 cdd.dismiss();
                 isHidden = true;
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ActivityCompat.checkSelfPermission(Chat.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Chat.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Dexter.withActivity(Chat.this)
+                        .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        ActivityCompat.requestPermissions(Chat.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                                804);
-                    } else {
-                        // if we can't access the location yet
-                        if (!location.hasLocationEnabled()) {
-                            // ask the user to enable location access
-                            SimpleLocation.openSettings(Chat.this);
-                        } else {
-                            encrypL = location.getLatitude() + "," + location.getLongitude();
-                            encrypL = encryption.encryptOrNull(encrypL);
-                            encrypMap = getString(R.string.map_location);
-                            encrypMap = encryption.encryptOrNull(encrypMap);
-                            currTime = ServerValue.TIMESTAMP;
-                            messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-                            //send owner data to friend
-                            mAuth = FirebaseAuth.getInstance();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("avatar", data.getAvatar());
-                            map.put("name", data.getName());
-                            map.put("nameL", data.getNameL());
-                            map.put("phone", data.getPhone());
-                            map.put("id", mAuth.getCurrentUser().getUid());
-                            map.put("screen",Global.myscreen);
-                            map.put("lastmessage", encrypMap);
-                            map.put("lastsender", mAuth.getCurrentUser().getUid());
-                            map.put("lastsenderava", data.getAvatar());
-                            map.put("messDate", currTime);
-                            //local message
-                            messagesAdapter.clear();
-                            messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map");
-                            try {
-                                Global.messG.add(messageLocal);
-                                //local store
-                                ((AppBack) getApplication()).setchatsdb(friendId);
-                            } catch (NullPointerException e) {
-                                Global.messG = new ArrayList<>();
-                                Global.messG.add(messageLocal);
-                                //local store
-                                ((AppBack) getApplication()).setchatsdb(friendId);
-                            }
-                            //update last message if dialog exist
-                            Chats chat = new Chats();
-                            //update dialog if not exist
-                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
-                            ArrayList<UserIn> tempoo = new ArrayList<>();
-                            tempoo.clear();
-                            tempoo.add(dialog);
-                            Global.userrG = dialog;
-                            Global.yourM = false;
-                            Global.Dialogonelist = tempoo;
-                            Global.Dialogid = friendId;
-                            Global.DialogM = messageLocal;
-                            chat.onNewMessage();
-                            messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                            messagesAdapter.notifyDataSetChanged();
-                            messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-                            ///////
-                            mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    sendMap();
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    // if we can't access the location yet
+                                    if (!location.hasLocationEnabled()) {
+                                        // ask the user to enable location access
+                                        SimpleLocation.openSettings(Chat.this);
+                                    } else {
+                                        encrypL = location.getLatitude() + "," + location.getLongitude();
+                                        encrypL = encryption.encryptOrNull(encrypL);
+                                        encrypMap = getString(R.string.map_location);
+                                        encrypMap = encryption.encryptOrNull(encrypMap);
+                                        currTime = ServerValue.TIMESTAMP;
+                                        messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+                                        //send owner data to friend
+                                        mAuth = FirebaseAuth.getInstance();
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("avatar", data.getAvatar());
+                                        map.put("name", data.getName());
+                                        map.put("nameL", data.getNameL());
+                                        map.put("phone", data.getPhone());
+                                        map.put("id", mAuth.getCurrentUser().getUid());
+                                        map.put("screen",Global.myscreen);
+                                        map.put("lastmessage", encrypMap);
+                                        map.put("lastsender", mAuth.getCurrentUser().getUid());
+                                        map.put("lastsenderava", data.getAvatar());
+                                        map.put("messDate", currTime);
+                                        //local message
+                                        messagesAdapter.clear();
+                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map");
+                                        try {
+                                            Global.messG.add(messageLocal);
+                                            //local store
+                                            ((AppBack) getApplication()).setchatsdb(friendId);
+                                        } catch (NullPointerException e) {
+                                            Global.messG = new ArrayList<>();
+                                            Global.messG.add(messageLocal);
+                                            //local store
+                                            ((AppBack) getApplication()).setchatsdb(friendId);
+                                        }
+                                        //update last message if dialog exist
+                                        Chats chat = new Chats();
+                                        //update dialog if not exist
+                                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+                                        ArrayList<UserIn> tempoo = new ArrayList<>();
+                                        tempoo.clear();
+                                        tempoo.add(dialog);
+                                        Global.userrG = dialog;
+                                        Global.yourM = false;
+                                        Global.Dialogonelist = tempoo;
+                                        Global.Dialogid = friendId;
+                                        Global.DialogM = messageLocal;
+                                        chat.onNewMessage();
+                                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                                        messagesAdapter.notifyDataSetChanged();
+                                        messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+                                        ///////
+                                        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                sendMap();
+                                            }
+                                        });
+                                    }
                                 }
-                            });
-                        }
-                    }
-                } else {
-                    // if we can't access the location yet
-                    if (!location.hasLocationEnabled()) {
-                        // ask the user to enable location access
-                        SimpleLocation.openSettings(Chat.this);
-                    } else {
-                        encrypL = location.getLatitude() + "," + location.getLongitude();
-                        encrypL = encryption.encryptOrNull(encrypL);
-                        encrypMap = getString(R.string.map_location);
-                        encrypMap = encryption.encryptOrNull(encrypMap);
-                        currTime = ServerValue.TIMESTAMP;
-                        messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-                        //send owner data to friend
-                        mAuth = FirebaseAuth.getInstance();
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", data.getAvatar());
-                        map.put("name", data.getName());
-                        map.put("nameL", data.getNameL());
-                        map.put("phone", data.getPhone());
-                        map.put("id", mAuth.getCurrentUser().getUid());
-                        map.put("screen",Global.myscreen);
-                        map.put("lastmessage", encrypMap);
-                        map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
-                        map.put("messDate", currTime);
-                        //local message
-                        messagesAdapter.clear();
-                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map");
-                        try {
-                            Global.messG.add(messageLocal);
-                            //local store
-                            ((AppBack) getApplication()).setchatsdb(friendId);
-                        } catch (NullPointerException e) {
-                            Global.messG = new ArrayList<>();
-                            Global.messG.add(messageLocal);
-                            //local store
-                            ((AppBack) getApplication()).setchatsdb(friendId);
-                        }
-                        //update last message if dialog exist
-                        Chats chat = new Chats();
-                        //update dialog if not exist
-                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
-                        ArrayList<UserIn> tempoo = new ArrayList<>();
-                        tempoo.clear();
-                        tempoo.add(dialog);
-                        Global.userrG = dialog;
-                        Global.yourM = false;
-                        Global.Dialogonelist = tempoo;
-                        Global.Dialogid = friendId;
-                        Global.DialogM = messageLocal;
-                        chat.onNewMessage();
-                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                        messagesAdapter.notifyDataSetChanged();
-                        messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-                        ///////
-                        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                sendMap();
+                                else
+                                    Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
                             }
-                        });
-                    }
-                }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
+
 
             }
         });
@@ -1078,34 +1040,32 @@ public class Chat extends AppCompatActivity
         recordView.setOnRecordListener(new OnRecordListener() {
             @Override
             public void onStart() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(Chat.this,
-                            Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(Chat.this,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(Chat.this,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                        ActivityCompat.requestPermissions(Chat.this,
-                                new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest.permission.READ_EXTERNAL_STORAGE},
-                                220);
+                Dexter.withActivity(Chat.this)
+                        .withPermissions(Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                    } else {
-                        //Start Recording..
-                        recordView.setVisibility(View.VISIBLE);
-                        messagebox.setVisibility(View.GONE);
-                        add.setVisibility(View.GONE);
-                        startRecording();
-                    }
-                } else {
-                    //Start Recording..
-                    recordView.setVisibility(View.VISIBLE);
-                    messagebox.setVisibility(View.GONE);
-                    add.setVisibility(View.GONE);
-                    startRecording();
+                                if(report.areAllPermissionsGranted())
+                                {
+                                    //Start Recording..
+                                    recordView.setVisibility(View.VISIBLE);
+                                    messagebox.setVisibility(View.GONE);
+                                    add.setVisibility(View.GONE);
+                                    startRecording();
+                                }
+                                else
+                                    Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
-                }
+
+                            }
+                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
+
             }
 
             @Override
@@ -1173,12 +1133,6 @@ public class Chat extends AppCompatActivity
                 h.postDelayed(runnable, TIMEUPDATE);
             }
         }, TIMEUPDATE);
-        //just get per
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(Chat.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(Chat.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-            }
-        }
         //all exist layout elements
         block.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1205,14 +1159,26 @@ public class Chat extends AppCompatActivity
             }
         });
 //check contact exist
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(Chat.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(Chat.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-            } else {
-                contactExists(Global.currphone);
-            }
-        } else
-            contactExists(Global.currphone);
+        Dexter.withActivity(Chat.this)
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if(report.areAllPermissionsGranted())
+                            contactExists(Global.currphone);
+
+                        else
+                            Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
+
 
         imm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1662,132 +1628,150 @@ public class Chat extends AppCompatActivity
 
     }
 
-    public void uploadF(Uri linkL, final String filename, String filetype) {
+    public void uploadF(Uri linkL, final String filename,  String filett) {
         //for local
         String fileL = filename;
-        if (ActivityCompat.checkSelfPermission(Chat.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Chat.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Chat.this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(Chat.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK},
-                    804);
-        } else {
-            filename.replace(" ", "_");
-            if (filetype.contains("/xlsx")) {
-                filetype = ".xlsx";
-            } else if (filetype.contains("/xls")) {
-                filetype = ".xls";
+        Dexter.withActivity(Chat.this)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-            } else if (filetype.contains("/docx")) {
-                filetype = ".docx";
+                        if(report.areAllPermissionsGranted())
+                        {
+                            filename.replace(" ", "_");
+                            if (filett.contains("/xlsx")) {
+                                filetype = ".xlsx";
+                            } else if (filett.contains("/xls")) {
+                                filetype = ".xls";
 
-            } else if (filetype.contains("/doc")) {
-                filetype = ".doc";
+                            } else if (filett.contains("/docx")) {
+                                filetype = ".docx";
 
-            } else if (filetype.contains("/pptx")) {
-                filetype = ".pptx";
-            } else if (filetype.contains("/ppt")) {
-                filetype = ".ppt";
+                            } else if (filett.contains("/doc")) {
+                                filetype = ".doc";
 
-            } else if (filetype.contains("/pdf")) {
-                filetype = ".pdf";
+                            } else if (filett.contains("/pptx")) {
+                                filetype = ".pptx";
+                            } else if (filett.contains("/ppt")) {
+                                filetype = ".ppt";
 
-            } else if (filetype.contains("/txt")) {
-                filetype = ".txt";
-            } else if (filetype.contains("/plain")) {
-                filetype = ".txt";
-            } else if (filetype.contains("/binary")) {
-                filetype = "";
-            }
-            //local message
-            messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-            fileA.add(messidL);
-            String locall = encryption.encryptOrNull(String.valueOf(linkL));
-            messagesAdapter.clear();
-            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no");
-            try {
-                Global.messG.add(messageLocal);
-                //local store
-                ((AppBack) getApplication()).setchatsdb(friendId);
-            } catch (NullPointerException e) {
-                Global.messG = new ArrayList<>();
-                Global.messG.add(messageLocal);
-                //local store
-                ((AppBack) getApplication()).setchatsdb(friendId);
-            }
-            //update last message if dialog exist
-            Chats chat = new Chats();
-            //update dialog if not exist
-            encrypF = "File " + filename + filetype;
-            encrypF = encryption.encryptOrNull(encrypF);
-            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
-            ArrayList<UserIn> tempoo = new ArrayList<>();
-            tempoo.clear();
-            tempoo.add(dialog);
-            Global.userrG = dialog;
-            Global.yourM = false;
-            Global.Dialogonelist = tempoo;
-            Global.Dialogid = friendId;
-            Global.DialogM = messageLocal;
-            chat.onNewMessage();
-            messagesAdapter.addToEnd(MessageData.getMessages(), true);
-            messagesAdapter.notifyDataSetChanged();
-            messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-            ///////
-            //upload on server
-            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Files/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + filetype);
-            final String finalFiletype = filetype;
-            UploadTask uploadTask = riversRef.putFile(linkL);
+                            } else if (filett.contains("/pdf")) {
+                                filetype = ".pdf";
 
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-
-                    // Continue with the task to get the download URL
-                    return riversRef.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadUrl = task.getResult();
-                        message.setText("");
-                        currTime = ServerValue.TIMESTAMP;
-                        //send owner data to friend
-                        mAuth = FirebaseAuth.getInstance();
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", data.getAvatar());
-                        map.put("name", data.getName());
-                        map.put("nameL", data.getNameL());
-                        map.put("phone", data.getPhone());
-                        map.put("id", mAuth.getCurrentUser().getUid());
-                        map.put("screen",Global.myscreen);
-                        map.put("lastmessage", encrypF);
-                        map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
-                        map.put("messDate", currTime);
-                        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                                sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
+                            } else if (filett.contains("/txt")) {
+                                filetype = ".txt";
+                            } else if (filett.contains("/plain")) {
+                                filetype = ".txt";
+                            } else if (filett.contains("/binary")) {
+                                filetype = "";
                             }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
+                            else
+                            {
+                                filetype = filett;
+                            }
+                            //local message
+                            messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+                            fileA.add(messidL);
+                            String locall = encryption.encryptOrNull(String.valueOf(linkL));
+                            messagesAdapter.clear();
+                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no");
+                            try {
+                                Global.messG.add(messageLocal);
+                                //local store
+                                ((AppBack) getApplication()).setchatsdb(friendId);
+                            } catch (NullPointerException e) {
+                                Global.messG = new ArrayList<>();
+                                Global.messG.add(messageLocal);
+                                //local store
+                                ((AppBack) getApplication()).setchatsdb(friendId);
+                            }
+                            //update last message if dialog exist
+                            Chats chat = new Chats();
+                            //update dialog if not exist
+                            encrypF = "File " + filename + filetype;
+                            encrypF = encryption.encryptOrNull(encrypF);
+                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+                            ArrayList<UserIn> tempoo = new ArrayList<>();
+                            tempoo.clear();
+                            tempoo.add(dialog);
+                            Global.userrG = dialog;
+                            Global.yourM = false;
+                            Global.Dialogonelist = tempoo;
+                            Global.Dialogid = friendId;
+                            Global.DialogM = messageLocal;
+                            chat.onNewMessage();
+                            messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                            messagesAdapter.notifyDataSetChanged();
+                            messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+                            ///////
+                            //upload on server
+                            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+                            StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Files/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + filetype);
+                            final String finalFiletype = filetype;
+                            UploadTask uploadTask = riversRef.putFile(linkL);
+
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+
+                                    // Continue with the task to get the download URL
+                                    return riversRef.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        Uri downloadUrl = task.getResult();
+                                        message.setText("");
+                                        currTime = ServerValue.TIMESTAMP;
+                                        //send owner data to friend
+                                        mAuth = FirebaseAuth.getInstance();
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("avatar", data.getAvatar());
+                                        map.put("name", data.getName());
+                                        map.put("nameL", data.getNameL());
+                                        map.put("phone", data.getPhone());
+                                        map.put("id", mAuth.getCurrentUser().getUid());
+                                        map.put("screen",Global.myscreen);
+                                        map.put("lastmessage", encrypF);
+                                        map.put("lastsender", mAuth.getCurrentUser().getUid());
+                                        map.put("lastsenderava", data.getAvatar());
+                                        map.put("messDate", currTime);
+                                        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+
+                                                    }
+                                                });
+
 
                                     }
-                                });
+                                }
+                            });
+                        }
+                        else
+                            Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                     }
-                }
-            });
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
-        }
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
+
 
 
     }
@@ -2010,10 +1994,10 @@ public class Chat extends AppCompatActivity
                 break;
             case Constant.REQUEST_CODE_PICK_VIDEO:
                 if (resultCode == RESULT_OK) {
-                    ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
-                    for (int i = 0; i < list.size(); i++) {
-                        uploadVideo(Uri.parse("file:///" + list.get(i).getPath()), list.get(i).getDuration(), list.get(i).getPath());
-                    }
+//                    ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
+//                    for (int i = 0; i < list.size(); i++) {
+//                        uploadVideo(Uri.parse("file:///" + list.get(i).getPath()), list.get(i).getDuration(), list.get(i).getPath());
+//                    }
                 }
                 break;
             case Constant.REQUEST_CODE_PICK_AUDIO:
@@ -2430,6 +2414,10 @@ public class Chat extends AppCompatActivity
         } catch (NullPointerException e) {
             stopAT();
         }
+        catch (RuntimeException e) {
+            mOutputFile.delete();
+            stopAT();
+        }
 
     }
 
@@ -2600,16 +2588,26 @@ public class Chat extends AppCompatActivity
             readM();
         }
         //check contact exist
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(Chat.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(Chat.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-            } else {
-                contactExists(Global.currphone);
-            }
-        } else
-            contactExists(Global.currphone);
+
+        Dexter.withActivity(Chat.this)
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if(report.areAllPermissionsGranted())
+                            contactExists(Global.currphone);
+
+                        else
+                            Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
         Global.currentactivity = this;
     }
 

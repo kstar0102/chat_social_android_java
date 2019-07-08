@@ -19,6 +19,7 @@
 
 
     <color name="grey">#cecece</color>
+    <color name="greystory">#A5A5A5</color>
     <color name="dark_gray_unread">#1b1c1d</color>
     <color name="mess_time">#aeaeae</color>
     <color name="dark_grey2">#a3a3a3</color>

@@ -16,6 +16,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.tasks.Continuation;
@@ -174,6 +177,7 @@ public class MainActivity extends AppCompatActivity
             //main data init
             SharedPreferences preferences = getSharedPreferences("profile", Context.MODE_PRIVATE);
             String phone = preferences.getString("phone_" + mAuth.getCurrentUser().getUid(), null);
+            if(phone != null)
             Global.phoneLocal = phone;
         }
 

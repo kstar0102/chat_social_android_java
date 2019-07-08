@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 public class StoryList {
 
-String link;
+String link,id;
 long time;
+
 
     public StoryList() {
     }
 
-    public StoryList(String link, long time) {
+    public StoryList(String link, String id, long time) {
         this.link = link;
+        this.id = id;
         this.time = time;
     }
 
@@ -29,5 +31,13 @@ long time;
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

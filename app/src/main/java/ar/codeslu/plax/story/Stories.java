@@ -1,14 +1,20 @@
 package ar.codeslu.plax.story;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,6 +27,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.fxn.pix.Options;
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -33,8 +42,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.instacart.library.truetime.TrueTime;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.stfalcon.chatkit.me.UserIn;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.Chat;
@@ -59,15 +75,16 @@ public class Stories extends AppCompatActivity {
     StoryView storyView;
     //Firebase
     FirebaseAuth mAuth;
-    DatabaseReference myData,mUserDB,mOtherData;
+    DatabaseReference myData, mUserDB, mOtherData;
 
     //vars
-    ArrayList<StoryModel> myS,otherS;
+    ArrayList<StoryModel> myS, otherS;
     ArrayList<StoryListRetr> getlistS;
     ArrayList<String> localContacts;
     ArrayList<UserData> userList, contactList, searchL;
-    String phone = "",
-            name = "", ava = "",id="";
+    String name = "", ava = "", id = "";
+    int enter = 0, enterM = 0;
+
     //enc
     Encryption encryption;
 
@@ -105,8 +122,27 @@ public class Stories extends AppCompatActivity {
         mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
         mUserDB.keepSynced(true);
 
-        getContactList();
 
+
+        Dexter.withActivity(Stories.this)
+                .withPermissions(Manifest.permission.READ_CONTACTS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if(report.areAllPermissionsGranted())
+                            getContactList();
+
+                        else
+                            Toast.makeText(Stories.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
 
 
         Query query = myData.child(mAuth.getCurrentUser().getUid()).child(Global.StoryS);
@@ -115,7 +151,10 @@ public class Stories extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 myS.clear();
-                storyView.setImageUris(myS, getApplicationContext());
+                if (Global.check_int(Stories.this))
+                    enterM = 0;
+
+                storyView.setVisibility(View.GONE);
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     StoryList post = postSnapshot.getValue(StoryList.class);
                     FirebaseFunctions.getInstance().getHttpsCallable("getTime")
@@ -127,18 +166,26 @@ public class Stories extends AppCompatActivity {
                             int hours = (int) TimeUnit.MILLISECONDS.toHours(now - post.getTime());
                             if (hours < 24) {
                                 try {
-                                    if (post.getLink() != null)
-                                        myS.add(new StoryModel(encryption.decryptOrNull(post.getLink()), getString(R.string.me), GetTime.getTimeAgo(post.getTime(), Stories.this)));
-                                } catch (NullPointerException e) {
+                                    if (post.getLink() != null) {
+                                        myS.add(new StoryModel(encryption.decryptOrNull(post.getLink()), getString(R.string.me), GetTime.getTimeAgo(post.getTime(), Stories.this),post.getTime()));
+                                        enterM = enterM + 1;
+                                        if (enterM == dataSnapshot.getChildrenCount() - 1) {
+                                            storyView.setImageUris(myS, getApplicationContext());
+                                            if (myS.size() > 0)
+                                                storyView.setVisibility(View.VISIBLE);
 
+                                            else
+                                                storyView.setVisibility(View.GONE);
+
+                                            enterM = 0;
+                                        }
+
+                                    }
+                                } catch (NullPointerException e) {
+                                    storyView.setVisibility(View.GONE);
                                 }
                             }
-                            storyView.setImageUris(myS, getApplicationContext());
-                            if (myS.size() > 0)
-                                storyView.setVisibility(View.VISIBLE);
-
-                            else
-                                storyView.setVisibility(View.GONE);
+                            /////
 
 
                         }
@@ -158,6 +205,8 @@ public class Stories extends AppCompatActivity {
 
         array = new ArrayList<>();
         adapter = new StoryAdapter(getlistS);
+        storyList.setAdapter(adapter);
+        storyList.setLayoutManager(new LinearLayoutManager(this));
         addStory.setOnClickListener(v -> startActivity(new Intent(Stories.this, AddStory.class)));
 
     }
@@ -178,10 +227,9 @@ public class Stories extends AppCompatActivity {
 
             if (!String.valueOf(phone.charAt(0)).equals("+"))
                 phone = ISOPrefix + phone;
-//            if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone)) {
-//
-//            }
-            localContacts.add(phone);
+            if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone)) {
+                localContacts.add(phone);
+            }
         }
         new Thread(
                 new Runnable() {
@@ -207,20 +255,20 @@ public class Stories extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                            if (childSnapshot.child("name").getValue() != null)
-                                name = childSnapshot.child("name").getValue().toString();
+                        if (childSnapshot.child("name").getValue() != null)
+                            name = childSnapshot.child("name").getValue().toString();
 
                         if (childSnapshot.child("avatar").getValue() != null)
                             ava = childSnapshot.child("avatar").getValue().toString();
                         if (childSnapshot.child("id").getValue() != null)
                             id = childSnapshot.child("id").getValue().toString();
 
-                        otherS.clear();
                         Query query = myData.child(id).child(Global.StoryS);
                         query.keepSynced(true);
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                otherS.clear();
                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                     StoryList post = postSnapshot.getValue(StoryList.class);
                                     FirebaseFunctions.getInstance().getHttpsCallable("getTime")
@@ -228,13 +276,32 @@ public class Stories extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(HttpsCallableResult httpsCallableResult) {
                                             long now = (long) httpsCallableResult.getData();
-
                                             int hours = (int) TimeUnit.MILLISECONDS.toHours(now - post.getTime());
                                             if (hours < 24) {
                                                 try {
-                                                    if (post.getLink() != null)
-                                                    {
-                                                        otherS.add(new StoryModel(encryption.decryptOrNull(post.getLink()), getString(R.string.me), GetTime.getTimeAgo(post.getTime(), Stories.this)));
+                                                    if (post.getLink() != null) {
+
+                                                        otherS.add(new StoryModel(encryption.decryptOrNull(post.getLink()), name, GetTime.getTimeAgo(post.getTime(), Stories.this),post.getTime()));
+
+                                                        if (enter == dataSnapshot.getChildrenCount() - 1) {
+                                                            for(int i=0;i<getlistS.size();i++)
+                                                            {
+                                                                if(getlistS.get(i).getUID().equals(id))
+                                                                {
+                                                                 getlistS.remove(i);
+                                                                 setStory(otherS,name,ava,id,otherS.get(otherS.size()-1).timeL);
+                                                                    break;
+                                                                }
+
+
+
+                                                            }
+                                                            enter = 0;
+                                                        }
+                                                        else
+                                                        enter = enter + 1;
+
+
                                                     }
                                                 } catch (NullPointerException e) {
 
@@ -243,7 +310,8 @@ public class Stories extends AppCompatActivity {
                                         }
                                     });
                                 }
-                                getlistS.add(new StoryListRetr(otherS,name,ava));
+
+
                             }
 
                             @Override
@@ -278,6 +346,32 @@ public class Stories extends AppCompatActivity {
         return CountryToPhonePrefix.getPhone(iso);
     }
 
+    private  void setStory(ArrayList<StoryModel> list ,String name,String ava,String id,long lastTime)
+    {
+        getlistS.add(new StoryListRetr(otherS, name, ava,id,lastTime));
+        adapter.notifyDataSetChanged();
+        arrange();
+    }
 
+    private void arrange()
+    {
+        StoryListRetr temp;
+        for(int i=0;i<getlistS.size();i++) {
+            if (i != getlistS.size() - 1)
+            {
+                if (getlistS.get(i).getLastTime() < getlistS.get(i + 1).getLastTime()) {
+                    temp = getlistS.get(i);
+                    getlistS.set(i, getlistS.get(i + 1));
+                    getlistS.set(i + 1, temp);
+                    arrange();
+                    break;
+                }
+            }
+
+        }
+
+        adapter.notifyDataSetChanged();
+
+    }
 
 }

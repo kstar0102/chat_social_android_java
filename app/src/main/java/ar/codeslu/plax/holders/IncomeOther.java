@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Environment;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +33,11 @@ import com.downloader.OnProgressListener;
 import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.messages.MessageHolders;
 
@@ -39,6 +46,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import ar.codeslu.plax.Map;
 import ar.codeslu.plax.R;
@@ -46,6 +54,7 @@ import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.custom.ReactCustom;
 import ar.codeslu.plax.global.Global;
 
+import ar.codeslu.plax.mediachat.Photoa;
 import ar.codeslu.plax.mediachat.VideoA;
 import nl.changer.audiowife.AudioWife;
 
@@ -173,6 +182,19 @@ public class IncomeOther
         map = itemView.findViewById(R.id.map);
         bubble = itemView.findViewById(R.id.bubblely);
         duration = itemView.findViewById(R.id.recordduration);
+
+        //resize
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        Global.chatactivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int imagewidth = (int) Math.round(displaymetrics.widthPixels * 0.68);
+        int imageheight = (int) Math.round(imagewidth * 0.6);
+        image.getLayoutParams().width = imagewidth;
+        image.getLayoutParams().height = imageheight;
+        map.getLayoutParams().width = imagewidth;
+        map.getLayoutParams().height = imageheight;
+
+
+
         //dark init
         if (Global.DARKSTATE) {
             play.setImageResource(R.drawable.download_w);
@@ -222,70 +244,91 @@ public class IncomeOther
             mPlayMedia.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SharedPreferences preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
-                    String pathL = preferences.getString("voice_" + message.getVoice().getUrl(), "not");
-                    if (Global.check_int(Global.conA)) {
-                        File file = new File(pathL);
-                        if (pathL.equals("not") || !file.exists()) {
-                            String url = message.getVoice().getUrl();
-                            pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-                                    + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Voice Notes/";
-                            fileName = message.getVoice().getUrl() + ".m4a";
-                            final String finalPathL = pathL;
-                            //     play(message.getVoice().getUrl());
-                            int downloadId = PRDownloader.download(url, pathL, fileName)
-                                    .build()
-                                    .setOnStartOrResumeListener(new OnStartOrResumeListener() {
-                                        @Override
-                                        public void onStartOrResume() {
 
+                    Dexter.withActivity(Global.chatactivity)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                    if(report.areAllPermissionsGranted())
+                                    {
+                                        SharedPreferences preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
+                                        String pathL = preferences.getString("voice_" + message.getVoice().getUrl(), "not");
+                                        if (Global.check_int(Global.conA)) {
+                                            File file = new File(pathL);
+                                            if (pathL.equals("not") || !file.exists()) {
+                                                String url = message.getVoice().getUrl();
+                                                pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                                                        + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Voice Notes/";
+                                                fileName = message.getVoice().getUrl() + ".m4a";
+                                                final String finalPathL = pathL;
+                                                //     play(message.getVoice().getUrl());
+                                                int downloadId = PRDownloader.download(url, pathL, fileName)
+                                                        .build()
+                                                        .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                                                            @Override
+                                                            public void onStartOrResume() {
+
+                                                            }
+                                                        })
+                                                        .setOnPauseListener(new OnPauseListener() {
+                                                            @Override
+                                                            public void onPause() {
+
+                                                            }
+                                                        })
+                                                        .setOnCancelListener(new OnCancelListener() {
+                                                            @Override
+                                                            public void onCancel() {
+
+                                                            }
+                                                        })
+                                                        .setOnProgressListener(new OnProgressListener() {
+                                                            @Override
+                                                            public void onProgress(Progress progress) {
+
+                                                            }
+                                                        })
+                                                        .start(new OnDownloadListener() {
+                                                            @Override
+                                                            public void onDownloadComplete() {
+                                                                editor.putString("voice_" + message.getVoice().getUrl(), finalPathL + fileName);
+                                                                editor.apply();
+                                                                play(finalPathL + fileName);
+                                                            }
+
+                                                            @Override
+                                                            public void onError(Error error) {
+                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
+
+                                                            }
+
+                                                        });
+                                            } else {
+                                                play(pathL);
+                                            }
+
+                                        } else {
+                                            if (pathL.equals("not")) {
+                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                play(pathL);
+                                            }
                                         }
-                                    })
-                                    .setOnPauseListener(new OnPauseListener() {
-                                        @Override
-                                        public void onPause() {
 
-                                        }
-                                    })
-                                    .setOnCancelListener(new OnCancelListener() {
-                                        @Override
-                                        public void onCancel() {
+                                    }
 
-                                        }
-                                    })
-                                    .setOnProgressListener(new OnProgressListener() {
-                                        @Override
-                                        public void onProgress(Progress progress) {
+                                    else
+                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
-                                        }
-                                    })
-                                    .start(new OnDownloadListener() {
-                                        @Override
-                                        public void onDownloadComplete() {
-                                            editor.putString("voice_" + message.getVoice().getUrl(), finalPathL + fileName);
-                                            editor.apply();
-                                            play(finalPathL + fileName);
-                                        }
 
-                                        @Override
-                                        public void onError(Error error) {
-                                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
+                                }
+                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
-                                        }
+                                    token.continuePermissionRequest();
 
-                                    });
-                        } else {
-                            play(pathL);
-                        }
-
-                    } else {
-                        if (pathL.equals("not")) {
-                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
-                        } else {
-                            play(pathL);
-                        }
-                    }
-
+                                }
+                            }).check();
                 }
             });
         } else if (message.getType().equals("file")) {
@@ -320,72 +363,93 @@ public class IncomeOther
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SharedPreferences preferences = Global.conA.getSharedPreferences("file", Context.MODE_PRIVATE);
-                    String pathL = preferences.getString("file_" + message.getFile().getUrl(), "not");
-                    if (Global.check_int(Global.conA)) {
-                        File file = new File(pathL);
-                        if (pathL.equals("not") || !file.exists()) {
-                            String url = message.getFile().getUrl();
-                            pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-                                    + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Files/";
-                            fileName = message.getFile().getFilename();
-                            final String finalPathL = pathL;
-                            int downloadId = PRDownloader.download(url, pathL, fileName)
-                                    .build()
-                                    .setOnStartOrResumeListener(new OnStartOrResumeListener() {
-                                        @Override
-                                        public void onStartOrResume() {
-                                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.downloadstart), Toast.LENGTH_SHORT).show();
 
+                    Dexter.withActivity(Global.chatactivity)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                    if(report.areAllPermissionsGranted())
+                                    {
+                                        SharedPreferences preferences = Global.conA.getSharedPreferences("file", Context.MODE_PRIVATE);
+                                        String pathL = preferences.getString("file_" + message.getFile().getUrl(), "not");
+                                        if (Global.check_int(Global.conA)) {
+                                            File file = new File(pathL);
+                                            if (pathL.equals("not") || !file.exists()) {
+                                                String url = message.getFile().getUrl();
+                                                pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                                                        + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Files/";
+                                                fileName = message.getFile().getFilename();
+                                                final String finalPathL = pathL;
+                                                int downloadId = PRDownloader.download(url, pathL, fileName)
+                                                        .build()
+                                                        .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                                                            @Override
+                                                            public void onStartOrResume() {
+                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.downloadstart), Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        })
+                                                        .setOnPauseListener(new OnPauseListener() {
+                                                            @Override
+                                                            public void onPause() {
+
+                                                            }
+                                                        })
+                                                        .setOnCancelListener(new OnCancelListener() {
+                                                            @Override
+                                                            public void onCancel() {
+
+                                                            }
+                                                        })
+                                                        .setOnProgressListener(new OnProgressListener() {
+                                                            @Override
+                                                            public void onProgress(Progress progress) {
+
+                                                            }
+                                                        })
+                                                        .start(new OnDownloadListener() {
+                                                            @Override
+                                                            public void onDownloadComplete() {
+                                                                editor.putString("file_" + message.getFile().getUrl(), finalPathL + fileName);
+                                                                editor.apply();
+                                                                //  here is open local
+                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.downloadcomplete), Toast.LENGTH_SHORT).show();
+
+                                                            }
+
+                                                            @Override
+                                                            public void onError(Error error) {
+                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_open), Toast.LENGTH_SHORT).show();
+
+                                                            }
+
+                                                        });
+                                            } else {
+                                                //  here is open local
+
+                                            }
+
+                                        } else {
+                                            if (pathL.equals("not")) {
+                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_open), Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                //  here is open local
+                                            }
                                         }
-                                    })
-                                    .setOnPauseListener(new OnPauseListener() {
-                                        @Override
-                                        public void onPause() {
+                                    }
 
-                                        }
-                                    })
-                                    .setOnCancelListener(new OnCancelListener() {
-                                        @Override
-                                        public void onCancel() {
+                                    else
+                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
-                                        }
-                                    })
-                                    .setOnProgressListener(new OnProgressListener() {
-                                        @Override
-                                        public void onProgress(Progress progress) {
 
-                                        }
-                                    })
-                                    .start(new OnDownloadListener() {
-                                        @Override
-                                        public void onDownloadComplete() {
-                                            editor.putString("file_" + message.getFile().getUrl(), finalPathL + fileName);
-                                            editor.apply();
-                                            //  here is open local
-                                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.downloadcomplete), Toast.LENGTH_SHORT).show();
+                                }
+                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
-                                        }
+                                    token.continuePermissionRequest();
 
-                                        @Override
-                                        public void onError(Error error) {
-                                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_open), Toast.LENGTH_SHORT).show();
-
-                                        }
-
-                                    });
-                        } else {
-                            //  here is open local
-
-                        }
-
-                    } else {
-                        if (pathL.equals("not")) {
-                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_open), Toast.LENGTH_SHORT).show();
-                        } else {
-                            //  here is open local
-                        }
-                    }
+                                }
+                            }).check();
 
                 }
             });
@@ -410,24 +474,40 @@ public class IncomeOther
             Picasso.get()
                     .load(message.getVideo().getThumb())
                     .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.loading)
                     .into(image);
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ActivityCompat.checkSelfPermission(Global.conA, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Global.conA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Global.conA, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED) {
 
-                        ActivityCompat.requestPermissions(Global.chatactivity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK},
-                                804);
-                    } else {
-                        Intent intent = new Intent(Global.conA, VideoA.class);
-                        intent.putExtra("Mid", message.getMessid());
-                        intent.putExtra("ava", Global.currAva);
-                        intent.putExtra("name", Global.currname);
-                        intent.putExtra("url", message.getVideo().getUrl());
-                        intent.putExtra("from", message.getId());
-                        intent.putExtra("duration", message.getVideo().getDuration());
-                        Global.conA.startActivity(intent);
-                    }
+                    Dexter.withActivity(Global.chatactivity)
+                            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                    if(report.areAllPermissionsGranted())
+                                    {
+                                        Intent intent = new Intent(Global.conA, VideoA.class);
+                                        intent.putExtra("Mid", message.getMessid());
+                                        intent.putExtra("ava", Global.currAva);
+                                        intent.putExtra("name", Global.currname);
+                                        intent.putExtra("url", message.getVideo().getUrl());
+                                        intent.putExtra("from", message.getId());
+                                        intent.putExtra("duration", message.getVideo().getDuration());
+                                        Global.conA.startActivity(intent);
+                                    }
+
+                                    else
+                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                    token.continuePermissionRequest();
+
+                                }
+                            }).check();
                 }
             });
 
@@ -456,6 +536,7 @@ public class IncomeOther
             Picasso.get()
                     .load(url)
                     .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.loading)
                     .into(map);
 
             map.setOnClickListener(new View.OnClickListener() {
@@ -498,14 +579,34 @@ public class IncomeOther
     }
 
     private void play(String file) {
-        AudioWife.getInstance()
-                .init(Global.conA, Uri.parse(file))
-                .setPlayView(mPlayMedia)
-                .setPauseView(mPauseMedia)
-                .setSeekBar(mMediaSeekBar)
-                .setRuntimeView(mRunTime)
-                .setTotalTimeView(mTotalTime);
-        //   AudioWife.getInstance().release();
+        Dexter.withActivity(Global.chatactivity)
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if(report.areAllPermissionsGranted())
+                        {
+                            AudioWife.getInstance()
+                                    .init(Global.conA, Uri.parse(file))
+                                    .setPlayView(mPlayMedia)
+                                    .setPauseView(mPauseMedia)
+                                    .setSeekBar(mMediaSeekBar)
+                                    .setRuntimeView(mRunTime)
+                                    .setTotalTimeView(mTotalTime);
+                            //   AudioWife.getInstance().release();
+                        }
+
+                        else
+                            Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
 
     }
 

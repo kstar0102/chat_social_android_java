@@ -18,9 +18,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="start|bottom"
-            android:layout_marginEnd="8dp"
             android:gravity="start"
             android:scaleType="fitXY"
+            android:layout_marginEnd="8dp"
             app:riv_corner_radius_bottom_left="15dip"
             app:riv_corner_radius_bottom_right="15dip"
             app:riv_corner_radius_top_left="15dip"
@@ -32,7 +32,6 @@
             android:layout_gravity="start"
             android:gravity="start"
             android:layout_width="150dp"
-            android:layout_marginEnd="8dp"
             android:layout_height="50dp"
             android:background="@drawable/shape_incoming_message"
             android:orientation="vertical"
@@ -41,6 +40,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
                 android:gravity="center_vertical">
 
                 <FrameLayout
@@ -133,18 +133,19 @@
             android:layout_width="wrap_content"
             android:layout_gravity="start"
             android:gravity="start"
-            android:layout_marginEnd="8dp"
             android:layout_toEndOf="@id/messageUserAvatar"
             android:layout_height="wrap_content">
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@id/image"
-                android:layout_width="wrap_content"
-                android:scaleType="fitXY"
-                android:minWidth="200dp"
-                android:minHeight="400dp"
+                android:layout_width="250dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/loading"
                 android:layout_gravity="start|center_vertical"
                 android:gravity="start|center_vertical"
-                android:layout_height="wrap_content"
                 app:riv_corner_radius_bottom_left="0dip"
                 app:riv_corner_radius_bottom_right="15dip"
                 app:riv_corner_radius_top_left="15dip"
@@ -162,10 +163,11 @@
         </RelativeLayout>
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@id/map"
-            android:layout_width="wrap_content"
-            android:scaleType="fitXY"
-            android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loading"
             app:riv_corner_radius_bottom_left="0dip"
             app:riv_corner_radius_bottom_right="15dip"
             app:riv_corner_radius_top_left="15dip"
@@ -178,7 +180,6 @@
             android:id="@id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_toEndOf="@id/messageUserAvatar"
             android:orientation="vertical"
             app:alignContent="stretch"
@@ -225,6 +226,7 @@
             android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
             android:layout_height="25dp"
             android:src="@drawable/emoji_blue"
+            android:layout_marginStart="8dp"
             android:layout_gravity="center_vertical|start" />
     </LinearLayout>
 
