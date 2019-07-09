@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import androidx.multidex.MultiDex;
 import android.util.DisplayMetrics;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.instacart.library.truetime.TrueTime;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.ios.IosEmojiProvider;
@@ -28,6 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ar.codeslu.plax.LockScreen;
+import ar.codeslu.plax.MainActivity;
+import ar.codeslu.plax.auth.Login;
 import ar.codeslu.plax.db.TinyDB;
 import in.myinnos.customfontlibrary.TypefaceUtil;
 
@@ -57,12 +59,11 @@ public class AppBack extends Application {
         super.onCreate();
         //gettime
         new InitTrueTimeAsyncTask().execute();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 //Emoji init
         EmojiManager.install(new IosEmojiProvider());
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
-
         //notif counter
         settings = getSharedPreferences("Setting", MODE_PRIVATE);
         editor = settings.edit();
@@ -81,6 +82,7 @@ public class AppBack extends Application {
             //lock screen
             lockscreen(shared().getBoolean("lock", false));
         }
+
     }
 
 

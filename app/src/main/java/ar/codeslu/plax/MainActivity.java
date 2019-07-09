@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 
 import androidx.core.app.ActivityCompat;
@@ -21,13 +22,16 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -119,8 +124,8 @@ public class MainActivity extends AppCompatActivity
         Global.mainActivity = this;
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
-        if(mAuth.getCurrentUser() != null)
-        checkData();
+        if (mAuth.getCurrentUser() != null)
+            checkData();
 
         //app global
         appback = (AppBack) getApplication();
@@ -141,8 +146,8 @@ public class MainActivity extends AppCompatActivity
         } catch (NullPointerException e) {
             //nothing
         }
-         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-         toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         toggle.setDrawerArrowDrawable(new BadgedDrawerArrowDrawable(MainActivity.this));
@@ -177,8 +182,8 @@ public class MainActivity extends AppCompatActivity
             //main data init
             SharedPreferences preferences = getSharedPreferences("profile", Context.MODE_PRIVATE);
             String phone = preferences.getString("phone_" + mAuth.getCurrentUser().getUid(), null);
-            if(phone != null)
-            Global.phoneLocal = phone;
+            if (phone != null)
+                Global.phoneLocal = phone;
         }
 
         Global.currentpageid = "";
@@ -308,7 +313,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_blocked) {
 
         } else if (id == R.id.nav_setting) {
-            startActivity(new Intent(MainActivity.this,Setting.class));
+            startActivity(new Intent(MainActivity.this, Setting.class));
 
         } else if (id == R.id.nav_share) {
 
@@ -329,7 +334,7 @@ public class MainActivity extends AppCompatActivity
                     //nothing
                 }
                 mAuth.signOut();
-                startActivity(new Intent(MainActivity.this,Login.class));
+                startActivity(new Intent(MainActivity.this, Login.class));
                 finish();
             } else
                 Toast.makeText(appback, R.string.check_int, Toast.LENGTH_SHORT).show();
@@ -433,7 +438,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         Global.currentactivity = this;
-        if(mAuth.getCurrentUser() != null)
+        if (mAuth.getCurrentUser() != null)
             checkData();
         AppBack myApp = (AppBack) this.getApplication();
         if (myApp.wasInBackground) {
@@ -511,7 +516,7 @@ public class MainActivity extends AppCompatActivity
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
-        UploadTask uploadTask =  riversRef.putBytes(thumbData);
+        UploadTask uploadTask = riversRef.putBytes(thumbData);
 
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -600,11 +605,34 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateTokens() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = database.getReference(Global.tokens);
-        Tokens tk = new Tokens(FirebaseInstanceId.getInstance().getToken());
-        tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(tk);
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (task.isSuccessful()) {
+                            String token = task.getResult().getToken();
+                            if(token != null)
+                            {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("tokens", token);
+                                DatabaseReference mToken = FirebaseDatabase.getInstance().getReference(Global.tokens);
+                                mToken.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                });
+                            }
+
+                        }
+
+
+                    }
+                });
+
+
     }
+
     private void checkData() {
         mData.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -627,7 +655,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
 
 
 }

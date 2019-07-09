@@ -125,7 +125,7 @@ public class OutcomeHolder
         autoLinkTextView.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
         autoLinkTextView.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
         if (message.getText() != null) {
-            autoLinkTextView.setAutoLinkText(message.getText().toLowerCase());
+            autoLinkTextView.setAutoLinkText(message.getText());
             autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
                 @Override
                 public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {

@@ -15,8 +15,9 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import android.view.View;
 
+import android.util.Log;
+import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -66,9 +68,16 @@ public class FCMR extends FirebaseMessagingService {
     //firebase
     FirebaseAuth mAuth;
     @Override
-    public void onNewToken(String s) {
-        String refreshToken = FirebaseInstanceId.getInstance().getToken();
-        updateToken(refreshToken);
+    public void onNewToken(String token) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokens", token);
+        DatabaseReference mToken = FirebaseDatabase.getInstance().getReference(Global.tokens);
+        mToken.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -121,18 +130,24 @@ public class FCMR extends FirebaseMessagingService {
                         message = name + " " + prefixR + " , " + messageReact;
                 }
                 if (!id.equals("ID")) {
+                    Log.wtf("keyyy",id);
+
                     //check online
                     DatabaseReference chatDelete = FirebaseDatabase.getInstance().getReference(Global.CHATS);
-                    chatDelete.child(mAuth.getCurrentUser().getUid()).child(id).child(Global.Messages).child(Mid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    Query query = chatDelete.child(mAuth.getCurrentUser().getUid()).child(id).child(Global.Messages).child(Mid);
+                    query.keepSynced(true);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 OnlineGetter onlineGetter = dataSnapshot.getValue(OnlineGetter.class);
                                 deleted = onlineGetter.isDeleted();
+                                Log.wtf("keyyy",deleted+"");
 
                                 if (!deleted) {
                                     try {
                                         if (Global.currentactivity != null) {
+                                            Log.wtf("keyyy",online+"");
                                             online = true;
                                             tawgeh();
                                         } else {
@@ -190,6 +205,8 @@ public class FCMR extends FirebaseMessagingService {
             } else if (title.contains("videocall")) {
                 openvideocall();
             } else {
+                Log.wtf("ffff",oneTimeID+"");
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     CustomNotAPI25(message, name, oneTimeID);
                 else
@@ -523,16 +540,6 @@ public class FCMR extends FirebaseMessagingService {
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-    private void updateToken(String refreshToken) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = database.getReference(Global.tokens);
-        Tokens tk = new Tokens(refreshToken);
-        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-        {
-            tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(tk);
-
         }
     }
 }

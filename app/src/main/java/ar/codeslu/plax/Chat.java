@@ -2634,36 +2634,36 @@ public class Chat extends AppCompatActivity
     }
 
     private void sendMessNotify(final String message, final String Mid) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Global.tokens);
-        databaseReference.orderByKey().equalTo(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
+        mTokenget.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Tokens tokens = snapshot.getValue(Tokens.class);
-                    String Ptoken = FirebaseInstanceId.getInstance().getToken();
-                    Map<String, String> map = new HashMap<>();
-                    map.put("title", Ptoken + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid);
-                    map.put("message", message);
-                    Sender sender = new Sender(tokens.getTokens(), map);
-                    fcm.send(sender)
-                            .enqueue(new Callback<FCMresp>() {
-                                @Override
-                                public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
-                                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Tokens tokens = dataSnapshot.getValue(Tokens.class);
+                Map<String, String> map = new HashMap<>();
+                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid);
+                map.put("message", message);
+                Sender sender = new Sender(tokens.getTokens(), map);
+                fcm.send(sender)
+                        .enqueue(new Callback<FCMresp>() {
+                            @Override
+                            public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
+                            }
 
-                                @Override
-                                public void onFailure(Call<FCMresp> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<FCMresp> call, Throwable t) {
 
-                                }
-                            });
-                }
+                            }
+                        });
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
     }
 
     public void goP(View view) {

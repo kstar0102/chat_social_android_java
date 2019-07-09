@@ -381,6 +381,11 @@ public class Chats extends Fragment
     public void onNewMessage() {
         mAuth = FirebaseAuth.getInstance();
 
+        Log.wtf("keeyyy",Global.diaG.size()+"");
+        Log.wtf("keeyyy",Global.userrG.getId()+"");
+        Log.wtf("keeyyy",Global.Dialogid);
+
+
         boolean isUpdated = dialogsAdapter.updateDialogWithMessage(Global.diaG, Global.Dialogid, Global.userrG);
 
         if (!isUpdated) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
@@ -163,43 +164,43 @@ public class ReactCustom extends Dialog {
 
     }
 
+
     private void sendMessNotify(final String Mid) {
+
         final int[] i = {0};
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Global.tokens);
-        databaseReference.orderByKey().equalTo(friendid).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
+        mTokenget.child(friendid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Tokens tokens = snapshot.getValue(Tokens.class);
-                    String Ptoken = FirebaseInstanceId.getInstance().getToken();
-                    i[0]++;
-                    //encrypt
-                    reactMessage = encryption.encryptOrNull(reactMessage);
-                    messageReact = encryption.encryptOrNull(messageReact);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Tokens tokens = dataSnapshot.getValue(Tokens.class);
+                i[0]++;
+                //encrypt
+                reactMessage = encryption.encryptOrNull(reactMessage);
+                messageReact = encryption.encryptOrNull(messageReact);
 
-                    Map<String, String> map = new HashMap<>();
-                    map.put("title", Ptoken + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid + "#" + "react" + "#" + messageReact);
-                    map.put("message", reactMessage);
-                    Sender sender = new Sender(tokens.getTokens(), map);
-                    fcm.send(sender)
-                            .enqueue(new Callback<FCMresp>() {
-                                @Override
-                                public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
-                                }
+                Map<String, String> map = new HashMap<>();
+                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid + "#" + "react" + "#" + messageReact);
+                map.put("message", reactMessage);
+                Sender sender = new Sender(tokens.getTokens(), map);
+                fcm.send(sender)
+                        .enqueue(new Callback<FCMresp>() {
+                            @Override
+                            public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
+                            }
 
-                                @Override
-                                public void onFailure(Call<FCMresp> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<FCMresp> call, Throwable t) {
 
-                                }
-                            });
-                }
+                            }
+                        });
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
     }
 }

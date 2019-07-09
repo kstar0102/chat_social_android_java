@@ -183,7 +183,7 @@ public class IncomeHolder
         autoLinkTextView.addAutoLinkMode(
                 AutoLinkMode.MODE_PHONE,
                 AutoLinkMode.MODE_URL, AutoLinkMode.MODE_EMAIL);
-        autoLinkTextView.setAutoLinkText(message.getText().toLowerCase());
+        autoLinkTextView.setAutoLinkText(message.getText());
         autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
             @Override
             public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {

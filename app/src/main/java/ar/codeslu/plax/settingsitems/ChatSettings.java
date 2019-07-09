@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -42,13 +44,14 @@ import ar.codeslu.plax.global.Global;
 public class ChatSettings extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    TextView fontT,wallT;
-    JellyToggleButton soundT,enterT;
-    LinearLayout fontL,wallL;
+    TextView fontT, wallT;
+    JellyToggleButton soundT, enterT;
+    LinearLayout fontL, wallL;
     AlertDialog.Builder dialog;
-String choosenFont;
-ImageView delete;
+    String choosenFont;
+    ImageView delete;
     DatabaseReference mData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,85 +67,83 @@ ImageView delete;
         wallT = findViewById(R.id.wallT);
         fontL = findViewById(R.id.fontL);
         wallL = findViewById(R.id.wallL);
-delete = findViewById(R.id.delete);
-if(((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
-delete.setVisibility(View.GONE);
-else
-    delete.setVisibility(View.VISIBLE);
+        delete = findViewById(R.id.delete);
+        if (((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
+            delete.setVisibility(View.GONE);
+        else
+            delete.setVisibility(View.VISIBLE);
 
 
-delete.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        ((AppBack) getApplication()).editSharePrefs().putString("wall", "no");
-        ((AppBack) getApplication()).editSharePrefs().apply();
-        Toast.makeText(ChatSettings.this, getResources().getString(R.string.walldsucc), Toast.LENGTH_SHORT).show();
-        finish();
-    }
-});
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AppBack) getApplication()).editSharePrefs().putString("wall", "no");
+                ((AppBack) getApplication()).editSharePrefs().apply();
+                Toast.makeText(ChatSettings.this, getResources().getString(R.string.walldsucc), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         if (mAuth.getCurrentUser() != null) {
-            if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false))
-            {
+            if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
                 wallT.setTextColor(Global.conMain.getResources().getColor(R.color.black));
                 fontT.setTextColor(Global.conMain.getResources().getColor(R.color.black));
 
-            }
-            else
-            {
+            } else {
                 wallT.setTextColor(Global.conMain.getResources().getColor(R.color.white));
                 fontT.setTextColor(Global.conMain.getResources().getColor(R.color.white));
 
             }
 
         }
-fontL.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        dialog = new AlertDialog.Builder(ChatSettings.this);
-        dialog.setTitle(R.string.plz);
-        //checked item is the default checked item when dialog open
-        choosenFont = ((AppBack) getApplication()).shared().getString("font", "8");
-        dialog.setSingleChoiceItems(getResources().getStringArray(R.array.font), (Integer.parseInt(choosenFont)-1), new DialogInterface.OnClickListener() {
+        fontL.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //set choosen lang id
-                choosenFont = String.valueOf(i+1);
-                ((AppBack) getApplication()).changefont((Integer.parseInt(choosenFont)));
-                dialogInterface.dismiss();
-                Intent restart = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                restart.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                restart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(restart);
-                finish();
+            public void onClick(View v) {
+                dialog = new AlertDialog.Builder(ChatSettings.this);
+                dialog.setTitle(R.string.plz);
+                //checked item is the default checked item when dialog open
+                choosenFont = ((AppBack) getApplication()).shared().getString("font", "8");
+                dialog.setSingleChoiceItems(getResources().getStringArray(R.array.font), (Integer.parseInt(choosenFont) - 1), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //set choosen lang id
+                        choosenFont = String.valueOf(i + 1);
+                        ((AppBack) getApplication()).changefont((Integer.parseInt(choosenFont)));
+                        dialogInterface.dismiss();
+                        Intent restart = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+                        restart.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        restart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(restart);
+                        finish();
 
+                    }
+                });
+                dialog.show();
             }
         });
-        dialog.show();
-    }
-});
         wallL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Dexter.withActivity(ChatSettings.this)
-                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                         .withListener(new MultiplePermissionsListener() {
-                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                if(report.areAllPermissionsGranted())
-                                {
+                                if (report.areAllPermissionsGranted()) {
                                     CropImage.activity()
                                             .setGuidelines(CropImageView.Guidelines.ON)
                                             .start(ChatSettings.this);
-                                }
-                                else
+                                } else
                                     Toast.makeText(ChatSettings.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                             }
-                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                 token.continuePermissionRequest();
 
@@ -151,7 +152,7 @@ fontL.setOnClickListener(new View.OnClickListener() {
             }
         });
         //toggles
-soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", false));
+        soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", false));
         enterT.setChecked(((AppBack) getApplication()).shared().getBoolean("enter", false));
 
         soundT.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -178,17 +179,17 @@ soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", fals
         });
 
 
-
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-             Uri imgLocalpath = result.getUri();
-             Intent intent = new Intent(this,TestWall.class);
-             intent.putExtra("wall334",String.valueOf(imgLocalpath));
-             startActivity(intent);
+                Uri imgLocalpath = result.getUri();
+                Intent intent = new Intent(this, TestWall.class);
+                intent.putExtra("wall334", String.valueOf(imgLocalpath));
+                startActivity(intent);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -199,7 +200,7 @@ soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", fals
     @Override
     public void onResume() {
         super.onResume();
-        if(((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
+        if (((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
             delete.setVisibility(View.GONE);
         else
             delete.setVisibility(View.VISIBLE);
