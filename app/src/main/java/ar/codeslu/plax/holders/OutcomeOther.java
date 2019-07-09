@@ -269,7 +269,7 @@ public class OutcomeOther
                                                             @Override
                                                             public void onError(Error error) {
 
-                                                                Toast.makeText(Global.conA, error.isServerError()+"", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
 
                                                             }
 

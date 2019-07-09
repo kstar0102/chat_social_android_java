@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="end|center_vertical"
 android:orientation="horizontal"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="8dp"
             android:layout_height="wrap_content">
             <TextView
@@ -54,16 +55,16 @@ android:orientation="horizontal"
                 android:textColor="@color/dark_grey_two" />
             <ProgressBar
                 android:id="@+id/sending"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginStart="5dp"
                 android:indeterminate="true" />
 
             <ImageView
                 android:id="@+id/retry"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginStart="5dp"
                 android:src="@drawable/errorimg" />
