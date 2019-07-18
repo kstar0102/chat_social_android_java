@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="16dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginEnd="8dp"
     android:id="@+id/lyM"
-    android:layout_marginRight="16dp"
     android:layout_gravity="end|center_vertical"
     android:gravity="end|center_vertical"
     android:orientation="horizontal"
-    android:layout_marginTop="8dp">
+ >
     <ImageView
         android:id="@+id/react"
         android:layout_width="25dp"
@@ -34,12 +34,10 @@
             android:background="@drawable/shape_outcoming_message"
             android:orientation="vertical"
             android:paddingLeft="4dp">
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical">
-
                 <FrameLayout
                     android:id="@+id/play_pause_layout"
                     android:layout_width="50dp"
@@ -55,6 +53,12 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/play_w" />
+
+                    <ProgressBar
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:theme="@style/progressOut"
+                        android:id="@+id/wait"/>
 
                     <ImageView
                         android:id="@+id/pause"
@@ -77,8 +81,8 @@
                     <SeekBar
                         android:id="@+id/media_seekbar"
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content"
+                        android:theme="@style/SeekBarColorOut"
                         android:layout_gravity="center_vertical" />
 
                     <LinearLayout
@@ -221,8 +225,7 @@
         android:gravity="end|center_vertical"
         android:orientation="horizontal"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="2dp"
         android:layout_marginRight="5dp"
         android:layout_height="wrap_content">
 

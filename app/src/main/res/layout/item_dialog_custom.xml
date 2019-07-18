@@ -12,7 +12,7 @@
         android:background="?attr/selectableItemBackground">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@id/dialogAvatar"
+            android:id="@+id/dialogAvatarC"
             android:layout_width="@dimen/dialog_avatar_width"
             android:layout_height="@dimen/dialog_avatar_height"
             android:layout_margin="16dp"
@@ -30,9 +30,9 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="19dp"
-            android:layout_toEndOf="@id/dialogAvatar"
+            android:layout_toEndOf="@+id/dialogAvatarC"
             android:layout_toLeftOf="@id/dialogDate"
-            android:layout_toRightOf="@id/dialogAvatar"
+            android:layout_toRightOf="@+id/dialogAvatarC"
             android:layout_toStartOf="@id/dialogDate"
             android:ellipsize="end"
             android:fontFamily="@string/font_fontFamily_medium"
@@ -58,11 +58,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="7dp"
-            android:layout_toEndOf="@id/dialogAvatar"
-            android:layout_toRightOf="@id/dialogAvatar">
+            android:layout_toEndOf="@+id/dialogAvatarC"
+            android:layout_toRightOf="@+id/dialogAvatarC">
 
             <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@id/dialogLastMessageUserAvatar"
+                android:id="@+id/dialogLastMessageUserAvatarC"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="7dp"
@@ -81,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/dialogLastMessageUserAvatar"
-                android:layout_toRightOf="@id/dialogLastMessageUserAvatar"
+                android:layout_toEndOf="@+id/dialogLastMessageUserAvatarC"
+                android:layout_toRightOf="@+id/dialogLastMessageUserAvatarC"
                 android:ellipsize="end"
                 android:gravity="top"
                 android:maxLines="1"/>
@@ -93,9 +93,9 @@
             android:id="@id/dialogUnreadBubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/dialogAvatar"
-            android:layout_alignRight="@id/dialogAvatar"
-            android:layout_alignTop="@id/dialogAvatar"
+            android:layout_alignEnd="@+id/dialogAvatarC"
+            android:layout_alignRight="@+id/dialogAvatarC"
+            android:layout_alignTop="@+id/dialogAvatarC"
             android:layout_marginEnd="-5dp"
             android:layout_marginRight="-5dp"
             android:layout_marginTop="-5dp"

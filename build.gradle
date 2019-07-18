@@ -24,6 +24,9 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/samanjafaridotir/easyCountDownTimerTextview'
         }
+        maven {
+            url 'https://dl.bintray.com/farhanahmed95/maven/'
+        }
     }
 }
 

@@ -33,6 +33,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".settingsitems.NotifSetting"
+            android:label="@string/title_activity_notif_setting"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".story.Stories"
             android:label="@string/title_activity_stories"
             android:parentActivityName=".MainActivity"
@@ -122,9 +126,6 @@
             android:name=".Map"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map" />
-        <activity
-            android:name="com.github.bkhezry.extrawebview.ItemActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".mediachat.VideoA"
             android:configChanges="keyboardHidden|orientation|screenSize"

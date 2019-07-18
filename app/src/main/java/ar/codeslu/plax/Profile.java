@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.vanniktech.emoji.EmojiTextView;
@@ -70,7 +73,14 @@ public class Profile extends AppCompatActivity {
         Global.currentactivity = this;
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
-
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         try {
             if (getIntent() != null)
                 id = getIntent().getExtras().getString("idP");
@@ -83,7 +93,9 @@ public class Profile extends AppCompatActivity {
 
 
         if (Global.check_int(Profile.this)) {
-            mData.child(id).addValueEventListener(new ValueEventListener() {
+            Query query = mData.child(id);
+            query.keepSynced(true);
+            query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {

@@ -343,6 +343,18 @@ public class TinyDB {
     	}
     	return objects;
     }
+    public ArrayList<MessageIn> getListRetry(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<MessageIn> objects =  new ArrayList<MessageIn>();
+
+        for(String jObjString : objStrings){
+            MessageIn value  = gson.fromJson(jObjString,  MessageIn.class);
+            objects.add(value);
+        }
+        return objects;
+    }
 
     public ArrayList<UserIn> getListDialog(String key){
         Gson gson = new Gson();
@@ -514,6 +526,15 @@ public class TinyDB {
     	putListString(key, objStrings);
     }
 
+    public void putListRetry(String key, ArrayList<MessageIn> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(MessageIn obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
     public void putListDialog(String key, ArrayList<UserIn> objArray){
         checkForNullKey(key);
         Gson gson = new Gson();

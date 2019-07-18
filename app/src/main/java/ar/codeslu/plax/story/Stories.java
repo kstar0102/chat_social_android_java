@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,7 +42,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-import com.instacart.library.truetime.TrueTime;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -50,13 +50,16 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.stfalcon.chatkit.me.UserIn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.Chat;
 import ar.codeslu.plax.Contacts;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.adapters.StoryAdapter;
+import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.GetTime;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.CountryToPhonePrefix;
@@ -76,6 +79,7 @@ public class Stories extends AppCompatActivity {
     //Firebase
     FirebaseAuth mAuth;
     DatabaseReference myData, mUserDB, mOtherData;
+
 
     //vars
     ArrayList<StoryModel> myS, otherS;
@@ -121,7 +125,14 @@ public class Stories extends AppCompatActivity {
         mOtherData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
         mUserDB.keepSynced(true);
-
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
 
 
         Dexter.withActivity(Stories.this)
@@ -372,6 +383,29 @@ public class Stories extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Global.currentactivity = this;
+        AppBack myApp = (AppBack) this.getApplication();
+        if (myApp.wasInBackground) {
+            //init data
+            Map<String, Object> map = new HashMap<>();
+            map.put(Global.Online, true);
+            myData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
+        }
+
+        myApp.stopActivityTransitionTimer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AppBack) this.getApplication()).startActivityTransitionTimer();
     }
 
 }

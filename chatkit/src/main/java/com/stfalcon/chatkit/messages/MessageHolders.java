@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -573,6 +574,8 @@ public class MessageHolders {
         if (item instanceof IMessage) {
             ((MessageHolders.BaseMessageViewHolder) holder).isSelected = isSelected;
             ((MessageHolders.BaseMessageViewHolder) holder).imageLoader = imageLoader;
+            holder.itemView.setFocusableInTouchMode(false);
+            holder.itemView.setFocusable(false);
             holder.itemView.setOnLongClickListener(onMessageLongClickListener);
             holder.itemView.setOnClickListener(onMessageClickListener);
 
@@ -879,6 +882,7 @@ public class MessageHolders {
         @Override
         public void onBind(MESSAGE message) {
             super.onBind(message);
+            Log.wtf("keyyy",message.getImageUrl());
             if (image != null && imageLoader != null) {
                 imageLoader.loadImage(image, message.getImageUrl(), getPayloadForImageLoader(message));
             }

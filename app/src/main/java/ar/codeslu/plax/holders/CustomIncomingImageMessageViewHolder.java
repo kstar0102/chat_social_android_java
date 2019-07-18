@@ -18,6 +18,8 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.messages.MessageHolders;
 
 import java.text.DateFormat;
@@ -38,6 +40,7 @@ public class CustomIncomingImageMessageViewHolder
         extends MessageHolders.IncomingImageMessageViewHolder<Message> {
 
     private View onlineIndicator;
+    RoundedImageView userava;
 
     public CustomIncomingImageMessageViewHolder(View itemView, Object payload) {
         super(itemView, payload);
@@ -46,6 +49,22 @@ public class CustomIncomingImageMessageViewHolder
     @Override
     public void onBind(final Message message) {
         super.onBind(message);
+        userava = itemView.findViewById(R.id.messageUserAvatarC);
+        if (String.valueOf(Global.currAva).equals("no")) {
+            Picasso.get()
+                    .load(R.drawable.profile)
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        } else {
+            Picasso.get()
+                    .load(Global.currAva)
+                    .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        }
+
+
+
         //react
         ImageView react = itemView.findViewById(R.id.react);
 

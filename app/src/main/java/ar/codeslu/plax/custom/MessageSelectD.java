@@ -18,23 +18,30 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.instacart.library.truetime.TrueTime;
 import com.stfalcon.chatkit.me.Message;
+import com.stfalcon.chatkit.me.MessageIn;
+import com.stfalcon.chatkit.me.UserIn;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.datasetters.MessageData;
+import ar.codeslu.plax.fragments.Chats;
+import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.GetTime;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.Tokens;
@@ -57,7 +64,7 @@ public class MessageSelectD extends Dialog {
 
     private Activity c;
     public Dialog d;
-    private Button copy, delete, deleteall;
+    private Button copy, delete, deleteall,retry;
     // private boolean deleted;
     private String messId, friendid, messagetxt, type;
     public long time;
@@ -75,7 +82,7 @@ public class MessageSelectD extends Dialog {
     Map<String, Object> map;
     Map<String, Object> mapd;
     LinearLayout dialogM;
-
+//indicate 1 other // 0 me
     public MessageSelectD(Activity a, Message message, String friendid, int indicat, int position) {
         super(a);
         // TODO Auto-generated constructor stub
@@ -93,6 +100,7 @@ public class MessageSelectD extends Dialog {
         setContentView(R.layout.select_dialog);
         copy = findViewById(R.id.copy);
         delete = findViewById(R.id.delete);
+        retry = findViewById(R.id.retry);
         deleteall = findViewById(R.id.deleteall);
         dialogM = findViewById(R.id.dialogM);
         if (Global.DARKSTATE)
@@ -108,29 +116,40 @@ public class MessageSelectD extends Dialog {
         time = message.getCreatedAt().getTime();
         deleted = message.isDeleted();
 
+        retry.setVisibility(View.GONE);
+
         //encryption
         byte[] iv = new byte[16];
         encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
-        if (!type.equals("text"))
+        if (!type.equals("text") || deleted)
             copy.setVisibility(View.GONE);
+
+        if (message.getStatus().equals(".."))
+            delete.setVisibility(View.GONE);
+        else if(message.getStatus().equals("X"))
+        {
+            retry.setVisibility(View.VISIBLE);
+            delete.setVisibility(View.VISIBLE);
+        }
+
 
         if (!Global.check_int(Global.conA)) {
             delete.setVisibility(View.GONE);
             deleteall.setVisibility(View.GONE);
+            retry.setVisibility(View.GONE);
+
         } else {
             deleteall.setVisibility(View.GONE);
-
             FirebaseFunctions.getInstance().getHttpsCallable("getTime")
                     .call().addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                 @Override
                 public void onSuccess(HttpsCallableResult httpsCallableResult) {
                     long now = (long) httpsCallableResult.getData();
                     int hours = (int) TimeUnit.MILLISECONDS.toHours(now - time);
-                    if (hours >= 24)
+                    if (hours >= 24 || indicat != 0|| message.getStatus().equals("..")||message.getStatus().equals("X")||deleted)
                         deleteall.setVisibility(View.GONE);
                     else
                         deleteall.setVisibility(View.VISIBLE);
-
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -141,25 +160,10 @@ public class MessageSelectD extends Dialog {
                 }
             });
 
-            if (deleted) {
-                deleteall.setVisibility(View.GONE);
-                copy.setVisibility(View.GONE);
 
-            }
 
-            if (indicat != 0) {
-                delete.setVisibility(View.GONE);
-                deleteall.setVisibility(View.GONE);
-            }
         }
-        if (indicat != 0) {
-            delete.setVisibility(View.GONE);
-            deleteall.setVisibility(View.GONE);
-        }
-        if (message.getStatus().equals("..") || message.getStatus().equals("X")) {
-            delete.setVisibility(View.GONE);
-            deleteall.setVisibility(View.GONE);
-        }
+
 
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,6 +242,16 @@ public class MessageSelectD extends Dialog {
                 dismiss();
             }
         });
+
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Global.conA, c.getString(R.string.we_will_soon), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
 
     private void kamelDelete() {
@@ -312,4 +326,75 @@ public class MessageSelectD extends Dialog {
             }
         });
     }
+
+//    public void sendText()
+//    {
+//            editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
+//            editor.apply();
+//            Global.yourM = false;
+//            encrypM = String.valueOf(input[0]).trim();
+//            encrypM = encryption.encryptOrNull(encrypM);
+//            currTime = ServerValue.TIMESTAMP;
+//            messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+//            //send owner data to friend
+//            mAuth = FirebaseAuth.getInstance();
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("avatar",Global.avaLocal);
+//            map.put("name",Global.nameLocal);
+//            map.put("nameL",Global.nameLocal);
+//            map.put("phone",Global.phoneLocal);
+//            map.put("id", mAuth.getCurrentUser().getUid());
+//            map.put("screen", Global.myscreen);
+//            map.put("lastmessage", encrypM);
+//            map.put("lastsender", mAuth.getCurrentUser().getUid());
+//            map.put("lastsenderava",Global.avaLocal);
+//            map.put("messDate", currTime);
+//
+//            //local message
+//            messagesAdapter.clear();
+//            messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+//            try {
+//                Global.messG.add(messageLocal);
+//                //local store
+//                ((AppBack) getApplication()).setchatsdb(friendId);
+//            } catch (NullPointerException e) {
+//                Global.messG = new ArrayList<>();
+//                Global.messG.add(messageLocal);
+//                //local store
+//                ((AppBack) getApplication()).setchatsdb(friendId);
+//            }
+//
+//            //update last message if dialog exist
+//            Chats chat = new Chats();
+//            //update dialog if not exist
+//            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0, Global.currscreen);
+//            ArrayList<UserIn> tempoo = new ArrayList<>();
+//            tempoo.clear();
+//            tempoo.add(dialog);
+//            Global.userrG = dialog;
+//            Global.Dialogonelist = tempoo;
+//            Global.Dialogid = friendId;
+//            Global.DialogM = messageLocal;
+//            //    ((AppBack) getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
+//            chat.onNewMessage();
+//
+//
+//            messagesAdapter.addToEnd(MessageData.getMessages(), true);
+//            messagesAdapter.notifyDataSetChanged();
+//            messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+//            ///////
+//
+//            mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void aVoid) {
+//                    sendM();
+//                }
+//            });
+//       
+//    }
+
+
+
+
+
 }

@@ -3,6 +3,7 @@ package ar.codeslu.plax.global;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -15,6 +16,7 @@ import com.stfalcon.chatkit.me.UserIn;
 
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMclient;
+import nl.changer.audiowife.AudioWife;
 
 /**
  * Created by Java_Dude on 10/17/2018.
@@ -56,6 +58,8 @@ public class Global {
     public static boolean DARKSTATE = false;
     public static boolean local_on = true;
     public static boolean yourM = true;
+public  static ArrayList<AudioWife> audiolist;
+    public  static ArrayList<String> btnid;
 
 
     //local vars (my data)
@@ -65,6 +69,9 @@ public class Global {
     public static String idLocal = "";
     public static String phoneLocal = "";
     public static ArrayList<MessageIn> messG;
+    public static ArrayList<MessageIn> retryM;
+    public static boolean myonstate;
+    public static boolean myscreen;
     public static ArrayList<UserIn> diaG;
     public static String currentpageid = "";
     public static Activity currentactivity;
@@ -90,12 +97,7 @@ public class Global {
     public static boolean currscreen;
     public static long currtime = 0;
 
-    //me
-    public static String myid = "";
-    public static String myava = "";
-    public static String myname = "";
-    public static boolean myonstate;
-    public static boolean myscreen;
+
 
     //dialog update message
     public static MessageIn DialogM;

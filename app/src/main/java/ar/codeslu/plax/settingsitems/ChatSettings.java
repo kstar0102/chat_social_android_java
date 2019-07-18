@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -60,7 +61,6 @@ public class ChatSettings extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
         soundT = findViewById(R.id.soundT);
         enterT = findViewById(R.id.enterT);
         fontT = findViewById(R.id.fontT);
@@ -68,6 +68,16 @@ public class ChatSettings extends AppCompatActivity {
         fontL = findViewById(R.id.fontL);
         wallL = findViewById(R.id.wallL);
         delete = findViewById(R.id.delete);
+        mAuth = FirebaseAuth.getInstance();
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
+
         if (((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
             delete.setVisibility(View.GONE);
         else
@@ -83,7 +93,7 @@ public class ChatSettings extends AppCompatActivity {
                 finish();
             }
         });
-        mAuth = FirebaseAuth.getInstance();
+
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {

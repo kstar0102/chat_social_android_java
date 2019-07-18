@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.codeslu.plax.Chat;
+import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
@@ -69,15 +70,22 @@ public class FCMR extends FirebaseMessagingService {
     FirebaseAuth mAuth;
     @Override
     public void onNewToken(String token) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("tokens", token);
-        DatabaseReference mToken = FirebaseDatabase.getInstance().getReference(Global.tokens);
-        mToken.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
+        try {
+            if (mAuth.getCurrentUser() != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("tokens", token);
+                DatabaseReference mToken = FirebaseDatabase.getInstance().getReference(Global.tokens);
+                mToken.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
 
+                    }
+                });
             }
-        });
+        }catch (NullPointerException e)
+        {
+
+        }
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -142,12 +150,9 @@ public class FCMR extends FirebaseMessagingService {
                             if (dataSnapshot.exists()) {
                                 OnlineGetter onlineGetter = dataSnapshot.getValue(OnlineGetter.class);
                                 deleted = onlineGetter.isDeleted();
-                                Log.wtf("keyyy",deleted+"");
-
                                 if (!deleted) {
                                     try {
                                         if (Global.currentactivity != null) {
-                                            Log.wtf("keyyy",online+"");
                                             online = true;
                                             tawgeh();
                                         } else {
@@ -189,10 +194,11 @@ public class FCMR extends FirebaseMessagingService {
 
     public void tawgeh() {
         //go activity
-        Intent intent = new Intent(this, Chat.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("id", id);
         intent.putExtra("ava", ava);
+        intent.putExtra("codetawgeh",1);
         stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intent);
         pIntent = PendingIntent.getActivity(this, 0, intent,

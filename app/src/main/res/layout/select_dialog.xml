@@ -20,8 +20,21 @@
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:text="@string/copy"
+            android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark2awy"
             android:background="@drawable/round_wire_g"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/retry"
+            android:layout_width="150dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark2awy"
+            android:background="@drawable/round_wire_r"
             android:textStyle="bold" />
 
         <Button
@@ -31,6 +44,7 @@
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:text="@string/delete_for_me"
+            android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark2awy"
             android:background="@drawable/round_wire_r"
             android:textStyle="bold" />
@@ -42,6 +56,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark2awy"
             android:background="@drawable/round_wire_r"
+            android:textAllCaps="false"
             android:text="@string/delete_for_all"
             android:textStyle="bold" />
     </LinearLayout>

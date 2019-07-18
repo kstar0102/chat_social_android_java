@@ -4,9 +4,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,17 +37,19 @@ import se.simbio.encryption.Encryption;
 public class LockScreen extends AppCompatActivity {
     //view
     PatternLockView mPatternLockView;
-     PatternLockViewListener mPatternLockViewListener;
-     ImageView profile_image;
-     Button clear,forgot;
+    PatternLockViewListener mPatternLockViewListener;
+    ImageView profile_image;
+    Button clear, forgot;
     //Firebase
     FirebaseAuth mAuth;
     DatabaseReference mData;
-//encrypt
-Encryption encryption;
+    //encrypt
+    Encryption encryption;
     //var
     int typeL; //0 is set //1 is get
     String pattren;
+    int num = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,14 @@ Encryption encryption;
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
 //encryption
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         //encryption
         byte[] iv = new byte[16];
         encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
@@ -72,9 +86,8 @@ Encryption encryption;
                     .into(profile_image);
         }
 
-        if(getIntent() != null)
-        {
-           typeL =  getIntent().getExtras().getInt("typeL");
+        if (getIntent() != null) {
+            typeL = getIntent().getExtras().getInt("typeL");
         }
 
         clear.setOnClickListener(new View.OnClickListener() {
@@ -94,40 +107,56 @@ Encryption encryption;
 
             @Override
             public void onComplete(List<PatternLockView.Dot> pattern) {
-                switch (typeL)
-                {
-                    case 0 :
+                switch (typeL) {
+                    case 0:
                         forgot.setVisibility(View.GONE);
                         mPatternLockView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
-                        pattren = encryption.encryptOrNull(PatternLockUtils.patternToString(mPatternLockView, pattern));
-                        ((AppBack) getApplication()).editSharePrefs().putString("lockP", pattren);
-                        ((AppBack) getApplication()).editSharePrefs().apply();
-                        mPatternLockView.clearPattern();
-                        ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", true);
-                        ((AppBack) getApplication()).editSharePrefs().apply();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LockScreen.this);
-                        builder.setMessage(R.string.chnge_pattern);
-                        builder.setTitle(R.string.patt_set);
-                        builder.setIcon(R.drawable.ic_lock_outline_black_24dp);
-                        builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
-                        });
-                        builder.show();
+                        num = PatternLockUtils.patternToString(mPatternLockView, pattern).length();
+
+                        if (num >= 4) {
+                            pattren = encryption.encryptOrNull(PatternLockUtils.patternToString(mPatternLockView, pattern));
+                            ((AppBack) getApplication()).editSharePrefs().putString("lockP", pattren);
+                            ((AppBack) getApplication()).editSharePrefs().apply();
+                            mPatternLockView.clearPattern();
+                            ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", true);
+                            ((AppBack) getApplication()).editSharePrefs().apply();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LockScreen.this);
+                            builder.setMessage(R.string.chnge_pattern);
+                            builder.setTitle(R.string.patt_set);
+                            builder.setIcon(R.drawable.ic_lock_outline_black_24dp);
+                            builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                            builder.show();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LockScreen.this);
+                            builder.setMessage(getString(R.string.patt_err_mess));
+                            builder.setTitle(getString(R.string.weak_pp));
+                            builder.setIcon(R.drawable.ic_lock_outline_black_24dp);
+                            builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    num = 0;
+                                    mPatternLockView.clearPattern();
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.show();
+                        }
+
                         break;
-                    case 1 :
+                    case 1:
                         forgot.setVisibility(View.VISIBLE);
-                        pattren =  encryption.decryptOrNull(((AppBack) getApplication()).shared().getString("lockP", "no"));
-                        if(pattren.equals(PatternLockUtils.patternToString(mPatternLockView, pattern)))
-                        {
+                        pattren = encryption.decryptOrNull(((AppBack) getApplication()).shared().getString("lockP", "no"));
+                        if (pattren.equals(PatternLockUtils.patternToString(mPatternLockView, pattern))) {
                             mPatternLockView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
                             mPatternLockView.clearPattern();
                             finish();
-                        }
-                        else
+                        } else
                             mPatternLockView.setViewMode(PatternLockView.PatternViewMode.WRONG);
 
 
@@ -186,6 +215,7 @@ Encryption encryption;
         });
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -212,8 +242,7 @@ Encryption encryption;
     public void onBackPressed() {
         super.onBackPressed();
         //lock screen
-        if(typeL == 1)
-        {
+        if (typeL == 1) {
             finish();
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }

@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +22,8 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.link.AutoLinkMode;
 import com.stfalcon.chatkit.link.AutoLinkOnClickListener;
 import com.stfalcon.chatkit.link.AutoLinkTextView;
@@ -46,6 +50,7 @@ public class IncomeHolder
         extends MessagesListAdapter.IncomingMessageViewHolder<Message> {
 
     AutoLinkTextView autoLinkTextView;
+    RoundedImageView userava;
 
     public IncomeHolder(View itemView, Object payload) {
         super(itemView);
@@ -54,6 +59,21 @@ public class IncomeHolder
     @Override
     public void onBind(final Message message) {
         super.onBind(message);
+
+
+         userava = itemView.findViewById(R.id.messageUserAvatarC);
+        if (String.valueOf(Global.currAva).equals("no")) {
+            Picasso.get()
+                    .load(R.drawable.profile)
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        } else {
+            Picasso.get()
+                    .load(Global.currAva)
+                    .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        }
         //react
         ImageView react = itemView.findViewById(R.id.react);
         if (message.isDeleted()) {

@@ -99,11 +99,34 @@ public class MessageData {
         return chats;
     }
 
+    public static Message getMessagesSingle(MessageIn mess) {
+        byte[] iv = new byte[16];
+        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+        Calendar calendar = Calendar.getInstance();
+        timeStamp = mess.getTime();
+        calendar.setTimeInMillis(timeStamp);
+        if (mess.getType().equals("text")) {
+            return getTextMessage(encryption.decryptOrNull(mess.getMessage()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+        } else if (mess.getType().equals("image")) {
+            return getImageMessage(encryption.decryptOrNull(mess.getLinkI()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+        } else if ( mess.getType().equals("voice")) {
+            return getVoiceMessage(encryption.decryptOrNull(mess.getLinkV()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+        } else if (mess.getType().equals("file")) {
+            return getFileMessage(encryption.decryptOrNull(mess.getLinkF()), mess.getFilename(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+        } else if (mess.getType().equals("video")) {
+            return getVideoMessage(encryption.decryptOrNull(mess.getLinkVideo()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.getThumb(), mess.isDeleted());
+        } else if (mess.getType().equals("map")) {
+            return getLocationMessage(encryption.decryptOrNull(mess.getLocation()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+        }
+
+        return null;
+    }
+
     private static UserIn getUser(String id) {
 
         if (id.equals(FirebaseAuth.getInstance().getUid())) {
             return new UserIn(
-                    id, Global.myname, Global.myava,Global.myscreen);
+                    id, Global.nameLocal, Global.avaLocal,Global.myscreen);
         } else {
             return new UserIn(
                     id, Global.currname, Global.currAva,Global.currscreen);

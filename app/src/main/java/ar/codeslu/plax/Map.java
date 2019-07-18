@@ -39,6 +39,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         Global.currentactivity = this;
         mAuth = FirebaseAuth.getInstance();
+
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         if (getIntent() != null) {
             Intent intent = getIntent();

@@ -4,7 +4,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -46,6 +49,15 @@ public class SecuSetting extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mchat = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
+        lockB.setVisibility(View.GONE);
 
         //set data
         if(((AppBack) getApplication()).shared().getBoolean("lock", false))
@@ -68,12 +80,22 @@ public class SecuSetting extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
         if (isChecked) {
             lockB.setVisibility(View.VISIBLE);
-            ((AppBack) getApplication()).lockscreenE();
+            lockT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (buttonView.isChecked())
+                    ((AppBack) getApplication()).lockscreenE();
+
+                }
+            });
+
+
         } else {
             lockB.setVisibility(View.GONE);
             ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", false);
             ((AppBack) getApplication()).editSharePrefs().apply();
         }
+        clicked = false;
     }
 
         });
@@ -153,12 +175,6 @@ public class SecuSetting extends AppCompatActivity {
             }
         });
 
-        lockT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clicked = true;
-            }
-        });
 
         lockB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +206,20 @@ public class SecuSetting extends AppCompatActivity {
         }
 
         myApp.stopActivityTransitionTimer();
+
+        //set data
+        if(((AppBack) getApplication()).shared().getBoolean("lock", false))
+        {
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
+            lockT.setChecked(true);
+            lockB.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            lockT.setChecked(false);
+            lockB.setVisibility(View.GONE);
+        }
     }
 
     @Override

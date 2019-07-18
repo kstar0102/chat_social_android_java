@@ -96,24 +96,16 @@ public class Chats extends Fragment
         dialogs = new ArrayList<>();
         //chat screen list
         dialogsList = (DialogsList) view.findViewById(R.id.dialogsList);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url, Object payload) {
-                if (String.valueOf(url).equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.profile)
-                            .error(R.drawable.errorimg)
-                            .into(imageView);
-                } else {
-                    Picasso.get()
-                            .load(url)
-                            .error(R.drawable.errorimg)
-                            .into(imageView);
-                }
+
             }
         };
-        mAuth = FirebaseAuth.getInstance();
-
         if (mAuth.getCurrentUser() != null)
             getChats();
 
@@ -150,7 +142,6 @@ public class Chats extends Fragment
         //getride of old data
         if(mAuth.getCurrentUser() != null)
         ((AppBack) Global.mainActivity.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
-
         mData = FirebaseDatabase.getInstance().getReference(Global.CHATS).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Query query = mData.orderByChild("messDate");
         query.keepSynced(true);
@@ -199,7 +190,6 @@ public class Chats extends Fragment
                         }
                         //update the list
                         dialogsAdapter.clear();
-
                         dialogsAdapter.setItems(DialogData.getDialogs());
                         dialogsAdapter.notifyDataSetChanged();
                     }
@@ -212,6 +202,13 @@ public class Chats extends Fragment
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 UserIn chats = dataSnapshot.getValue(UserIn.class);
                 String tempID ="";
+
+//                int indexx = dialogsAdapter.halbine(Global.diaG, chats.getId());
+//
+//                Global.diaG.get(indexx).set;
+
+
+
                 try {
                     if(Global.yourM)
                      tempID = chats.getLastsender();
@@ -301,29 +298,6 @@ public class Chats extends Fragment
         });
 
 
-//        query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    if (userList.size() != 0)
-//                        userList.clear();
-//                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-//                        UserIn author = childSnapshot.getValue(UserIn.class);
-//                        userList.add(author);
-//                    }
-//                    Collections.reverse(userList);
-//                    Global.userG = userList;
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 
 
@@ -381,11 +355,7 @@ public class Chats extends Fragment
     public void onNewMessage() {
         mAuth = FirebaseAuth.getInstance();
 
-        Log.wtf("keeyyy",Global.diaG.size()+"");
-        Log.wtf("keeyyy",Global.userrG.getId()+"");
-        Log.wtf("keeyyy",Global.Dialogid);
-
-
+            ((AppBack) Global.mainActivity.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
         boolean isUpdated = dialogsAdapter.updateDialogWithMessage(Global.diaG, Global.Dialogid, Global.userrG);
 
         if (!isUpdated) {

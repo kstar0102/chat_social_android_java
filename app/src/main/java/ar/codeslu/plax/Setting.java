@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
@@ -26,6 +27,7 @@ import ar.codeslu.plax.adapters.SettingAdapter;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.settings.SettingList;
 import ar.codeslu.plax.settingsitems.ChatSettings;
+import ar.codeslu.plax.settingsitems.NotifSetting;
 import ar.codeslu.plax.settingsitems.SecuSetting;
 
 public class Setting extends AppCompatActivity {
@@ -58,6 +60,14 @@ public class Setting extends AppCompatActivity {
         //firebase init
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         //arrays
         list = new ArrayList<>();
         langcodesA = new ArrayList<>();
@@ -88,6 +98,7 @@ public class Setting extends AppCompatActivity {
                         break;
                     //notification settings
                     case 2:
+                        startActivity(new Intent(Setting.this, NotifSetting.class));
                         break;
                     //change lang
                     case 3:

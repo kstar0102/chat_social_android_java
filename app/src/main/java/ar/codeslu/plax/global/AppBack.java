@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.instacart.library.truetime.TrueTime;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.ios.IosEmojiProvider;
 
@@ -58,8 +57,8 @@ public class AppBack extends Application {
     public void onCreate() {
         super.onCreate();
         //gettime
-        new InitTrueTimeAsyncTask().execute();
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 //Emoji init
         EmojiManager.install(new IosEmojiProvider());
         mAuth = FirebaseAuth.getInstance();
@@ -179,21 +178,7 @@ public class AppBack extends Application {
         this.wasInBackground = false;
     }
 
-    public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        protected Void doInBackground(Void... params) {
-            try {
-                TrueTime.build()
-                        //.withSharedPreferences(SampleActivity.this)
-                        .withNtpHost("time.google.com")
-                        .withLoggingEnabled(false)
-                        .withConnectionTimeout(3_1428)
-                        .initialize();
-            } catch (IOException e) {
-            }
-            return null;
-        }
-    }
 
 
 
@@ -229,6 +214,17 @@ public class AppBack extends Application {
     {
         Global.messG = tinydb.getListChats(mAuth.getCurrentUser().getUid() + "/" + friendId);
     }
+
+
+    public void setRetry(String friendId)
+    {
+        tinydb.putListRetry(mAuth.getCurrentUser().getUid() + "R" + friendId, Global.retryM);
+    }
+    public void getRetry(String friendId)
+    {
+        Global.retryM = tinydb.getListRetry(mAuth.getCurrentUser().getUid() + "R" + friendId);
+    }
+
 
     public void setdialogdb(String userId)
     {

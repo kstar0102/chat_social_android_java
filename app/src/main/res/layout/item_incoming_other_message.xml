@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginStart="8dp"
     android:id="@+id/lyM"
     android:orientation="vertical"
-    android:layout_marginTop="8dp">
+>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@id/messageUserAvatar"
+            android:id="@+id/messageUserAvatarC"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="start|bottom"
@@ -58,6 +58,11 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/play_b" />
+                    <ProgressBar
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:theme="@style/progressIn"
+                        android:id="@+id/wait"/>
 
                     <ImageView
                         android:id="@+id/pause"
@@ -80,7 +85,7 @@
                     <SeekBar
                         android:id="@+id/media_seekbar"
                         android:layout_width="match_parent"
-
+                        android:theme="@style/SeekBarColorIn"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical" />
 
@@ -235,7 +240,6 @@
         android:textColor="@color/white"
         android:textSize="15sp"
         android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

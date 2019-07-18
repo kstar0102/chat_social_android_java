@@ -145,20 +145,38 @@ public class ReactCustom extends Dialog {
         if (Global.check_int(Global.conA)) {
             final Map<String, Object> map = new HashMap<>();
             map.put("react", reactF);
-            mData.child(friendid).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).child(Mid)
+            mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(Mid)
                     .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(Mid)
-                            .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    mData.child(friendid).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).child(Mid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            if (!reactF.equals("no"))
-                                sendMessNotify(Mid);
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                mData.child(friendid).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).child(Mid)
+                                        .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        if (!reactF.equals("no"))
+                                            sendMessNotify(Mid);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
+
+
+
+
+
                 }
             });
+
         } else
             Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
 

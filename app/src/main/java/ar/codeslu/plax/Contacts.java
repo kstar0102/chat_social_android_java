@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -96,7 +98,14 @@ public class Contacts extends AppCompatActivity {
         //custom recyclerview
         mUserList.setIndexBarTextColor(R.color.white);
         mUserList.setIndexBarColor(R.color.colorPrimaryDark2awy);
-
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         //Actionbar init
         toolbar = (Toolbar) findViewById(R.id.search_toolbar);
         toolbar.setPadding(0, 0, 0, 0);

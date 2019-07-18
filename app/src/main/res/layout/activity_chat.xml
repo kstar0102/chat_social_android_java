@@ -36,7 +36,6 @@
         android:id="@+id/overdark"
         android:background="@drawable/image_visivility"
         />
-
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
         android:layout_marginBottom="45dp"
@@ -162,7 +161,7 @@
         android:layout_gravity="center_vertical"/>
     <com.vanniktech.emoji.EmojiEditText
         android:id="@+id/messageInput"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

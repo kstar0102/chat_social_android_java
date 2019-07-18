@@ -16,10 +16,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -90,10 +92,27 @@ public class IncomeOther
     private TextView mRunTime, duration, mTotalTime;
     private RelativeLayout jzvdStd;
     private RoundedImageView image, map;
+    RoundedImageView userava;
+    private String btnid;
+    private ProgressBar wait;
 
     @Override
     public void onBind(final Message message) {
         super.onBind(message);
+        userava = itemView.findViewById(R.id.messageUserAvatarC);
+        if (String.valueOf(Global.currAva).equals("no")) {
+            Picasso.get()
+                    .load(R.drawable.profile)
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        } else {
+            Picasso.get()
+                    .load(Global.currAva)
+                    .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                    .error(R.drawable.errorimg)
+                    .into(userava);
+        }
+
         //react
         ImageView react = itemView.findViewById(R.id.react);
         if (message.isDeleted()) {
@@ -180,6 +199,7 @@ public class IncomeOther
         jzvdStd = (RelativeLayout) itemView.findViewById(R.id.videoView);
         image = itemView.findViewById(R.id.image);
         map = itemView.findViewById(R.id.map);
+        wait = itemView.findViewById(R.id.wait);
         bubble = itemView.findViewById(R.id.bubblely);
         duration = itemView.findViewById(R.id.recordduration);
 
@@ -229,6 +249,16 @@ public class IncomeOther
         lyFullV.setVisibility(View.GONE);
         map.setVisibility(View.GONE);
         if (message.getType().equals("voice")) {
+            lyFullV.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 1, getAdapterPosition());
+                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                    cdd.show();
+                    return true;
+                }
+            });
             map.setVisibility(View.GONE);
             bubble.setVisibility(View.GONE);
             Global.DEFAULT_STATUE = message.getVoice().getUrl();
@@ -238,20 +268,33 @@ public class IncomeOther
             duration.setVisibility(View.GONE);
             jzvdStd.setVisibility(View.GONE);
             mTotalTime.setText(message.getVoice().getDuration());
+            mPlayMedia.setTag(message.getMessid());
+            wait.setVisibility(View.GONE);
+
             //Shared pref
             preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
             editor = preferences.edit();
+            mPlayMedia.setFocusableInTouchMode(false);
+            mPlayMedia.setFocusable(false);
+            mPauseMedia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             mPlayMedia.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    btnid = (String) view.getTag();
                     Dexter.withActivity(Global.chatactivity)
-                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                             .withListener(new MultiplePermissionsListener() {
-                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                                    if(report.areAllPermissionsGranted())
-                                    {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                    if (report.areAllPermissionsGranted()) {
+                                        mPauseMedia.setVisibility(View.GONE);
+                                        mPlayMedia.setVisibility(View.GONE);
+                                        wait.setVisibility(View.VISIBLE);
                                         SharedPreferences preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
                                         String pathL = preferences.getString("voice_" + message.getVoice().getUrl(), "not");
                                         if (Global.check_int(Global.conA)) {
@@ -259,10 +302,10 @@ public class IncomeOther
                                             if (pathL.equals("not") || !file.exists()) {
                                                 String url = message.getVoice().getUrl();
                                                 pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-                                                        + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Voice Notes/";
-                                                fileName = message.getVoice().getUrl() + ".m4a";
+                                                        + "/" + Global.conA.getResources().getString(R.string.app_name) + "/VoiceNotes/";
+                                                fileName = System.currentTimeMillis()+"VN" + ".m4a";
                                                 final String finalPathL = pathL;
-                                                //     play(message.getVoice().getUrl());
+                                                Log.wtf("key","dd");
                                                 int downloadId = PRDownloader.download(url, pathL, fileName)
                                                         .build()
                                                         .setOnStartOrResumeListener(new OnStartOrResumeListener() {
@@ -299,6 +342,7 @@ public class IncomeOther
 
                                                             @Override
                                                             public void onError(Error error) {
+
                                                                 Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
 
                                                             }
@@ -310,6 +354,9 @@ public class IncomeOther
 
                                         } else {
                                             if (pathL.equals("not")) {
+                                                mPauseMedia.setVisibility(View.GONE);
+                                                mPlayMedia.setVisibility(View.VISIBLE);
+                                                wait.setVisibility(View.GONE);
                                                 Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
                                             } else {
                                                 play(pathL);
@@ -317,13 +364,10 @@ public class IncomeOther
                                         }
 
                                     }
-
-                                    else
-                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
-
-
                                 }
-                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                     token.continuePermissionRequest();
 
@@ -331,6 +375,7 @@ public class IncomeOther
                             }).check();
                 }
             });
+
         } else if (message.getType().equals("file")) {
             //dark init
             if (Global.DARKSTATE)
@@ -579,6 +624,8 @@ public class IncomeOther
     }
 
     private void play(String file) {
+
+
         Dexter.withActivity(Global.chatactivity)
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
@@ -586,18 +633,55 @@ public class IncomeOther
 
                         if(report.areAllPermissionsGranted())
                         {
-                            AudioWife.getInstance()
-                                    .init(Global.conA, Uri.parse(file))
+
+                            if(Global.audiolist.size() >0)
+                                Global.audiolist.get(Global.audiolist.size()-1).pause();
+
+
+                            AudioWife audioWife = new AudioWife();
+
+
+                            mPauseMedia.setVisibility(View.VISIBLE);
+                            mPlayMedia.setVisibility(View.GONE);
+                            wait.setVisibility(View.GONE);
+
+                            audioWife.init(Global.conA, Uri.parse(file))
                                     .setPlayView(mPlayMedia)
                                     .setPauseView(mPauseMedia)
                                     .setSeekBar(mMediaSeekBar)
                                     .setRuntimeView(mRunTime)
                                     .setTotalTimeView(mTotalTime);
-                            //   AudioWife.getInstance().release();
+                            Global.audiolist.add(audioWife);
+                            Global.btnid.add(btnid);
+                            Global.audiolist.get(Global.audiolist.size()-1).play();
+
+                            Global.audiolist.get(Global.audiolist.size()-1).addOnPlayClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String position = (String) v.getTag();
+
+
+                                    for(int i=0;i<Global.audiolist.size();i++)
+                                    {
+                                        if(i != Global.btnid.indexOf(position))
+                                            Global.audiolist.get(i).pause();
+                                    }
+
+
+
+                                }
+                            });
+
+
                         }
 
                         else
+                        {
                             Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+                            mPauseMedia.setVisibility(View.GONE);
+                            mPlayMedia.setVisibility(View.VISIBLE);
+                            wait.setVisibility(View.GONE);
+                        }
 
 
                     }
@@ -607,7 +691,6 @@ public class IncomeOther
 
                     }
                 }).check();
-
     }
 
     public static Bitmap framgetter(String videoPath) throws Throwable {

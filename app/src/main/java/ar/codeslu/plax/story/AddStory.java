@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.story.base.BaseActivity;
 import ar.codeslu.plax.story.filters.FilterListener;
@@ -542,6 +543,30 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
             super.onBackPressed();
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Global.currentactivity = this;
+        AppBack myApp = (AppBack) this.getApplication();
+        if (myApp.wasInBackground) {
+            //init data
+            Map<String, Object> map = new HashMap<>();
+            map.put(Global.Online, true);
+            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
+        }
+
+        myApp.stopActivityTransitionTimer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AppBack) this.getApplication()).startActivityTransitionTimer();
+    }
+
 }
 
 

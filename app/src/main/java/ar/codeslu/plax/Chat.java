@@ -6,22 +6,28 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 
+import com.farhanahmed.pico.Pico;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
@@ -30,17 +36,23 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +90,10 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import com.sandrios.sandriosCamera.internal.SandriosCamera;
+import com.sandrios.sandriosCamera.internal.configuration.CameraConfiguration;
+import com.sandrios.sandriosCamera.internal.ui.model.Media;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.me.UserIn;
@@ -135,7 +151,7 @@ import com.vincent.filepicker.activity.VideoPickActivity;
 import com.vincent.filepicker.filter.entity.AudioFile;
 import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.NormalFile;
-import com.vincent.filepicker.filter.entity.VideoFile;
+
 
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMresp;
@@ -177,13 +193,13 @@ public class Chat extends AppCompatActivity
     //view
     RelativeLayout ly;
     Encryption encryption;
-    ImageView add, send, emoji,bg;
+    ImageView add, send, emoji, bg;
     private RecordButton voice;
     RecordView recordView;
     EmojiEditText message;
-    private LinearLayout messagebox,overdark;
+    private LinearLayout messagebox, overdark;
     private boolean isHidden = true;
-    ImageButton btnI, btnV, btnVideo, btnF, btnL;
+    ImageButton btnI, btnV, btnVideo, btnF, btnL,btnS;
     private Bitmap compressedImageFile;
     //typing
     private Timer mActivityTransitionTimer;
@@ -249,6 +265,8 @@ public class Chat extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Global.audiolist = new ArrayList<>();
+        Global.btnid = new ArrayList<>();
         if (getIntent() != null) {
             Intent intent = getIntent();
             Global.currscreen = intent.getExtras().getBoolean("screen");
@@ -294,8 +312,8 @@ public class Chat extends AppCompatActivity
         overdark.setVisibility(View.GONE);
 
 //set Wallpapers
-        if(!((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
-           String pathW =  ((AppBack) getApplication()).shared().getString("wall", "no");
+        if (!((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
+            String pathW = ((AppBack) getApplication()).shared().getString("wall", "no");
             File f = new File(getRealPathFromURI(Uri.parse(pathW)));
             Drawable d = Drawable.createFromPath(f.getAbsolutePath());
             ly.setBackground(d);
@@ -323,6 +341,7 @@ public class Chat extends AppCompatActivity
         //menu inti
         btnI = cdd.findViewById(R.id.gallery);
         btnV = cdd.findViewById(R.id.audio);
+        btnS = cdd.findViewById(R.id.snap);
         btnL = cdd.findViewById(R.id.location);
         btnVideo = cdd.findViewById(R.id.video);
         btnF = cdd.findViewById(R.id.file);
@@ -330,6 +349,7 @@ public class Chat extends AppCompatActivity
         reactD = cdd.findViewById(R.id.reactD);
         cdd.dismiss();
         isHidden = true;
+
 
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
@@ -346,22 +366,20 @@ public class Chat extends AppCompatActivity
                 Global.DARKSTATE = false;
 //wallpaper
                 overdark.setVisibility(View.GONE);
-                if(((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
+                if (((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
                     bg.setImageResource(R.drawable.bg2);
 
 
-                else
-                {
-                   Uri pathW = Uri.parse(((AppBack) getApplication()).shared().getString("wall", "no"));
+                else {
+                    Uri pathW = Uri.parse(((AppBack) getApplication()).shared().getString("wall", "no"));
                     File f = new File(getRealPathFromURI(pathW));
-                    if(f.exists()) {
+                    if (f.exists()) {
                         Picasso.get()
                                 .load(pathW)
                                 .error(R.drawable.bg2)
                                 .into(bg);
 
-                    }
-                    else
+                    } else
                         bg.setImageResource(R.drawable.bg2);
 
 
@@ -379,23 +397,18 @@ public class Chat extends AppCompatActivity
                 Global.DARKSTATE = true;
                 //wallpaper
                 overdark.setVisibility(View.VISIBLE);
-                if(((AppBack) getApplication()).shared().getString("wall", "no").equals("no"))
-                {
+                if (((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
                     bg.setImageResource(R.drawable.bg3);
                     overdark.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     Uri pathW = Uri.parse(((AppBack) getApplication()).shared().getString("wall", "no"));
                     File f = new File(getRealPathFromURI(pathW));
-                    if(f.exists()) {
+                    if (f.exists()) {
                         Picasso.get()
                                 .load(pathW)
                                 .error(R.drawable.bg3)
                                 .into(bg);
-                          }
-                    else
-                    {
+                    } else {
                         bg.setImageResource(R.drawable.bg3);
                         overdark.setVisibility(View.GONE);
                     }
@@ -447,7 +460,9 @@ public class Chat extends AppCompatActivity
             Intent intent = getIntent();
             friendId = intent.getExtras().getString("id");
             Global.currentpageid = friendId;
-            mDataget.child(friendId).addValueEventListener(new ValueEventListener() {
+            Query query = mDataget.child(friendId);
+            query.keepSynced(true);
+            query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userData = dataSnapshot.getValue(senderD.class);
@@ -477,7 +492,7 @@ public class Chat extends AppCompatActivity
         SharedPreferences preferences = getSharedPreferences("messagebox", Context.MODE_PRIVATE);
         message.setText(preferences.getString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), ""));
         //toolbar data get
-        if (!Global.check_int(this)) {
+
             if (getIntent() != null) {
                 Intent intent = getIntent();
                 friendId = intent.getExtras().getString("id");
@@ -499,11 +514,14 @@ public class Chat extends AppCompatActivity
                         .into(ava);
             }
             state.setVisibility(View.GONE);
-        }
+
 
 //typing
+
         Global.currFid = friendId;
-        type.child(friendId).child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        Query query = type.child(friendId).child(mAuth.getCurrentUser().getUid());
+        query.keepSynced(true);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserIn userIn = dataSnapshot.getValue(UserIn.class);
@@ -529,7 +547,9 @@ public class Chat extends AppCompatActivity
 
         mylist = new ArrayList<>();
         myData = FirebaseDatabase.getInstance().getReference(Global.USERS);
-        myData.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query1 = myData.child(mAuth.getCurrentUser().getUid());
+        query1.keepSynced(true);
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 data = dataSnapshot.getValue(myD.class);
@@ -540,23 +560,25 @@ public class Chat extends AppCompatActivity
 
             }
         });
-        mdatagetme.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query2 = mdatagetme.child(mAuth.getCurrentUser().getUid());
+        query2.keepSynced(true);
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 myD userData = dataSnapshot.getValue(myD.class);
-                Global.myname = userData.getNameL();
-                Global.myava = userData.getAvatar();
+                Global.nameLocal = userData.getName();
+                Global.avaLocal = userData.getAvatar();
                 Global.myscreen = userData.isScreen();
                 Global.myonstate = userData.isOnstatue();
                 //attach menu photo
-                if (String.valueOf(Global.myava).equals("no")) {
+                if (String.valueOf(Global.avaLocal).equals("no")) {
                     Picasso.get()
                             .load(R.drawable.profile)
                             .error(R.drawable.errorimg)
                             .into(attachmenuP);
                 } else {
                     Picasso.get()
-                            .load(Global.myava)
+                            .load(Global.avaLocal)
                             .error(R.drawable.errorimg)
                             .into(attachmenuP);
                 }
@@ -567,6 +589,11 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
+
+
+
+
 
         downdown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -580,7 +607,7 @@ public class Chat extends AppCompatActivity
             messagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    if (!messagesList.canScrollVertically(1)) {
+                    if (!messagesList.canScrollVertically(5)) {
                         canScroll = false;
                         downdown.setVisibility(View.GONE);
                     } else {
@@ -709,15 +736,15 @@ public class Chat extends AppCompatActivity
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("avatar", data.getAvatar());
-                    map.put("name", data.getName());
-                    map.put("nameL", data.getNameL());
-                    map.put("phone", data.getPhone());
+                    map.put("avatar",Global.avaLocal);
+                    map.put("name",Global.nameLocal);
+                    map.put("nameL",Global.nameLocal);
+                    map.put("phone",Global.phoneLocal);
                     map.put("id", mAuth.getCurrentUser().getUid());
-                    map.put("screen",Global.myscreen);
+                    map.put("screen", Global.myscreen);
                     map.put("lastmessage", encrypM);
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", data.getAvatar());
+                    map.put("lastsenderava",Global.avaLocal);
                     map.put("messDate", currTime);
 
                     //local message
@@ -737,7 +764,7 @@ public class Chat extends AppCompatActivity
                     //update last message if dialog exist
                     Chats chat = new Chats();
                     //update dialog if not exist
-                    UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0,Global.currscreen);
+                    UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0, Global.currscreen);
                     ArrayList<UserIn> tempoo = new ArrayList<>();
                     tempoo.clear();
                     tempoo.add(dialog);
@@ -764,90 +791,87 @@ public class Chat extends AppCompatActivity
             }
         });
 
-        message.setOnKeyListener(new View.OnKeyListener()
-        {
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                if (event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    if(((AppBack) getApplication()).shared().getBoolean("enter", false)){
+        message.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (((AppBack) getApplication()).shared().getBoolean("enter", false)) {
                         switch (keyCode) {
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            input[0] = message.getText().toString();
-                            if (!input[0].trim().isEmpty()) {
-                                message.setText("");
-                                getSize();
-                                editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
-                                editor.apply();
-                                if (emojiPopup.isShowing()) {
-                                    emoji.setImageResource(R.drawable.ic_emoji);
-                                    emojiPopup.dismiss();
-                                }
-                                Global.yourM = false;
-                                encrypM = String.valueOf(input[0]).trim();
-                                encrypM = encryption.encryptOrNull(encrypM);
-                                currTime = ServerValue.TIMESTAMP;
-                                messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-                                //send owner data to friend
-                                mAuth = FirebaseAuth.getInstance();
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("avatar", data.getAvatar());
-                                map.put("name", data.getName());
-                                map.put("nameL", data.getNameL());
-                                map.put("phone", data.getPhone());
-                                map.put("id", mAuth.getCurrentUser().getUid());
-                                map.put("screen",Global.myscreen);
-                                map.put("lastmessage", encrypM);
-                                map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                map.put("lastsenderava", data.getAvatar());
-                                map.put("messDate", currTime);
-
-                                //local message
-                                messagesAdapter.clear();
-                                messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
-                                try {
-                                    Global.messG.add(messageLocal);
-                                    //local store
-                                    ((AppBack) getApplication()).setchatsdb(friendId);
-                                } catch (NullPointerException e) {
-                                    Global.messG = new ArrayList<>();
-                                    Global.messG.add(messageLocal);
-                                    //local store
-                                    ((AppBack) getApplication()).setchatsdb(friendId);
-                                }
-
-                                //update last message if dialog exist
-                                Chats chat = new Chats();
-                                //update dialog if not exist
-                                UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0,Global.currscreen);
-                                ArrayList<UserIn> tempoo = new ArrayList<>();
-                                tempoo.clear();
-                                tempoo.add(dialog);
-                                Global.userrG = dialog;
-                                Global.Dialogonelist = tempoo;
-                                Global.Dialogid = friendId;
-                                Global.DialogM = messageLocal;
-                                chat.onNewMessage();
-
-
-                                messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                                messagesAdapter.notifyDataSetChanged();
-                                messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-                                ///////
-
-                                mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        sendM();
+                            case KeyEvent.KEYCODE_DPAD_CENTER:
+                            case KeyEvent.KEYCODE_ENTER:
+                                input[0] = message.getText().toString();
+                                if (!input[0].trim().isEmpty()) {
+                                    message.setText("");
+                                    getSize();
+                                    editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
+                                    editor.apply();
+                                    if (emojiPopup.isShowing()) {
+                                        emoji.setImageResource(R.drawable.ic_emoji);
+                                        emojiPopup.dismiss();
                                     }
-                                });
-                            } else
-                                Snackbar.make(ly, R.string.empty_mess, Snackbar.LENGTH_SHORT).show();
-                            return true;
-                        default:
-                            break;
-                    }
+                                    Global.yourM = false;
+                                    encrypM = String.valueOf(input[0]).trim();
+                                    encrypM = encryption.encryptOrNull(encrypM);
+                                    currTime = ServerValue.TIMESTAMP;
+                                    messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+                                    //send owner data to friend
+                                    mAuth = FirebaseAuth.getInstance();
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("avatar",Global.avaLocal);
+                                    map.put("name",Global.nameLocal);
+                                    map.put("nameL",Global.nameLocal);
+                                    map.put("phone",Global.phoneLocal);
+                                    map.put("id", mAuth.getCurrentUser().getUid());
+                                    map.put("screen", Global.myscreen);
+                                    map.put("lastmessage", encrypM);
+                                    map.put("lastsender", mAuth.getCurrentUser().getUid());
+                                    map.put("lastsenderava",Global.avaLocal);
+                                    map.put("messDate", currTime);
+
+                                    //local message
+                                    messagesAdapter.clear();
+                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+                                    try {
+                                        Global.messG.add(messageLocal);
+                                        //local store
+                                        ((AppBack) getApplication()).setchatsdb(friendId);
+                                    } catch (NullPointerException e) {
+                                        Global.messG = new ArrayList<>();
+                                        Global.messG.add(messageLocal);
+                                        //local store
+                                        ((AppBack) getApplication()).setchatsdb(friendId);
+                                    }
+
+                                    //update last message if dialog exist
+                                    Chats chat = new Chats();
+                                    //update dialog if not exist
+                                    UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0, Global.currscreen);
+                                    ArrayList<UserIn> tempoo = new ArrayList<>();
+                                    tempoo.clear();
+                                    tempoo.add(dialog);
+                                    Global.userrG = dialog;
+                                    Global.Dialogonelist = tempoo;
+                                    Global.Dialogid = friendId;
+                                    Global.DialogM = messageLocal;
+                                    chat.onNewMessage();
+
+
+                                    messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                                    messagesAdapter.notifyDataSetChanged();
+                                    messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+                                    ///////
+
+                                    mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            sendM();
+                                        }
+                                    });
+                                } else
+                                    Snackbar.make(ly, R.string.empty_mess, Snackbar.LENGTH_SHORT).show();
+                                return true;
+                            default:
+                                break;
+                        }
                     }
                 }
                 return false;
@@ -898,11 +922,9 @@ public class Chat extends AppCompatActivity
             public void onClick(View view) {
                 cdd.dismiss();
                 isHidden = true;
-                Intent intent2 = new Intent(Chat.this, VideoPickActivity.class);
-                intent2.putExtra(IS_NEED_CAMERA, true);
-                intent2.putExtra(Constant.MAX_NUMBER, Global.videoS);
-                intent2.putExtra(IS_NEED_FOLDER_LIST, true);
-                startActivityForResult(intent2, Constant.REQUEST_CODE_PICK_VIDEO);
+
+                Pico.openMultipleFiles(Chat.this, Pico.TYPE_VIDEO);
+
             }
         });
         btnV.setOnClickListener(new View.OnClickListener() {
@@ -915,6 +937,20 @@ public class Chat extends AppCompatActivity
                 intent3.putExtra(IS_NEED_FOLDER_LIST, true);
                 intent3.putExtra(Constant.MAX_NUMBER, Global.audioS);
                 startActivityForResult(intent3, Constant.REQUEST_CODE_PICK_AUDIO);
+            }
+        });
+        btnS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cdd.dismiss();
+                isHidden = true;
+                SandriosCamera
+                        .with()
+                        .setShowPicker(true)
+                        .setMediaAction(CameraConfiguration.MEDIA_QUALITY_MEDIUM)
+                        .setMediaAction(CameraConfiguration.MEDIA_ACTION_VIDEO)
+                        .enableImageCropping(true)
+                        .launchCamera(Chat.this);
             }
         });
         emoji.setOnClickListener(new View.OnClickListener() {
@@ -937,12 +973,12 @@ public class Chat extends AppCompatActivity
                 isHidden = true;
 
                 Dexter.withActivity(Chat.this)
-                        .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)
+                        .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
                         .withListener(new MultiplePermissionsListener() {
-                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                if(report.areAllPermissionsGranted())
-                                {
+                                if (report.areAllPermissionsGranted()) {
                                     // if we can't access the location yet
                                     if (!location.hasLocationEnabled()) {
                                         // ask the user to enable location access
@@ -957,15 +993,15 @@ public class Chat extends AppCompatActivity
                                         //send owner data to friend
                                         mAuth = FirebaseAuth.getInstance();
                                         Map<String, Object> map = new HashMap<>();
-                                        map.put("avatar", data.getAvatar());
-                                        map.put("name", data.getName());
-                                        map.put("nameL", data.getNameL());
-                                        map.put("phone", data.getPhone());
+                                        map.put("avatar",Global.avaLocal);
+                                        map.put("name",Global.nameLocal);
+                                        map.put("nameL",Global.nameLocal);
+                                        map.put("phone",Global.phoneLocal);
                                         map.put("id", mAuth.getCurrentUser().getUid());
-                                        map.put("screen",Global.myscreen);
+                                        map.put("screen", Global.myscreen);
                                         map.put("lastmessage", encrypMap);
                                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                        map.put("lastsenderava", data.getAvatar());
+                                        map.put("lastsenderava",Global.avaLocal);
                                         map.put("messDate", currTime);
                                         //local message
                                         messagesAdapter.clear();
@@ -983,7 +1019,7 @@ public class Chat extends AppCompatActivity
                                         //update last message if dialog exist
                                         Chats chat = new Chats();
                                         //update dialog if not exist
-                                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+                                        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.avaLocal, System.currentTimeMillis(), 0, Global.currscreen);
                                         ArrayList<UserIn> tempoo = new ArrayList<>();
                                         tempoo.clear();
                                         tempoo.add(dialog);
@@ -1004,13 +1040,14 @@ public class Chat extends AppCompatActivity
                                             }
                                         });
                                     }
-                                }
-                                else
+                                } else
                                     Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                             }
-                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                 token.continuePermissionRequest();
 
@@ -1042,24 +1079,25 @@ public class Chat extends AppCompatActivity
             public void onStart() {
 
                 Dexter.withActivity(Chat.this)
-                        .withPermissions(Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withPermissions(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                         .withListener(new MultiplePermissionsListener() {
-                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                if(report.areAllPermissionsGranted())
-                                {
+                                if (report.areAllPermissionsGranted()) {
                                     //Start Recording..
                                     recordView.setVisibility(View.VISIBLE);
                                     messagebox.setVisibility(View.GONE);
                                     add.setVisibility(View.GONE);
                                     startRecording();
-                                }
-                                else
+                                } else
                                     Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                             }
-                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                 token.continuePermissionRequest();
 
@@ -1089,9 +1127,12 @@ public class Chat extends AppCompatActivity
                         stopRecording(true);
                         Uri uri = Uri.parse("file://" + mOutputFile.getAbsolutePath());
                         setResult(Activity.RESULT_OK, new Intent().setData(uri));
+                        Log.wtf("keyyy","1122");
+
                         uploadV(uri, recordTime);
                     } catch (NullPointerException e) {
                         stopAT();
+
                     }
                 }
             }
@@ -1162,9 +1203,10 @@ public class Chat extends AppCompatActivity
         Dexter.withActivity(Chat.this)
                 .withPermissions(Manifest.permission.READ_CONTACTS)
                 .withListener(new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        if(report.areAllPermissionsGranted())
+                        if (report.areAllPermissionsGranted())
                             contactExists(Global.currphone);
 
                         else
@@ -1172,7 +1214,9 @@ public class Chat extends AppCompatActivity
 
 
                     }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         token.continuePermissionRequest();
 
@@ -1297,6 +1341,8 @@ public class Chat extends AppCompatActivity
                     }
                 });
         messagesList.setAdapter(messagesAdapter);
+        messagesList.setNestedScrollingEnabled(true);
+
     }
 
     private void sendM() {
@@ -1321,14 +1367,14 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypM);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
@@ -1377,20 +1423,21 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypMap);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
                         mData.child(mAuth.getCurrentUser().getUid()).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypMap, messidL);
 
                             }
                         })
@@ -1410,25 +1457,19 @@ public class Chat extends AppCompatActivity
         });
     }
 
-    private void checkFailedMessage() {
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < Global.messG.size(); i++) {
-                            //check all failed messages
-                            if (Global.messG.get(i).getStatue().equals(".."))
-                                Global.messG.get(i).setStatue("X");
-                        }
-                        messagesAdapter.clear();
-                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                        messagesAdapter.notifyDataSetChanged();
-                    }
-                }
-        );
-    }
+//    private void checkFailedMessage() {
+//        runOnUiThread(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }
+//        );
+//    }
 
     private void getChats() {
+
         final long[] keyOnce = {0};
         final int[] i = {0};
         final int[] onceOnce = {0};
@@ -1437,6 +1478,11 @@ public class Chat extends AppCompatActivity
         query = mData.child(mAuth.getCurrentUser().getUid()).child(friendId).child(Global.Messages).orderByChild("time");
         query.keepSynced(true);
         initAdapter();
+        //just init because of the first time offline started chat
+        messagesAdapter.clear();
+        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.notifyDataSetChanged();
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1448,6 +1494,15 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
+        if(!Global.check_int(Chat.this))
+        {
+            ((AppBack) getApplication()).getchatsdb(friendId);
+            //update the list
+            messagesAdapter.clear();
+            messagesAdapter.addToEnd(MessageData.getMessages(), true);
+            messagesAdapter.notifyDataSetChanged();
+        }
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -1465,20 +1520,22 @@ public class Chat extends AppCompatActivity
                         }
 
                     }
-
                     //check only in global list range
                     if (i[0] >= keyOnce[0] - 1) {
                         if (Global.check_int(Chat.this)) {
                             //local store
                             ((AppBack) getApplication()).setchatsdb(friendId);
                         }
-                        //update the list
-                        messagesAdapter.clear();
-                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                        messagesAdapter.notifyDataSetChanged();
-//check one time only on activity start
+
+                                //update the list
+                                messagesAdapter.clear();
+                                messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                                messagesAdapter.notifyDataSetChanged();
+                        messagesList.scrollBy(0,0);
+
+
+
                         if (onceOnce[0] == 0) {
-                            checkFailedMessage();
                             keyOnce[0]++;
                         }
                     }
@@ -1490,14 +1547,18 @@ public class Chat extends AppCompatActivity
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 MessageIn message = dataSnapshot.getValue(MessageIn.class);
-
+                if(messagesAdapter.halbine(Global.messG, message.getMessId()) != -1)
                 Global.messG.set(messagesAdapter.halbine(Global.messG, message.getMessId()), message);
 
                 //local store
                 ((AppBack) getApplication()).setchatsdb(friendId);
-                messagesAdapter.clear();
-                messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                messagesAdapter.notifyDataSetChanged();
+
+                        messagesAdapter.clear();
+                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                        messagesAdapter.notifyDataSetChanged();
+                        messagesList.scrollBy(0,0);
+
+
 
 
             }
@@ -1511,9 +1572,13 @@ public class Chat extends AppCompatActivity
 
                 //local store
                 ((AppBack) getApplication()).setchatsdb(friendId);
-                messagesAdapter.clear();
-                messagesAdapter.addToEnd(MessageData.getMessages(), true);
-                messagesAdapter.notifyDataSetChanged();
+
+                        messagesAdapter.clear();
+                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                        messagesAdapter.notifyDataSetChanged();
+                messagesList.scrollBy(0,0);
+
+
 
             }
 
@@ -1532,7 +1597,9 @@ public class Chat extends AppCompatActivity
 
 
     private void readM() {
-        mData.child(friendId).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query33 =  mData.child(friendId).child(mAuth.getCurrentUser().getUid()).child(Global.Messages);
+        query33.keepSynced(true);
+        query33.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -1624,21 +1691,19 @@ public class Chat extends AppCompatActivity
         Pix.start(Chat.this, options);
 
 
-
-
     }
 
-    public void uploadF(Uri linkL, final String filename,  String filett) {
+    public void uploadF(Uri linkL, final String filename, String filett) {
         //for local
         String fileL = filename;
 
         Dexter.withActivity(Chat.this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK)
                 .withListener(new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        if(report.areAllPermissionsGranted())
-                        {
+                        if (report.areAllPermissionsGranted()) {
                             filename.replace(" ", "_");
                             if (filett.contains("/xlsx")) {
                                 filetype = ".xlsx";
@@ -1665,9 +1730,7 @@ public class Chat extends AppCompatActivity
                                 filetype = ".txt";
                             } else if (filett.contains("/binary")) {
                                 filetype = "";
-                            }
-                            else
-                            {
+                            } else {
                                 filetype = filett;
                             }
                             //local message
@@ -1691,7 +1754,7 @@ public class Chat extends AppCompatActivity
                             //update dialog if not exist
                             encrypF = "File " + filename + filetype;
                             encrypF = encryption.encryptOrNull(encrypF);
-                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+                            UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.avaLocal, System.currentTimeMillis(), 0, Global.currscreen);
                             ArrayList<UserIn> tempoo = new ArrayList<>();
                             tempoo.clear();
                             tempoo.add(dialog);
@@ -1731,15 +1794,15 @@ public class Chat extends AppCompatActivity
                                         //send owner data to friend
                                         mAuth = FirebaseAuth.getInstance();
                                         Map<String, Object> map = new HashMap<>();
-                                        map.put("avatar", data.getAvatar());
-                                        map.put("name", data.getName());
-                                        map.put("nameL", data.getNameL());
-                                        map.put("phone", data.getPhone());
+                                        map.put("avatar",Global.avaLocal);
+                                        map.put("name",Global.nameLocal);
+                                        map.put("nameL",Global.nameLocal);
+                                        map.put("phone",Global.phoneLocal);
                                         map.put("id", mAuth.getCurrentUser().getUid());
-                                        map.put("screen",Global.myscreen);
+                                        map.put("screen", Global.myscreen);
                                         map.put("lastmessage", encrypF);
                                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                        map.put("lastsenderava", data.getAvatar());
+                                        map.put("lastsenderava",Global.avaLocal);
                                         map.put("messDate", currTime);
                                         mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -1759,19 +1822,19 @@ public class Chat extends AppCompatActivity
                                     }
                                 }
                             });
-                        }
-                        else
+                        } else
                             Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                     }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         token.continuePermissionRequest();
 
                     }
                 }).check();
-
 
 
     }
@@ -1797,7 +1860,7 @@ public class Chat extends AppCompatActivity
         //update dialog if not exist
         encrypV = "Voice " + getHumanTimeText(time);
         encrypV = encryption.encryptOrNull(encrypV);
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.avaLocal, System.currentTimeMillis(), 0, Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -1814,7 +1877,7 @@ public class Chat extends AppCompatActivity
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Audio/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + ".m4a");
-        UploadTask uploadTask =  riversRef.putFile(linkL);
+        UploadTask uploadTask = riversRef.putFile(linkL);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -1831,30 +1894,44 @@ public class Chat extends AppCompatActivity
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
-                    mOutputFile.delete();
+                    Log.wtf("keyyy",String.valueOf(downloadUrl));
+                    try
+                    {
+                        mOutputFile.delete();
+
+                    }
+                    catch (NullPointerException e)
+                    {
+
+                    }
                     message.setText("");
                     currTime = ServerValue.TIMESTAMP;
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("avatar", data.getAvatar());
-                    map.put("name", data.getName());
-                    map.put("nameL", data.getNameL());
-                    map.put("phone", data.getPhone());
+                    map.put("avatar",Global.avaLocal);
+                    map.put("name",Global.nameLocal);
+                    map.put("nameL",Global.nameLocal);
+                    map.put("phone",Global.phoneLocal);
                     map.put("id", mAuth.getCurrentUser().getUid());
-                    map.put("screen",Global.myscreen);
+                    map.put("screen", Global.myscreen);
                     map.put("lastmessage", encrypV);
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", data.getAvatar());
+                    map.put("lastsenderava",Global.avaLocal);
                     map.put("messDate", currTime);
                     mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Log.wtf("keyyy","kkkl");
+
                             sendVpre(String.valueOf(downloadUrl), time);
                         }
                     });
 
                 }
+                else
+                Log.wtf("keyyy",task.getException().getMessage());
+
             }
         });
 
@@ -1881,7 +1958,7 @@ public class Chat extends AppCompatActivity
         //update dialog if not exist
         encrypVideo = "Video " + getHumanTimeText(time);
         encrypVideo = encryption.encryptOrNull(encrypVideo);
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.avaLocal, System.currentTimeMillis(), 0, Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -1898,7 +1975,7 @@ public class Chat extends AppCompatActivity
         final String videoidtemp = System.currentTimeMillis() + "";
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Video/" + mAuth.getCurrentUser().getUid() + friendId + videoidtemp + ".mp4");
-        UploadTask uploadTask =  riversRef.putFile(linkL);
+        UploadTask uploadTask = riversRef.putFile(linkL);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -1920,15 +1997,15 @@ public class Chat extends AppCompatActivity
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("avatar", data.getAvatar());
-                    map.put("name", data.getName());
-                    map.put("nameL", data.getNameL());
-                    map.put("phone", data.getPhone());
+                    map.put("avatar",Global.avaLocal);
+                    map.put("name",Global.nameLocal);
+                    map.put("nameL",Global.nameLocal);
+                    map.put("phone",Global.phoneLocal);
                     map.put("id", mAuth.getCurrentUser().getUid());
-                    map.put("screen",Global.myscreen);
+                    map.put("screen", Global.myscreen);
                     map.put("lastmessage", encrypVideo);
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", data.getAvatar());
+                    map.put("lastsenderava",Global.avaLocal);
                     map.put("messDate", currTime);
                     mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -1939,7 +2016,7 @@ public class Chat extends AppCompatActivity
                             byte[] byteArray = bao.toByteArray();
                             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
                             StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Video/" + "Thumb/" + mAuth.getCurrentUser().getUid() + friendId + videoidtemp + ".png");
-                            UploadTask uploadTask =   riversRef.putBytes(byteArray);
+                            UploadTask uploadTask = riversRef.putBytes(byteArray);
 
                             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
@@ -1971,8 +2048,6 @@ public class Chat extends AppCompatActivity
         });
 
 
-
-
     }
 
     @Override
@@ -1990,14 +2065,6 @@ public class Chat extends AppCompatActivity
                         String path = list.get(i);
                         afterCompress(path);
                     }
-                }
-                break;
-            case Constant.REQUEST_CODE_PICK_VIDEO:
-                if (resultCode == RESULT_OK) {
-//                    ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
-//                    for (int i = 0; i < list.size(); i++) {
-//                        uploadVideo(Uri.parse("file:///" + list.get(i).getPath()), list.get(i).getDuration(), list.get(i).getPath());
-//                    }
                 }
                 break;
             case Constant.REQUEST_CODE_PICK_AUDIO:
@@ -2023,6 +2090,42 @@ public class Chat extends AppCompatActivity
                 }
                 break;
         }
+        Pico.onActivityResult(this,requestCode,resultCode,data,new Pico.onActivityResultHandler(){
+
+            @Override
+            public void onActivityResult(List<File> files) {
+                for (File file : files){
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(Chat.this, Uri.fromFile(file));
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long timeInMillisec = Long.parseLong(time );
+                    retriever.release();
+                    uploadVideo(Uri.parse("file:///" + file.getAbsolutePath()),timeInMillisec, file.getAbsolutePath());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Exception error) {
+
+            }
+        });
+        if (resultCode == Activity.RESULT_OK
+                && requestCode == SandriosCamera.RESULT_CODE
+                && data != null) {
+            if (data.getSerializableExtra(SandriosCamera.MEDIA) instanceof Media) {
+                Media media = (Media) data.getSerializableExtra(SandriosCamera.MEDIA);
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(Chat.this, Uri.parse(media.getPath()));
+                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long timeInMillisec = Long.parseLong(time );
+                retriever.release();
+                uploadVideo(Uri.parse("file:///" + media.getPath()),timeInMillisec, media.getPath());
+            }
+
+    }
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -2050,7 +2153,7 @@ public class Chat extends AppCompatActivity
         encrypI = "Image";
         encrypI = encryption.encryptOrNull(encrypI);
 
-        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.myava, System.currentTimeMillis(), 0,Global.currscreen);
+        UserIn dialog = new UserIn(Global.currname, Global.currstatue, Global.currAva, Global.currphone, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.avaLocal, System.currentTimeMillis(), 0, Global.currscreen);
         ArrayList<UserIn> tempoo = new ArrayList<>();
         tempoo.clear();
         tempoo.add(dialog);
@@ -2081,7 +2184,7 @@ public class Chat extends AppCompatActivity
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = mStorageRef.child(Global.Mess + "/" + mAuth.getCurrentUser().getUid() + "/Images/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + ".jpg");
-        UploadTask uploadTask =   riversRef.putBytes(thumbData);
+        UploadTask uploadTask = riversRef.putBytes(thumbData);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -2103,15 +2206,15 @@ public class Chat extends AppCompatActivity
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("avatar", data.getAvatar());
-                    map.put("name", data.getName());
-                    map.put("nameL", data.getNameL());
-                    map.put("phone", data.getPhone());
+                    map.put("avatar",Global.avaLocal);
+                    map.put("name",Global.nameLocal);
+                    map.put("nameL",Global.nameLocal);
+                    map.put("phone",Global.phoneLocal);
                     map.put("id", mAuth.getCurrentUser().getUid());
-                    map.put("screen",Global.myscreen);
+                    map.put("screen", Global.myscreen);
                     map.put("lastmessage", encrypI);
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", data.getAvatar());
+                    map.put("lastsenderava",Global.avaLocal);
                     map.put("messDate", currTime);
                     mData.child(friendId).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -2150,14 +2253,14 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypI);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
@@ -2220,14 +2323,14 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypF);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
@@ -2288,14 +2391,14 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypV);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
@@ -2343,14 +2446,14 @@ public class Chat extends AppCompatActivity
                         //send friend data to owner
                         mAuth = FirebaseAuth.getInstance();
                         Map<String, Object> map = new HashMap<>();
-                        map.put("avatar", userData.getAvatar());
-                        map.put("name", userData.getName());
-                        map.put("nameL", userData.getNameL());
-                        map.put("phone", userData.getPhone());
-                        map.put("screen",Global.currscreen);
+                        map.put("avatar",Global.currAva);
+                        map.put("name",Global.currname);
+                        map.put("nameL",Global.currname);
+                        map.put("phone",Global.currphone);
+                        map.put("screen", Global.currscreen);
                         map.put("lastmessage", encrypVideo);
                         map.put("lastsender", mAuth.getCurrentUser().getUid());
-                        map.put("lastsenderava", data.getAvatar());
+                        map.put("lastsenderava",Global.avaLocal);
                         map.put("messDate", currTime);
                         map.put("id", friendId);
                         //  ------------
@@ -2396,6 +2499,7 @@ public class Chat extends AppCompatActivity
             startAT();
             return true;
         } catch (Exception e) {
+            Log.wtf("keyyyy",e.getMessage());
             return false;
         }
     }
@@ -2413,8 +2517,7 @@ public class Chat extends AppCompatActivity
             }
         } catch (NullPointerException e) {
             stopAT();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             mOutputFile.delete();
             stopAT();
         }
@@ -2592,9 +2695,10 @@ public class Chat extends AppCompatActivity
         Dexter.withActivity(Chat.this)
                 .withPermissions(Manifest.permission.READ_CONTACTS)
                 .withListener(new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        if(report.areAllPermissionsGranted())
+                        if (report.areAllPermissionsGranted())
                             contactExists(Global.currphone);
 
                         else
@@ -2602,7 +2706,9 @@ public class Chat extends AppCompatActivity
 
 
                     }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         token.continuePermissionRequest();
 
@@ -2729,6 +2835,7 @@ public class Chat extends AppCompatActivity
             existlay.setVisibility(View.GONE);
 
     }
+
     private String getRealPathFromURI(Uri contentURI) {
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) {
@@ -2739,6 +2846,7 @@ public class Chat extends AppCompatActivity
             return cursor.getString(idx);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -2752,5 +2860,30 @@ public class Chat extends AppCompatActivity
                 return;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Global.btnid.clear();
+        Global.audiolist.clear();
+        for (int i = 0; i < Global.messG.size(); i++) {
+            //check all failed messages
+            if (Global.messG.get(i).getStatue().equals(".."))
+            {
+                //make it false
+                Global.messG.get(i).setStatue("X");
+                ((AppBack) getApplication()).setchatsdb(friendId);
+
+                //put to retry
+                ((AppBack) getApplication()).getRetry(friendId);
+                Global.messG.get(i).setStatue("..");
+                Global.retryM.add(Global.messG.get(i));
+                ((AppBack) getApplication()).setRetry(friendId);
+            }
+        }
+       messagesAdapter.clear();
+        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.notifyDataSetChanged();
+        super.onDestroy();
     }
 }

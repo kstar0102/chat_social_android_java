@@ -8,12 +8,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -52,6 +56,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +97,7 @@ public class OutcomeOther
     private LinearLayout lyFullV;
     private ImageView mPlayMedia;
     private ImageView mPauseMedia;
+    private ProgressBar wait;
     private SeekBar mMediaSeekBar;
     private TextView mRunTime;
     private TextView mTotalTime;
@@ -100,6 +106,8 @@ public class OutcomeOther
     Bitmap bmp = null;
     private ImageView retry;
     private ProgressBar sending;
+    private String btnid;
+
 
     @Override
     public void onBind(final Message message) {
@@ -149,19 +157,14 @@ public class OutcomeOther
         //retry adapt
         retry = itemView.findViewById(R.id.retry);
         sending = itemView.findViewById(R.id.sending);
-        if (message.getStatus().equals("X"))
-        {
+        if (message.getStatus().equals("X")) {
             retry.setVisibility(View.VISIBLE);
             sending.setVisibility(View.GONE);
 
-        }
-        else if(message.getStatus().equals(".."))
-        {
+        } else if (message.getStatus().equals("..")) {
             retry.setVisibility(View.GONE);
             sending.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             retry.setVisibility(View.GONE);
             sending.setVisibility(View.GONE);
         }
@@ -189,14 +192,26 @@ public class OutcomeOther
         map.getLayoutParams().height = imageheight;
 
 
-
         if (message.getType().equals("voice")) {
+            lyFullV.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
+                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                    cdd.show();
+                    return true;
+                }
+            });
+
+
             map.setVisibility(View.GONE);
             bubble.setVisibility(View.GONE);
             Global.DEFAULT_STATUE = message.getVoice().getUrl();
             bubble.setBackgroundResource(0);
             mPlayMedia = itemView.findViewById(R.id.play);
             mPauseMedia = itemView.findViewById(R.id.pause);
+            wait = itemView.findViewById(R.id.wait);
             mMediaSeekBar = (SeekBar) itemView.findViewById(R.id.media_seekbar);
             mRunTime = (TextView) itemView.findViewById(R.id.run_time);
             mTotalTime = (TextView) itemView.findViewById(R.id.total_time);
@@ -205,95 +220,112 @@ public class OutcomeOther
             duration.setVisibility(View.GONE);
             jzvdStd.setVisibility(View.GONE);
             mTotalTime.setText(message.getVoice().getDuration());
+            mPlayMedia.setTag(message.getMessid());
+            wait.setVisibility(View.GONE);
+
             //Shared pref
             preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
             editor = preferences.edit();
+            mPlayMedia.setFocusableInTouchMode(false);
+            mPlayMedia.setFocusable(false);
+            mPauseMedia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             mPlayMedia.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
-
+                    btnid = (String) view.getTag();
                     Dexter.withActivity(Global.chatactivity)
-                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                             .withListener(new MultiplePermissionsListener() {
-                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                    if (report.areAllPermissionsGranted()) {
+                                        if(!message.getStatus().equals(".."))
+                                        {
+                                            mPauseMedia.setVisibility(View.GONE);
+                                            mPlayMedia.setVisibility(View.GONE);
+                                            wait.setVisibility(View.VISIBLE);
+                                            SharedPreferences preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
+                                            String pathL = preferences.getString("voice_" + message.getVoice().getUrl(), "not");
+                                            if (Global.check_int(Global.conA)) {
+                                                File file = new File(pathL);
+                                                if (pathL.equals("not") || !file.exists()) {
+                                                    String url = message.getVoice().getUrl();
+                                                    pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                                                            + "/" + Global.conA.getResources().getString(R.string.app_name) + "/VoiceNotes/";
+                                                    fileName = System.currentTimeMillis()+"VN" + ".m4a";
+                                                    final String finalPathL = pathL;
+                                                    Log.wtf("key","dd");
+                                                    int downloadId = PRDownloader.download(url, pathL, fileName)
+                                                            .build()
+                                                            .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                                                                @Override
+                                                                public void onStartOrResume() {
 
-                                    if(report.areAllPermissionsGranted())
-                                    {
-                                        SharedPreferences preferences = Global.conA.getSharedPreferences("voice", Context.MODE_PRIVATE);
-                                        String pathL = preferences.getString("voice_" + message.getVoice().getUrl(), "not");
-                                        if (Global.check_int(Global.conA)) {
-                                            File file = new File(pathL);
-                                            if (pathL.equals("not") || !file.exists()) {
-                                                String url = message.getVoice().getUrl();
-                                                pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-                                                        + "/" + Global.conA.getResources().getString(R.string.app_name) + "/Voice Notes/";
-                                                fileName = message.getVoice().getUrl() + ".m4a";
-                                                final String finalPathL = pathL;
-                                                //     play(message.getVoice().getUrl());
-                                                int downloadId = PRDownloader.download(url, pathL, fileName)
-                                                        .build()
-                                                        .setOnStartOrResumeListener(new OnStartOrResumeListener() {
-                                                            @Override
-                                                            public void onStartOrResume() {
+                                                                }
+                                                            })
+                                                            .setOnPauseListener(new OnPauseListener() {
+                                                                @Override
+                                                                public void onPause() {
 
-                                                            }
-                                                        })
-                                                        .setOnPauseListener(new OnPauseListener() {
-                                                            @Override
-                                                            public void onPause() {
+                                                                }
+                                                            })
+                                                            .setOnCancelListener(new OnCancelListener() {
+                                                                @Override
+                                                                public void onCancel() {
 
-                                                            }
-                                                        })
-                                                        .setOnCancelListener(new OnCancelListener() {
-                                                            @Override
-                                                            public void onCancel() {
+                                                                }
+                                                            })
+                                                            .setOnProgressListener(new OnProgressListener() {
+                                                                @Override
+                                                                public void onProgress(Progress progress) {
 
-                                                            }
-                                                        })
-                                                        .setOnProgressListener(new OnProgressListener() {
-                                                            @Override
-                                                            public void onProgress(Progress progress) {
+                                                                }
+                                                            })
+                                                            .start(new OnDownloadListener() {
+                                                                @Override
+                                                                public void onDownloadComplete() {
+                                                                    editor.putString("voice_" + message.getVoice().getUrl(), finalPathL + fileName);
+                                                                    editor.apply();
+                                                                    play(finalPathL + fileName);
+                                                                }
 
-                                                            }
-                                                        })
-                                                        .start(new OnDownloadListener() {
-                                                            @Override
-                                                            public void onDownloadComplete() {
-                                                                editor.putString("voice_" + message.getVoice().getUrl(), finalPathL + fileName);
-                                                                editor.apply();
-                                                                play(finalPathL + fileName);
-                                                            }
+                                                                @Override
+                                                                public void onError(Error error) {
 
-                                                            @Override
-                                                            public void onError(Error error) {
+                                                                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
 
-                                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
+                                                                }
 
-                                                            }
+                                                            });
+                                                } else {
+                                                    play(pathL);
+                                                }
 
-                                                        });
                                             } else {
-                                                play(pathL);
-                                            }
-
-                                        } else {
-                                            if (pathL.equals("not")) {
-                                                Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                play(pathL);
+                                                if (pathL.equals("not")) {
+                                                    mPauseMedia.setVisibility(View.GONE);
+                                                    mPlayMedia.setVisibility(View.VISIBLE);
+                                                    wait.setVisibility(View.GONE);
+                                                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.cannot_play), Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    play(pathL);
+                                                }
                                             }
                                         }
+                                        else
+                                            Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.pleasew8), Toast.LENGTH_SHORT).show();
+
 
                                     }
-
-                                    else
-                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
-
-
                                 }
-                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                     token.continuePermissionRequest();
 
@@ -329,12 +361,12 @@ public class OutcomeOther
                 public void onClick(View view) {
 
                     Dexter.withActivity(Global.chatactivity)
-                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                             .withListener(new MultiplePermissionsListener() {
-                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                    if(report.areAllPermissionsGranted())
-                                    {
+                                    if (report.areAllPermissionsGranted()) {
                                         SharedPreferences preferences = Global.conA.getSharedPreferences("file", Context.MODE_PRIVATE);
                                         String pathL = preferences.getString("file_" + message.getFile().getUrl(), "not");
                                         if (Global.check_int(Global.conA)) {
@@ -401,14 +433,14 @@ public class OutcomeOther
                                                 //  here is open local
                                             }
                                         }
-                                    }
-
-                                    else
+                                    } else
                                         Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                                 }
-                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                     token.continuePermissionRequest();
 
@@ -420,7 +452,7 @@ public class OutcomeOther
             bubble.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0,getAdapterPosition());
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
                     cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
                     cdd.show();
@@ -446,12 +478,12 @@ public class OutcomeOther
                 public void onClick(View view) {
 
                     Dexter.withActivity(Global.chatactivity)
-                            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK)
                             .withListener(new MultiplePermissionsListener() {
-                                @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                    if(report.areAllPermissionsGranted())
-                                    {
+                                    if (report.areAllPermissionsGranted()) {
                                         Intent intent = new Intent(Global.conA, VideoA.class);
                                         intent.putExtra("Mid", message.getMessid());
                                         intent.putExtra("ava", Global.avaLocal);
@@ -460,14 +492,14 @@ public class OutcomeOther
                                         intent.putExtra("from", message.getId());
                                         intent.putExtra("duration", message.getVideo().getDuration());
                                         Global.conA.startActivity(intent);
-                                    }
-
-                                    else
+                                    } else
                                         Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                                 }
-                                @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                     token.continuePermissionRequest();
 
@@ -479,7 +511,7 @@ public class OutcomeOther
             image.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0,getAdapterPosition());
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
                     cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
                     cdd.show();
@@ -498,7 +530,7 @@ public class OutcomeOther
             lat = location[0];
             lng = location[1];
 
-              url = "https://maps.googleapis.com/maps/api/staticmap?center=" + Double.parseDouble(lat) + "," + Double.parseDouble(lng) + "&zoom=15&size=300x300&maptype=roadmap&format=png&visual_refresh=true&key=" + Global.conA.getResources().getString(R.string.google_maps_key) + "&signature=BASE64_SIGNATURE";
+            url = "https://maps.googleapis.com/maps/api/staticmap?center=" + Double.parseDouble(lat) + "," + Double.parseDouble(lng) + "&zoom=15&size=300x300&maptype=roadmap&format=png&visual_refresh=true&key=" + Global.conA.getResources().getString(R.string.google_maps_key) + "&signature=BASE64_SIGNATURE";
             Picasso.get()
                     .load(url)
                     .error(R.drawable.errorimg)
@@ -522,7 +554,7 @@ public class OutcomeOther
             map.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0,getAdapterPosition());
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
                     cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
                     cdd.show();
@@ -544,18 +576,55 @@ public class OutcomeOther
 
                         if(report.areAllPermissionsGranted())
                         {
-                            AudioWife.getInstance()
-                                    .init(Global.conA, Uri.parse(file))
+
+                         if(Global.audiolist.size() >0)
+                             Global.audiolist.get(Global.audiolist.size()-1).pause();
+
+
+                            AudioWife audioWife = new AudioWife();
+
+
+                            mPauseMedia.setVisibility(View.VISIBLE);
+                            mPlayMedia.setVisibility(View.GONE);
+                            wait.setVisibility(View.GONE);
+
+                            audioWife.init(Global.conA, Uri.parse(file))
                                     .setPlayView(mPlayMedia)
                                     .setPauseView(mPauseMedia)
                                     .setSeekBar(mMediaSeekBar)
                                     .setRuntimeView(mRunTime)
                                     .setTotalTimeView(mTotalTime);
-                            //   AudioWife.getInstance().release();
+                            Global.audiolist.add(audioWife);
+                            Global.btnid.add(btnid);
+                            Global.audiolist.get(Global.audiolist.size()-1).play();
+
+                            Global.audiolist.get(Global.audiolist.size()-1).addOnPlayClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String position = (String) v.getTag();
+
+
+                                            for(int i=0;i<Global.audiolist.size();i++)
+                                               {
+                                                   if(i != Global.btnid.indexOf(position))
+                                                   Global.audiolist.get(i).pause();
+                                               }
+
+
+
+                                        }
+                                    });
+
+
                         }
 
                         else
+                        {
                             Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+                            mPauseMedia.setVisibility(View.GONE);
+                            mPlayMedia.setVisibility(View.VISIBLE);
+                            wait.setVisibility(View.GONE);
+                        }
 
 
                     }

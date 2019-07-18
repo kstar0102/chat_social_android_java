@@ -1,8 +1,11 @@
 package ar.codeslu.plax.holders;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import ar.codeslu.plax.R;
@@ -18,6 +21,8 @@ import ar.codeslu.plax.models.DefaultDialog;
 public class DialogHolder extends DialogsListAdapter.DialogViewHolder<DefaultDialog> {
 
     FirebaseAuth mAuth;
+    RoundedImageView ava, avaSmall;
+
     public DialogHolder(View itemView) {
         super(itemView);
     }
@@ -26,6 +31,60 @@ public class DialogHolder extends DialogsListAdapter.DialogViewHolder<DefaultDia
     public void onBind(DefaultDialog dialog) {
         super.onBind(dialog);
         mAuth = FirebaseAuth.getInstance();
+        ava = itemView.findViewById(R.id.dialogAvatarC);
+        avaSmall = itemView.findViewById(R.id.dialogLastMessageUserAvatarC);
+
+        try {
+
+
+            if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
+                Picasso.get()
+                        .load(R.drawable.profile)
+                        .error(R.drawable.errorimg)
+                        .into(ava);
+            } else {
+                Picasso.get()
+                        .load(dialog.getDialogPhoto())
+                        .error(R.drawable.errorimg)
+                        .into(ava);
+            }
+
+
+            if (dialog.getLastMessage().getId().equals(mAuth.getCurrentUser().getUid())) {
+                if (Global.avaLocal.equals("no")) {
+                    Picasso.get()
+                            .load(R.drawable.profile)
+                            .error(R.drawable.errorimg)
+                            .into(avaSmall);
+                } else {
+                    Picasso.get()
+                            .load(Global.avaLocal)
+                            .error(R.drawable.errorimg)
+                            .into(avaSmall);
+                }
+
+            } else {
+
+                if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
+                    Picasso.get()
+                            .load(R.drawable.profile)
+                            .error(R.drawable.errorimg)
+                            .into(avaSmall);
+                } else {
+                    Picasso.get()
+                            .load(dialog.getDialogPhoto())
+                            .error(R.drawable.errorimg)
+                            .into(avaSmall);
+                }
+
+            }
+
+
+        } catch (NullPointerException e) {
+
+        }
+
+
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {

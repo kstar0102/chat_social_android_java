@@ -99,6 +99,8 @@
     <string name="setting">Setting</string>
     <string name="others">Others</string>
     <string name="share">Share</string>
+    <string name="pleasew8">Please wait until the voice note upload</string>
+
     <string name="sign_out">Sign out</string>
     <string name="title_activity_setting">Setting</string>
     <string name="about">About</string>
@@ -456,5 +458,17 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="ups">Uploading</string>
     <string name="me">Me</string>
     <string name="acc_per">Please accept the permission</string>
+    <string name="patt_err_mess">Please join 4 points or more together to make your data more safe :)</string>
+    <string name="weak_pp">Weak pattern</string>
+    <string name="title_activity_notif_setting">NotifSetting</string>
+    <string name="defaultt">Default</string>
+    <string name="blue">Blue</string>
+    <string name="notification_sound">Notification Sound</string>
+    <string name="led_color">LED color</string>
+    <string name="slec">Select Notification</string>
+    <string name="set">Set notification</string>
+    <string name="retry">Retry</string>
+    <string name="we_will_soon">We will add this feature soon</string>
+    <string name="snap">Snap</string>
 
 </resources>

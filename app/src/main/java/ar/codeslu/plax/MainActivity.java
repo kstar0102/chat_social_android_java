@@ -23,6 +23,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.material.navigation.NavigationView;
 
@@ -46,6 +49,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -279,6 +283,26 @@ public class MainActivity extends AppCompatActivity
             getshared();
         //online checker
         ((AppBack) this.getApplication()).startOnline();
+
+        try {
+            if(getIntent()!= null)
+            {
+                if(getIntent().getExtras().getInt("codetawgeh",0) == 1)
+                {
+                    Intent intent = new Intent(this, Chat.class);
+                    intent.putExtra("name", getIntent().getExtras().getString("name"));
+                    intent.putExtra("id",  getIntent().getExtras().getString("id"));
+                    intent.putExtra("ava",  getIntent().getExtras().getString("ava"));
+                    startActivity(intent);
+                }
+            }
+        }catch (NullPointerException e)
+        {
+
+        }
+
+
+
     }
 
     @Override
@@ -361,8 +385,9 @@ public class MainActivity extends AppCompatActivity
     public void sharedadv(boolean check) {
         if (check) {
             Global.idLocal = mAuth.getCurrentUser().getUid();
-
-            mData.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            Query query = mData.child(mAuth.getCurrentUser().getUid());
+            query.keepSynced(true);
+            query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -634,7 +659,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkData() {
-        mData.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = mData.child(mAuth.getCurrentUser().getUid());
+        query.keepSynced(true);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserData userData = dataSnapshot.getValue(UserData.class);
