@@ -5,21 +5,22 @@ package ar.codeslu.plax.lists;
  */
 
 public class UserData  {
-    String name,nameL, statue, avatar, phone, lastOn,id;
-    boolean onstatue,screen;
-    long time,timeC;
+    private  String name,nameL, statue, avatar, phone, lastOn,id;
+    private boolean online,screen;
+    private long time,timeC;
 
     public UserData() {
     }
 
-    public UserData(String id,String ava, String name,String statue, String phone,boolean online,boolean screen) {
-        this.nameL = name;
+    public UserData(String id,String ava, String nameL,String statue, String phone,boolean online,boolean screen,String name) {
+        this.nameL = nameL;
+        this.name = name;
         this.statue = statue;
         this.phone = phone;
         this.id = id;
         this.avatar = ava;
-        onstatue = online;
-        screen = screen;
+        this.online = online;
+        this.screen = screen;
 
     }
 
@@ -80,12 +81,12 @@ public class UserData  {
         this.id = id;
     }
 
-    public boolean isOnstatue() {
-        return onstatue;
+    public boolean isOnline() {
+        return online;
     }
 
-    public void setOnstatue(boolean onstatue) {
-        onstatue = onstatue;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public long getTime() {

@@ -5,24 +5,24 @@ package ar.codeslu.plax.lists;
  */
 
 public class OnlineGetter {
-    boolean onstatue,deleted;
+    boolean online,deleted;
     String statue;
 
     public OnlineGetter() {
     }
 
     public OnlineGetter(boolean onstatue, boolean deleted, String statue) {
-        onstatue = onstatue;
+        this.online = onstatue;
         this.deleted = deleted;
         this.statue = statue;
     }
 
-    public boolean isOnstatue() {
-        return onstatue;
+    public boolean isOnline() {
+        return online;
     }
 
-    public void setOnstatue(boolean onstatue) {
-        onstatue = onstatue;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public boolean isDeleted() {

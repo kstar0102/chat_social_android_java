@@ -14,6 +14,7 @@ import java.util.List;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
+import ar.codeslu.plax.lists.UserData;
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMclient;
 import nl.changer.audiowife.AudioWife;
@@ -38,7 +39,7 @@ public class Global {
     public final static String USERS = "Users";
     public final static String CHATS = "Chats";
     public final static String Phones = "Phones";
-    public final static String Online = "Onstatue";
+    public final static String Online = "online";
     public final static String avatar = "avatar";
     public final static String time = "time";
     public final static String Messages = "messages";
@@ -70,6 +71,7 @@ public  static ArrayList<AudioWife> audiolist;
     public static String phoneLocal = "";
     public static ArrayList<MessageIn> messG;
     public static ArrayList<MessageIn> retryM;
+    public static ArrayList<UserData> contactsG;
     public static boolean myonstate;
     public static boolean myscreen;
     public static ArrayList<UserIn> diaG;

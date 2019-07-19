@@ -6,23 +6,28 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +46,8 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiTextView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +76,7 @@ public class Contacts extends AppCompatActivity {
     FirebaseAuth mAuth;
     DatabaseReference mUserDB;
 
-    ArrayList<UserData> userList, contactList, searchL;
+    ArrayList<UserData> contactList, searchL;
     ArrayList<String> localContacts;
     int secN = 0;
     AlertDialog dialog;
@@ -78,6 +85,26 @@ public class Contacts extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        //loader
+        if (Global.DARKSTATE) {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(Contacts.this)
+                    .setMessage(R.string.pleasW)
+                    .setTheme(R.style.darkDialog)
+                    .setCancelable(true)
+                    .build();
+        } else {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(Contacts.this)
+                    .setMessage(R.string.pleasW)
+                    .setCancelable(true)
+                    .build();
+        }
+
+
+        dialog.show();
+
+
         sora = findViewById(R.id.sora);
         mUserList = findViewById(R.id.userlist);
         contactNum = findViewById(R.id.contactNum);
@@ -85,7 +112,7 @@ public class Contacts extends AppCompatActivity {
         hint = findViewById(R.id.hintC);
         sora.setVisibility(View.GONE);
         contactList = new ArrayList<>();
-        userList = new ArrayList<>();
+        ((AppBack) getApplication()).getContacts();
         localContacts = new ArrayList<>();
         searchL = new ArrayList<>();
         mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
@@ -93,7 +120,7 @@ public class Contacts extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUserList.setHasFixedSize(true);
         mUserList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mUserListAdapter = new ContactsU(userList);
+        mUserListAdapter = new ContactsU(Global.contactsG);
         mUserList.setAdapter(mUserListAdapter);
         //custom recyclerview
         mUserList.setIndexBarTextColor(R.color.white);
@@ -127,16 +154,17 @@ public class Contacts extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Global.check_int(Contacts.this)) {
+                if (!Global.check_int(Contacts.this))
+                    Toast.makeText(Contacts.this, R.string.check_int, Toast.LENGTH_SHORT).show();
+                else {
+                    secN = 0;
                     dialog.show();
                     contactList.clear();
-                    userList.clear();
+                    Global.contactsG.clear();
                     localContacts.clear();
                     mUserListAdapter.notifyDataSetChanged();
                     getContactList();
-
-                } else
-                    Toast.makeText(Contacts.this, R.string.check_int, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         search.addTextChangedListener(new TextWatcher() {
@@ -161,17 +189,22 @@ public class Contacts extends AppCompatActivity {
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.READ_CONTACTS)
                 .withListener(new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        if(report.areAllPermissionsGranted())
+                        if (report.areAllPermissionsGranted()) {
+                            if (Global.check_int(Contacts.this))
+                                Global.contactsG.clear();
+
                             getContactList();
-
-                        else
+                        } else
                             Toast.makeText(Contacts.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                     }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         token.continuePermissionRequest();
 
@@ -190,33 +223,11 @@ public class Contacts extends AppCompatActivity {
             }
         }
 
-        //loader
-        if (Global.DARKSTATE)
-        {
-            dialog = new SpotsDialog.Builder()
-                    .setContext(this)
-                    .setMessage(R.string.pleasW)
-                    .setTheme(R.style.darkDialog)
-                    .setCancelable(true)
-                    .build();
-        }
-        else
-        {
-            dialog = new SpotsDialog.Builder()
-                    .setContext(this)
-                    .setMessage(R.string.pleasW)
-                    .setCancelable(true)
-                    .build();
-        }
-
-
-        dialog.show();
-
     }
 
     private void getContactList() {
         String ISOPrefix = getCountryISO();
-        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+" ASC");
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         while (phones.moveToNext()) {
             String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
@@ -234,18 +245,46 @@ public class Contacts extends AppCompatActivity {
                 localContacts.add(phone);
             }
         }
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < localContacts.size(); i++) {
-                            UserData mContact = new UserData("", "", "", "", localContacts.get(i), false,false);
-                            contactList.add(mContact);
-                            getUserDetails(mContact);
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if (Global.check_int(Contacts.this)) {
+                    for (int i = 0; i < localContacts.size(); i++) {
+                        UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false, "");
+                        contactList.add(mContact);
+                        getUserDetails(mContact);
+                    }
+                } else {
+                    ((AppBack) getApplication()).getContacts();
+
+                    for (int i = 0; i < Global.contactsG.size(); i++) {
+                        if (localContacts.indexOf(Global.contactsG.get(i).getPhone()) == -1) {
+                            Global.contactsG.remove(i);
+                            ((AppBack) getApplication()).setContacts();
                         }
                     }
+                    dialog.dismiss();
+                    if (Global.contactsG.size() == 0) {
+                        sora.setVisibility(View.VISIBLE);
+                        contactNum.setVisibility(View.GONE);
+                        mUserList.setVisibility(View.GONE);
+                    } else {
+                        sora.setVisibility(View.GONE);
+                        contactNum.setVisibility(View.VISIBLE);
+                        mUserList.setVisibility(View.VISIBLE);
+                        if (Global.contactsG.size() == 1)
+                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
+                        else
+                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
+                    }
+                    mUserListAdapter.notifyDataSetChanged();
+
                 }
-        ).start();
+
+            }
+        });
 
 
     }
@@ -258,9 +297,10 @@ public class Contacts extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String phone = "",
-                            name = "", ava = "",
+                            name = "",
+                            nameP = "", ava = "",
                             statue = "";
-                    boolean online=false,screen = false;
+                    boolean online = false, screen = false;
                     secN++;
                     if (secN == contactList.size())
                         dialog.dismiss();
@@ -274,43 +314,48 @@ public class Contacts extends AppCompatActivity {
                             if (childSnapshot.child("name").getValue() != null)
                                 phone = childSnapshot.child("name").getValue().toString();
                         }
+                        if (childSnapshot.child("name").getValue() != null)
+                            nameP = childSnapshot.child("name").getValue().toString();
                         if (childSnapshot.child("avatar").getValue() != null)
                             ava = childSnapshot.child("avatar").getValue().toString();
                         if (childSnapshot.child("statue").getValue() != null)
                             statue = childSnapshot.child("statue").getValue().toString();
-                        if (childSnapshot.child("Onstatue").getValue() != null)
-                            online = (boolean) childSnapshot.child("Onstatue").getValue();
+                        if (childSnapshot.child(Global.Online).getValue() != null)
+                            online = (boolean) childSnapshot.child(Global.Online).getValue();
                         if (childSnapshot.child("screen").getValue() != null)
                             screen = (boolean) childSnapshot.child("screen").getValue();
-                        UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online,screen);
+                        UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online, screen, nameP);
                         if (name.equals(phone))
                             for (UserData mContactIterator : contactList) {
                                 if (mContactIterator.getPhone().equals(mUser.getPhone())) {
                                     mUser.setNameL(getContactName(mUser.getPhone(), Contacts.this));
+                                    mUser.setName(mContactIterator.getName());
                                     mUser.setAvatar(mContactIterator.getAvatar());
                                     mUser.setStatue(mContactIterator.getStatue());
                                     mUser.setScreen(mContactIterator.isScreen());
 
                                 }
                             }
-
-                        userList.add(mUser);
+                        Global.contactsG.add(mUser);
+                        ((AppBack) getApplication()).setContacts();
                         mUserListAdapter.notifyDataSetChanged();
-                        if (userList.size() == 1)
-                            contactNum.setText(userList.size() + " " + getResources().getString(R.string.contact));
+                        if (Global.contactsG.size() == 1)
+                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
                         else
-                            contactNum.setText(userList.size() + " " + getResources().getString(R.string.contacts));
+                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
                         sora.setVisibility(View.GONE);
                         contactNum.setVisibility(View.VISIBLE);
                         mUserList.setVisibility(View.VISIBLE);
 
 
-                        return;
+                    }
+                    Log.wtf("keyyyy", secN + "ee" + Global.contactsG.size());
+                    if (secN == Global.contactsG.size()) {
+                        dialog.dismiss();
                     }
 
-
                 } else {
-                    if (userList.size() == 0 && secN == contactList.size()) {
+                    if (Global.contactsG.size() == 0 && secN == Global.contactsG.size()) {
                         sora.setVisibility(View.VISIBLE);
                         contactNum.setVisibility(View.GONE);
                         mUserList.setVisibility(View.GONE);
@@ -335,14 +380,32 @@ public class Contacts extends AppCompatActivity {
     }
 
     private String getCountryISO() {
-        String iso = null;
+        String countryCode = null;
 
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-        if (telephonyManager.getNetworkCountryIso() != null)
-            if (!telephonyManager.getNetworkCountryIso().toString().equals(""))
-                iso = telephonyManager.getNetworkCountryIso().toString();
+        // try to get country code from TelephonyManager service
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm != null) {
+            // query first getSimCountryIso()
+            countryCode = tm.getSimCountryIso();
 
-        return CountryToPhonePrefix.getPhone(iso);
+            if (countryCode != null && countryCode.length() == 2)
+                return countryCode.toLowerCase();
+
+            if (tm.getPhoneType() == TelephonyManager.PHONE_TYPE_CDMA) {
+                // special case for CDMA Devices
+                countryCode = getCDMACountryIso();
+            } else {
+                // for 3G devices (with SIM) query getNetworkCountryIso()
+                countryCode = tm.getNetworkCountryIso();
+            }
+
+            if (countryCode != null && countryCode.length() == 2)
+                return countryCode.toLowerCase();
+        }
+
+        Log.d("kkk",countryCode+"lll");
+
+        return CountryToPhonePrefix.getPhone(countryCode);
     }
 
     public String getContactName(final String phoneNumber, Context context) {
@@ -383,7 +446,7 @@ public class Contacts extends AppCompatActivity {
     private void filter(String text) {
         ArrayList<UserData> filteredList = new ArrayList<>();
 
-        for (UserData item : userList) {
+        for (UserData item : Global.contactsG) {
             if (item.getNameL().toLowerCase().contains(text.toLowerCase()))
                 filteredList.add(item);
 
@@ -420,5 +483,68 @@ public class Contacts extends AppCompatActivity {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
     }
+
+    private static String getCDMACountryIso() {
+        try {
+            // try to get country code from SystemProperties private class
+            Class<?> systemProperties = Class.forName("android.os.SystemProperties");
+            Method get = systemProperties.getMethod("get", String.class);
+
+            // get homeOperator that contain MCC + MNC
+            String homeOperator = ((String) get.invoke(systemProperties,
+                    "ro.cdma.home.operator.numeric"));
+
+            // first 3 chars (MCC) from homeOperator represents the country code
+            int mcc = Integer.parseInt(homeOperator.substring(0, 3));
+
+            // mapping just countries that actually use CDMA networks
+            switch (mcc) {
+                case 330:
+                    return "PR";
+                case 310:
+                    return "US";
+                case 311:
+                    return "US";
+                case 312:
+                    return "US";
+                case 316:
+                    return "US";
+                case 283:
+                    return "AM";
+                case 460:
+                    return "CN";
+                case 455:
+                    return "MO";
+                case 414:
+                    return "MM";
+                case 619:
+                    return "SL";
+                case 450:
+                    return "KR";
+                case 634:
+                    return "SD";
+                case 434:
+                    return "UZ";
+                case 232:
+                    return "AT";
+                case 204:
+                    return "NL";
+                case 262:
+                    return "DE";
+                case 247:
+                    return "LV";
+                case 255:
+                    return "UA";
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (NoSuchMethodException ignored) {
+        } catch (IllegalAccessException ignored) {
+        } catch (InvocationTargetException ignored) {
+        } catch (NullPointerException ignored) {
+        }
+
+        return null;
+    }
+
 }
 

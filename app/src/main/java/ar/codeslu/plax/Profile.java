@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -121,7 +122,7 @@ public class Profile extends AppCompatActivity {
                             String phone = userData.getPhone();
                             phoneE.setText(phone);
                         }
-                        if (!userData.isOnstatue()) {
+                        if (!userData.isOnline()) {
                             if (userData.getTime() != 0) {
                                 long last = userData.getTime();
                                 last_onlineS = GetTime.getTimeAgo(last, Profile.this);

@@ -79,21 +79,30 @@ public class SecuSetting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
         if (isChecked) {
-            lockB.setVisibility(View.VISIBLE);
             lockT.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (buttonView.isChecked())
                     ((AppBack) getApplication()).lockscreenE();
+                    lockB.setVisibility(View.VISIBLE);
 
                 }
             });
 
 
         } else {
-            lockB.setVisibility(View.GONE);
-            ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", false);
-            ((AppBack) getApplication()).editSharePrefs().apply();
+            lockT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!buttonView.isChecked())
+                    {
+                        lockB.setVisibility(View.GONE);
+                        ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", false);
+                        ((AppBack) getApplication()).editSharePrefs().apply();
+                    }
+
+                }
+            });
         }
         clicked = false;
     }
@@ -211,7 +220,6 @@ public class SecuSetting extends AppCompatActivity {
         if(((AppBack) getApplication()).shared().getBoolean("lock", false))
         {
             //lock screen
-            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
             lockT.setChecked(true);
             lockB.setVisibility(View.VISIBLE);
         }

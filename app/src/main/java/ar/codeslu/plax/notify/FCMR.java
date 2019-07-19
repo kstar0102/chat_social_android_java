@@ -15,6 +15,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.View;
@@ -287,6 +288,7 @@ public class FCMR extends FirebaseMessagingService {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void CustomNotAPI25(String body, String string, int i) {
+        int color = ContextCompat.getColor(conn, R.color.red);
         Uri defaultsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationChann notificationChann = new NotificationChann(getBaseContext());
         Notification.Builder builder = notificationChann.getPLAXNot(string, body, pIntent, defaultsound);
@@ -313,13 +315,14 @@ public class FCMR extends FirebaseMessagingService {
     }
 
     public void CustomNot(String body, String title, int id) {
+        int color = ContextCompat.getColor(conn, R.color.red);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
         builder.setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.logo)
-                .setLights(Color.BLUE,1000,1000)
+                .setLights(color,1000,1000)
                 .setContentIntent(pIntent);
         NotificationManager manager = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(id, builder.build());

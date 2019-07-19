@@ -37,7 +37,7 @@ public class NotificationChann extends ContextWrapper {
         NotificationChannel channel = new NotificationChannel(PLAX_CHANNEL_ID, PLAX_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         channel.enableLights(true);
         channel.enableVibration(true);
-        channel.setLightColor(Color.BLUE);
+        channel.setLightColor(Color.RED);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         getManager().createNotificationChannel(channel);
     }
@@ -54,6 +54,8 @@ public class NotificationChann extends ContextWrapper {
                 .setContentText(body)
                 .setContentTitle(title)
                 .setSound(sound)
+                .setWhen(System.currentTimeMillis())
+                .setLights(Color.RED, 300, 100) // To change Light Colors
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.logo);
 

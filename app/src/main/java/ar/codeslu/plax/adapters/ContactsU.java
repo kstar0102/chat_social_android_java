@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
         //check int for online
         if (Global.check_int(context)) {
             holder.on_wire.setVisibility(View.VISIBLE);
-            if (userList.get(position).isOnstatue()) {
+            if (userList.get(position).isOnline()) {
                 holder.on_wire.setBackgroundColor(context.getResources().getColor(R.color.green));
             } else {
                 holder.on_wire.setBackgroundColor(context.getResources().getColor(R.color.red));

@@ -468,7 +468,7 @@ public class Chat extends AppCompatActivity
                     userData = dataSnapshot.getValue(senderD.class);
                     Global.currname = userData.getName();
                     Global.currAva = userData.getAvatar();
-                    Global.onstate = userData.isOnstatue();
+                    Global.onstate = userData.isOnline();
                     Global.currtime = userData.getTime();
                     Global.currstatue = userData.getStatue();
                     Global.currphone = userData.getPhone();
@@ -529,12 +529,10 @@ public class Chat extends AppCompatActivity
                     typingR = userIn.isTyping();
                     recordingR = userIn.isAudio();
                     typingit();
-                    recordingit();
                 } else {
                     typingR = false;
                     recordingR = false;
                     typingit();
-                    recordingit();
                 }
 
             }
@@ -569,7 +567,7 @@ public class Chat extends AppCompatActivity
                 Global.nameLocal = userData.getName();
                 Global.avaLocal = userData.getAvatar();
                 Global.myscreen = userData.isScreen();
-                Global.myonstate = userData.isOnstatue();
+                Global.myonstate = userData.isOnline();
                 //attach menu photo
                 if (String.valueOf(Global.avaLocal).equals("no")) {
                     Picasso.get()
@@ -2590,35 +2588,8 @@ public class Chat extends AppCompatActivity
         if (Global.onstate) {
             if (typingR)
                 state.setText(R.string.typing);
-
-            else
-                state.setText(getResources().getString(R.string.online));
-
-        } else {
-            state.setText(GetTime.getTimeAgo(Global.currtime, Chat.this));
-            final ExecutorService es = Executors.newCachedThreadPool();
-            ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
-            ses.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    es.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            state.setText(GetTime.getTimeAgo(Global.currtime, Chat.this));
-                            Toast.makeText(Chat.this, GetTime.getTimeAgo(Global.currtime, Chat.this), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }, 0, 1, TimeUnit.MINUTES);
-        }
-    }
-
-    public void recordingit() {
-
-        if (Global.onstate) {
-            if (recordingR)
+            else if (recordingR)
                 state.setText(R.string.recording);
-
             else
                 state.setText(getResources().getString(R.string.online));
 
@@ -2728,6 +2699,16 @@ public class Chat extends AppCompatActivity
         } catch (RuntimeException e) {
             mOutputFile.delete();
         }
+
+        try {
+            for(int i=0;i<Global.audiolist.size();i++)
+                Global.audiolist.get(i).pause();
+        }
+        catch (NullPointerException e)
+        {
+
+        }
+
         setResult(RESULT_CANCELED);
         Global.currentpageid = "";
     }
@@ -2864,6 +2845,17 @@ public class Chat extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+
+        try {
+            for(int i=0;i<Global.audiolist.size();i++)
+                Global.audiolist.get(i).pause();
+        }
+        catch (NullPointerException e)
+        {
+
+        }
+
+
         Global.btnid.clear();
         Global.audiolist.clear();
         for (int i = 0; i < Global.messG.size(); i++) {

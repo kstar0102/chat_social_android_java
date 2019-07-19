@@ -247,7 +247,7 @@ public class Stories extends AppCompatActivity {
                     @Override
                     public void run() {
                         for (int i = 0; i < localContacts.size(); i++) {
-                            UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false);
+                            UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false,"");
                             contactList.add(mContact);
                             getUserDetails(mContact);
                         }

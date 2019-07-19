@@ -1,34 +1,38 @@
 package ar.codeslu.plax.settingsitems;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
-import com.kevalpatel.ringtonepicker.RingtonePickerListener;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import ar.codeslu.plax.Chat;
 import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
+import petrov.kristiyan.colorpicker.ColorPicker;
+import xyz.aprildown.ultimatemusicpicker.MusicPickerListener;
+import xyz.aprildown.ultimatemusicpicker.UltimateMusicPicker;
 
-public class NotifSetting extends AppCompatActivity {
+public class NotifSetting extends AppCompatActivity implements MusicPickerListener {
 
     LinearLayout soundL,ledL;
     @Override
@@ -52,26 +56,20 @@ public class NotifSetting extends AppCompatActivity {
                             public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                                 if (report.areAllPermissionsGranted()) {
-                                    RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
-                                            .Builder(NotifSetting.this, getSupportFragmentManager())
-                                            .setTitle(getString(R.string.slec))
-                                            .displayDefaultRingtone(true)
-                                            .displaySilentRingtone(true)
-                                            .setPositiveButtonText(getString(R.string.set))
-                                            .setCancelButtonText(getString(R.string.cancel))
-                                            .setPlaySampleWhileSelection(true)
-                                            .setListener(new RingtonePickerListener() {
-                                                @Override
-                                                public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
 
-                                                }
-                                            });
+                                    new UltimateMusicPicker()
+                                            // Picker activity action bar title or dialog title
+                                            .windowTitle("UltimateMusicPicker")
+                                            // Music preview stream type(AudioManager.STREAM_MUSIC is used by default)
+                                            .streamType(AudioManager.STREAM_NOTIFICATION)
 
-                                    ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION);
-                                    ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
-
-//Display the dialog.
-                                    ringtonePickerBuilder.show();
+                                            // Show different kinds of system ringtones. Calling order determines their display order.
+                                            .notification()
+                                            .alarm()
+                                            // Show a picker dialog
+                                            .goWithDialog(getSupportFragmentManager());
+                                    // Or show a picker activity
+                                    //.goWithActivity(this, 0, MusicPickerActivity::class.java)
                                 } else
                                     Toast.makeText(NotifSetting.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
@@ -88,7 +86,42 @@ public class NotifSetting extends AppCompatActivity {
             }
         });
 
+        ledL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ColorPicker colorPicker = new ColorPicker(NotifSetting.this);
+                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
+                    @Override
+                    public void setOnFastChooseColorListener(int position, int color) {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                })
+                        .disableDefaultButtons(true)
+                        .setRoundColorButton(true)
+                        .setColumns(5)
+                        .show();
+
+            }
+        });
+
 
     }
 
+    @Override
+    public void onMusicPick(@NotNull Uri uri, @NotNull String s) {
+        Log.d("kkk",s+"////"+String.valueOf(uri));
+
+    }
+
+    @Override
+    public void onPickCanceled() {
+        Log.d("kkk","cancellll");
+
+
+    }
 }

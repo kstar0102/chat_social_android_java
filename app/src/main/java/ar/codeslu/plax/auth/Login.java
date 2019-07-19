@@ -113,6 +113,7 @@ public class Login extends AppCompatActivity {
         if(tm != null) {
             // query first getSimCountryIso()
             countryCode = tm.getSimCountryIso();
+
             if (countryCode != null && countryCode.length() == 2)
                 return countryCode.toLowerCase();
 

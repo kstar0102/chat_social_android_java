@@ -225,6 +225,14 @@ public class AppBack extends Application {
         Global.retryM = tinydb.getListRetry(mAuth.getCurrentUser().getUid() + "R" + friendId);
     }
 
+    public void setContacts()
+    {
+        tinydb.putListContacts(mAuth.getCurrentUser().getUid() + "C",Global.contactsG);
+    }
+    public void getContacts()
+    {
+        Global.contactsG = tinydb.getListConatcts(mAuth.getCurrentUser().getUid() + "C" );
+    }
 
     public void setdialogdb(String userId)
     {

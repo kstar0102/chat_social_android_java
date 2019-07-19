@@ -44,6 +44,8 @@ import com.google.gson.Gson;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
+import ar.codeslu.plax.lists.UserData;
+
 
 public class TinyDB {
 
@@ -356,6 +358,19 @@ public class TinyDB {
         return objects;
     }
 
+    public ArrayList<UserData> getListConatcts(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<UserData> objects =  new ArrayList<UserData>();
+
+        for(String jObjString : objStrings){
+            UserData value  = gson.fromJson(jObjString,  UserData.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+
     public ArrayList<UserIn> getListDialog(String key){
         Gson gson = new Gson();
 
@@ -545,7 +560,15 @@ public class TinyDB {
         putListString(key, objStrings);
     }
 
-
+    public void putListContacts(String key, ArrayList<UserData> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(UserData obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
 
     /**
      * Remove SharedPreferences item with 'key'
