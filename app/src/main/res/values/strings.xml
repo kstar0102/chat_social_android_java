@@ -23,7 +23,7 @@
     <string name="resend">You can get another code after 1 minute</string>
     <string name="enter_code">Enter the code</string>
     <string name="friends">Friends</string>
-
+    <string name="you_added">You added to</string>
     <!--Tab Names-->
     <string name="calls">Calls</string>
     <string name="chats">Chats</string>
@@ -75,8 +75,8 @@
     <string name="title_activity_map">Map</string>
     <string name="friendlocation">Friend\'s Location</string>
     <string name="map_location">Map Location</string>
-    <string name="typing">Typing…</string>
-    <string name="recording">recording audio…</string>
+    <string name="typing"> is Typing…</string>
+    <string name="recording"> is recording audio…</string>
     <string name="downloadcomplete">Download Complete</string>
     <string name="downloadstart">Downloading…</string>
     <string name="copy">Copy</string>
@@ -112,6 +112,8 @@
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
     <string name="choose_lang">Choose Language</string>
+    <string name="choose_not">Choose Notification</string>
+
     <string name="restart">Please restart the app</string>
     <string name="restart_hint">Please Restart the app to fully active language change</string>
     <string name="wait">Please wait until data completely send</string>
@@ -170,13 +172,24 @@
 
     <string-array name="settingmain">
         <item>Chat Settings</item>
-        <item>Security</item>
+        <item>Security Settings</item>
         <item>Notifications Settings</item>
         <item>Change Language</item>
         <item>Delete Account</item>
         <item>Privacy and policy</item>
         <item>About</item>
     </string-array>
+
+
+    <string-array name="ringN">
+        <item>Default</item>
+        <item>Notification 1</item>
+        <item>Notification 2</item>
+        <item>Notification 3</item>
+        <item>Notification 4</item>
+    </string-array>
+
+
     <!--Country codes-->
 
     <string-array name="CountryCodes">
@@ -420,7 +433,7 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="walldsucc">The wallpaper deleted successfully</string>
     <string name="click_enter_to_send">Click enter to send</string>
     <string name="new_message_sound">New Message sound</string>
-    <string name="title_activity_secu_setting">Security Setting</string>
+    <string name="title_activity_secu_setting">Security Settings</string>
     <string name="prevent_chat_screen_shot">Prevent chat Screen shot (β)</string>
     <string name="screen_lock">Screen Lock</string>
     <string name="change_passcode">Change PassCode</string>
@@ -460,7 +473,7 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="acc_per">Please accept the permission</string>
     <string name="patt_err_mess">Please join 4 points or more together to make your data more safe :)</string>
     <string name="weak_pp">Weak pattern</string>
-    <string name="title_activity_notif_setting">NotifSetting</string>
+    <string name="title_activity_notif_setting">Notification Settings</string>
     <string name="defaultt">Default</string>
     <string name="blue">Blue</string>
     <string name="notification_sound">Notification Sound</string>
@@ -470,5 +483,13 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="retry">Retry</string>
     <string name="we_will_soon">We will add this feature soon</string>
     <string name="snap">Snap</string>
+    <string name="chatss">Chat settings</string>
+    <string name="chos_noti">Choose your Notification Tone</string>
+    <string name="title_activity_add_group">AddGroup</string>
+    <string name="group_name">Group name</string>
+    <string name="plz_chs_per">Please choose at least one person</string>
+    <string name="cannot_l_g">Can\'t leave Group name empty</string>
+    <string name="reach_max">You reached the maximum number</string>
+    <string name="add_you">Added you to</string>
 
 </resources>

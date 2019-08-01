@@ -32,10 +32,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Group"></activity>
+        <activity
+            android:name=".AddGroup"
+            android:label="@string/title_activity_add_group"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".settingsitems.NotifSetting"
             android:label="@string/title_activity_notif_setting"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:parentActivityName=".Setting"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".story.Stories"
             android:label="@string/title_activity_stories"
@@ -50,7 +57,7 @@
         <activity android:name=".settingsitems.TestWall" />
         <activity
             android:name=".settingsitems.ChatSettings"
-            android:label="@string/title_activity_setting"
+            android:label="@string/chatss"
             android:parentActivityName=".Setting"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -111,6 +118,14 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".CheckConnectivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="android.support.FILE_PROVIDER_PATHS"

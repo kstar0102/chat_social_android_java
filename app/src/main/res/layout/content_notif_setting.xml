@@ -38,6 +38,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/soundT"
                 android:layout_gravity="center"
                 android:text="@string/defaultt"
                 android:gravity="center|start"
@@ -58,11 +59,6 @@
             android:layout_height="40dp"
             android:src="@drawable/ic_color"
             android:id="@+id/ledI" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,15 +68,5 @@
                 android:layout_marginStart="5dp"
                 android:textColor="@color/black"
                 android:textSize="18sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/blue"
-                android:gravity="center|start"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/greystory"
-                android:textSize="14sp"/>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

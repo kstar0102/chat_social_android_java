@@ -20,6 +20,8 @@ public class Message implements IMessage,
     private boolean deleted;
     private Date createdAt;
     private UserIn user;
+    private GroupIn group;
+
     private Image image;
     private Voice voice;
     private Video video;
@@ -65,6 +67,14 @@ public class Message implements IMessage,
         this.id = id;
         this.text = text;
         this.user = user;
+        this.createdAt = createdAt;
+        this.deleted = deleted;
+    }
+
+    public Message(String id, GroupIn group, String text, Date createdAt) {
+        this.id = id;
+        this.text = text;
+        this.group = group;
         this.createdAt = createdAt;
         this.deleted = deleted;
     }

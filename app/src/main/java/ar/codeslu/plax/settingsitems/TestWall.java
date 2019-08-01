@@ -8,14 +8,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,15 +32,22 @@ import ar.codeslu.plax.global.Global;
 public class TestWall extends AppCompatActivity {
 
     Uri pathW;
-    LinearLayout ly;
+    RelativeLayout ly;
     Button cancel,setw;
     DatabaseReference mData;
     FirebaseAuth mAuth;
+    ImageView bg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_wall);
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        bg = findViewById(R.id.bg);
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int imagewidth = (int) Math.round(displaymetrics.widthPixels * 0.99);
+        int imageheight = (int) Math.round(displaymetrics.heightPixels);
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
@@ -45,7 +56,6 @@ public class TestWall extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
         }
-        setContentView(R.layout.activity_test_wall);
         ly = findViewById(R.id.messagesList);
 setw = findViewById(R.id.setw);
 cancel= findViewById(R.id.cancel);
@@ -53,8 +63,12 @@ cancel= findViewById(R.id.cancel);
         {
            pathW = Uri.parse(getIntent().getExtras().getString("wall334"));
             File f = new File(getRealPathFromURI(pathW));
-            Drawable d = Drawable.createFromPath(f.getAbsolutePath());
-            ly.setBackground(d);
+                Picasso.get()
+                        .load(pathW)
+                        .resize(imagewidth,imageheight)
+                        .error(R.drawable.bg2)
+                        .into(bg);
+
         }
 cancel.setOnClickListener(new View.OnClickListener() {
     @Override

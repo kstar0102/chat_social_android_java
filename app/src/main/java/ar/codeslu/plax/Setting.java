@@ -102,7 +102,7 @@ public class Setting extends AppCompatActivity {
                     case 2:
                         startActivity(new Intent(Setting.this, NotifSetting.class));
                         break;
-                    //change lang
+                   // change lang
                     case 3:
                         dialog = new AlertDialog.Builder(Setting.this);
                         dialog.setTitle(getResources().getString(R.string.choose_lang));

@@ -11,6 +11,7 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.stfalcon.chatkit.me.GroupIn;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
@@ -38,6 +39,7 @@ public class Global {
     //Database Constants
     public final static String USERS = "Users";
     public final static String CHATS = "Chats";
+    public final static String GROUPS = "Groups";
     public final static String Phones = "Phones";
     public final static String Online = "online";
     public final static String avatar = "avatar";
@@ -50,13 +52,16 @@ public class Global {
     public final static String AvatarS = "Avatar";
     public final static String StoryS = "Stories";
     public final static String Mess = "Message";
+    public final static String GroupAva = "GroupsAva";
 
 
     //App constatnts
     public final static int STATUE_LENTH = 20;
+    public final static int FileName_LENTH = 30;
     public final static int NOTIFYTIME = 3000;
     public static String DEFAULT_STATUE = "Hello World!!";
     public static boolean DARKSTATE = false;
+    public static boolean netconnect = false;
     public static boolean local_on = true;
     public static boolean yourM = true;
 public  static ArrayList<AudioWife> audiolist;
@@ -75,10 +80,12 @@ public  static ArrayList<AudioWife> audiolist;
     public static boolean myonstate;
     public static boolean myscreen;
     public static ArrayList<UserIn> diaG;
+    public static ArrayList<GroupIn> diaGGG;
     public static String currentpageid = "";
     public static Activity currentactivity;
     public static Activity chatactivity;
     public static Activity mainActivity;
+    public static ArrayList<String> groupids;
 
     //app media max number chooser
     public static int photoS = 5; //photos max number to select in one time
@@ -95,6 +102,9 @@ public  static ArrayList<AudioWife> audiolist;
     public static String currname = "";
     public static String currstatue = "";
     public static String currphone = "";
+    public static ArrayList<String> currGUsers ;
+    public static ArrayList<String> currGAdmins;
+
     public static boolean onstate;
     public static boolean currscreen;
     public static long currtime = 0;
@@ -105,7 +115,9 @@ public  static ArrayList<AudioWife> audiolist;
     public static MessageIn DialogM;
     public static String Dialogid = "";
     public static UserIn userrG;
+    public static GroupIn groupG;
     public static ArrayList<UserIn> Dialogonelist;
+    public static ArrayList<GroupIn> DialogonelistG;
 
     //encryption
     public static String salt = "cryp2code8882888plaxsalt";

@@ -41,6 +41,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.stfalcon.chatkit.me.GroupIn;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
@@ -383,6 +384,18 @@ public class TinyDB {
         }
         return objects;
     }
+    public ArrayList<GroupIn> getListDialogG(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<GroupIn> objects =  new ArrayList<GroupIn>();
+
+        for(String jObjString : objStrings){
+            GroupIn value  = gson.fromJson(jObjString,  GroupIn.class);
+            objects.add(value);
+        }
+        return objects;
+    }
 
     public <T> T getObject(String key, Class<T> classOfT){
 
@@ -555,6 +568,15 @@ public class TinyDB {
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();
         for(UserIn obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+    public void putListDialogG(String key, ArrayList<GroupIn> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(GroupIn obj : objArray){
             objStrings.add(gson.toJson(obj));
         }
         putListString(key, objStrings);

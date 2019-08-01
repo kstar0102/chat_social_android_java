@@ -7,11 +7,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.global.AppBack;
 
 
 /**
@@ -23,10 +25,14 @@ public class NotificationChann extends ContextWrapper {
     public static  String PLAX_CHANNEL_ID;
     public static  String PLAX_CHANNEL_NAME;
     NotificationManager manager;
+    int colorN;
+    Uri sound;
 
-    public NotificationChann(Context base) {
+    public NotificationChann(Context base,int color,Uri sound) {
         super(base);
-        PLAX_CHANNEL_ID = getApplicationContext().getPackageName();
+        this.colorN = color;
+        this.sound = sound;
+        PLAX_CHANNEL_ID = System.currentTimeMillis()+getApplicationContext().getPackageName();
         PLAX_CHANNEL_NAME = getString(R.string.app_name);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             creatChannel();
@@ -34,11 +40,16 @@ public class NotificationChann extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void creatChannel() {
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build();
         NotificationChannel channel = new NotificationChannel(PLAX_CHANNEL_ID, PLAX_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         channel.enableLights(true);
         channel.enableVibration(true);
-        channel.setLightColor(Color.RED);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        channel.setSound(sound,audioAttributes);
+        channel.setLightColor(colorN);
+        channel.setLockscreenVisibility(Notification.PRIORITY_HIGH);
         getManager().createNotificationChannel(channel);
     }
 
@@ -55,9 +66,10 @@ public class NotificationChann extends ContextWrapper {
                 .setContentTitle(title)
                 .setSound(sound)
                 .setWhen(System.currentTimeMillis())
-                .setLights(Color.RED, 300, 100) // To change Light Colors
+                .setLights(colorN, 300, 100) // To change Light Colors
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.logo);
+
 
     }
 

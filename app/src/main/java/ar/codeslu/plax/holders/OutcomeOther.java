@@ -345,8 +345,14 @@ public class OutcomeOther
             lyFullV.setVisibility(View.GONE);
             jzvdStd.setVisibility(View.GONE);
             play.setVisibility(View.VISIBLE);
+
+            String filename = message.getFile().getFilename();
+
+            if (filename.length() > Global.FileName_LENTH)
+                fileName = fileName.substring(0, Global.STATUE_LENTH) + "...";
+
             duration.setVisibility(View.VISIBLE);
-            duration.setText(message.getFile().getFilename());
+            duration.setText(filename);
             duration.setTextSize(13);
             LinearLayout ly = itemView.findViewById(R.id.lyV);
             ly.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;

@@ -285,9 +285,10 @@ public class MainActivity extends AppCompatActivity
         ((AppBack) this.getApplication()).startOnline();
 
         try {
-            if(getIntent()!= null)
+
+            if(getIntent()!= null )
             {
-                if(getIntent().getExtras().getInt("codetawgeh",0) == 1)
+                if(getIntent().getExtras().getInt("codetawgeh",0) == 1 && mAuth.getCurrentUser() != null)
                 {
                     Intent intent = new Intent(this, Chat.class);
                     intent.putExtra("name", getIntent().getExtras().getString("name"));

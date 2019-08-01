@@ -66,14 +66,58 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-   <LinearLayout
+   <RelativeLayout
        android:layout_width="match_parent"
        android:id="@+id/messagesList"
        android:orientation="vertical"
        android:layout_weight="1"
-       android:background="@drawable/bg3"
-       android:paddingTop="8dp"
+       android:scaleType="centerCrop"
        android:layout_height="match_parent">
+       <ScrollView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:fillViewport="true">
+
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+               <FrameLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+
+                   <ImageView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:scaleType="centerCrop"
+                       android:id="@+id/bg"
+                       android:src="@drawable/bg2" />
+
+               </FrameLayout>
+           </RelativeLayout>
+       </ScrollView>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="vertical"
+       android:layout_height="match_parent">
+       <TextView
+           android:id="@id/messageText"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:background="@drawable/round_w"
+           android:gravity="center_horizontal"
+           android:paddingRight="8dp"
+           android:paddingLeft="8dp"
+           android:paddingBottom="5dp"
+           android:paddingTop="5dp"
+           android:textSize="13sp"
+           android:layout_marginTop="3dp"
+           android:layout_marginBottom="3dp"
+           android:textStyle="bold"
+           android:text="ddddd"
+           android:textColor="@color/black"
+           />
        <com.google.android.flexbox.FlexboxLayout
            android:id="@id/bubble"
            android:layout_width="wrap_content"
@@ -182,8 +226,8 @@
                android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
                android:src="@drawable/emoji_blue" />
        </LinearLayout>
-
    </LinearLayout>
+   </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"

@@ -202,13 +202,6 @@ public class Chats extends Fragment
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 UserIn chats = dataSnapshot.getValue(UserIn.class);
                 String tempID ="";
-
-//                int indexx = dialogsAdapter.halbine(Global.diaG, chats.getId());
-//
-//                Global.diaG.get(indexx).set;
-
-
-
                 try {
                     if(Global.yourM)
                      tempID = chats.getLastsender();

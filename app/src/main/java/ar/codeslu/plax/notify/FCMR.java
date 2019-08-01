@@ -4,9 +4,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -17,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +37,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -288,10 +295,11 @@ public class FCMR extends FirebaseMessagingService {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void CustomNotAPI25(String body, String string, int i) {
-        int color = ContextCompat.getColor(conn, R.color.red);
-        Uri defaultsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationChann notificationChann = new NotificationChann(getBaseContext());
-        Notification.Builder builder = notificationChann.getPLAXNot(string, body, pIntent, defaultsound);
+        int color = ((AppBack) getApplication()).shared().getInt("colorN",Color.BLUE);
+        Uri sound = Uri.parse(((AppBack) getApplication()).shared().getString("ringU", "no"));
+Log.wtf("keyyyy",sound+"");
+        NotificationChann notificationChann = new NotificationChann(getBaseContext(),color,sound);
+        Notification.Builder builder = notificationChann.getPLAXNot(string, body, pIntent, sound);
         notificationChann.getManager().notify(i, builder.build());
     }
 
@@ -315,11 +323,12 @@ public class FCMR extends FirebaseMessagingService {
     }
 
     public void CustomNot(String body, String title, int id) {
-        int color = ContextCompat.getColor(conn, R.color.red);
+        int color = ((AppBack) getApplication()).shared().getInt("colorN",Color.BLUE);
+       Uri sound = Uri.parse(((AppBack) getApplication()).shared().getString("ringU", "no"));
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-        builder.setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setContentTitle(title)
+        builder.setContentTitle(title)
                 .setContentText(body)
+                .setSound(sound)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.logo)
                 .setLights(color,1000,1000)
@@ -550,5 +559,40 @@ public class FCMR extends FirebaseMessagingService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public Uri setMyNotification(String path) {
+        File sdfile = new File(path);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DATA, sdfile.getAbsolutePath());
+        values.put(MediaStore.MediaColumns.TITLE, "38");
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/*");
+        values.put(MediaStore.Audio.Media.IS_RINGTONE, false);
+        values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+        values.put(MediaStore.Audio.Media.IS_ALARM, false);
+        values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(sdfile.getAbsolutePath());
+        Uri newUri;
+        ContentValues cv = new ContentValues();
+        Cursor cursor = this.getContentResolver().query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
+        if (cursor.moveToNext() && cursor.getCount() > 0) {
+            String _id = cursor.getString(0);
+            cv.put(MediaStore.MediaColumns.DATA, sdfile.getAbsolutePath());
+            cv.put(MediaStore.MediaColumns.TITLE, "38");
+            cv.put(MediaStore.MediaColumns.MIME_TYPE, "audio/*");
+            cv.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+            cv.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+            cv.put(MediaStore.Audio.Media.IS_ALARM, false);
+            cv.put(MediaStore.Audio.Media.IS_MUSIC, false);
+            getContentResolver().update(uri, cv, MediaStore.Audio.Media.DATA + "=?", new String[]{path});
+            newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+        } else {
+            newUri = getApplicationContext().getContentResolver().insert(uri, values);
+        }
+        cursor.close();
+
+     //  RingtoneManager.setActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION, newUri);
+ return  newUri;
+
     }
 }

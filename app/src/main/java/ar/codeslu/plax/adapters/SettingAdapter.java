@@ -71,7 +71,7 @@ public class SettingAdapter extends BaseAdapter {
             case 1:
                 photo.setImageDrawable(conn.getResources().getDrawable(R.drawable.ic_privacy));
                 break;
-            case 2:
+          case 2:
                 photo.setImageDrawable(conn.getResources().getDrawable(R.drawable.ic_notifications_b));
                 break;
             case 3:

@@ -1,5 +1,10 @@
 package ar.codeslu.plax.settingsitems;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -7,16 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +37,7 @@ import java.util.Map;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import io.github.tonnyl.light.Light;
 
 public class SecuSetting extends AppCompatActivity {
     JellyToggleButton lockT,screenT;
@@ -35,6 +45,10 @@ public class SecuSetting extends AppCompatActivity {
     boolean clicked = false;
     DatabaseReference mData,mchat;
     FirebaseAuth mAuth;
+    LinearLayout ly;
+    Handler mHandler;
+    boolean isRunning = true;
+    boolean prevstate = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +58,7 @@ public class SecuSetting extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         lockT = findViewById(R.id.lockT);
+        ly = findViewById(R.id.ly);
         screenT = findViewById(R.id.screenST);
         lockB = findViewById(R.id.lockB);
         mAuth = FirebaseAuth.getInstance();
@@ -72,6 +87,51 @@ public class SecuSetting extends AppCompatActivity {
             lockT.setChecked(false);
             lockB.setVisibility(View.GONE);
         }
+
+
+        mHandler = new Handler();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                while (isRunning) {
+                    try {
+                        Thread.sleep(500);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if(prevstate != Global.check_int(SecuSetting.this)) {
+                                    screenT.setEnabled(Global.check_int(SecuSetting.this));
+                                    if (!Global.check_int(SecuSetting.this))
+                                        Light.error(ly, getResources().getString(R.string.check_int), Snackbar.LENGTH_INDEFINITE).show();
+                                    else
+                                        Light.error(ly, getResources().getString(R.string.check_int), Snackbar.LENGTH_SHORT).show();
+
+                                    prevstate = Global.check_int(SecuSetting.this);
+                                }
+
+                            }
+                        });
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }).start();
+
+        screenT.setEnabled(Global.check_int(this));
+        screenT.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(!Global.check_int(SecuSetting.this))
+                    Toast.makeText(SecuSetting.this, R.string.check_int, Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
+
 
         screenT.setChecked(((AppBack) getApplication()).shared().getBoolean("screenP", false));
 
@@ -228,6 +288,7 @@ public class SecuSetting extends AppCompatActivity {
             lockT.setChecked(false);
             lockB.setVisibility(View.GONE);
         }
+        screenT.setEnabled(Global.check_int(this));
     }
 
     @Override
@@ -235,5 +296,4 @@ public class SecuSetting extends AppCompatActivity {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
     }
-
 }

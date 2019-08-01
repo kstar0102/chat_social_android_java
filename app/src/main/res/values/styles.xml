@@ -72,22 +72,19 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="SeekBarColorOut"
-        parent="Widget.AppCompat.SeekBar">
+    <style name="SeekBarColorOut" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">@color/white</item>
     </style>
-    <style name="SeekBarColorIn"
-        parent="Widget.AppCompat.SeekBar">
+
+    <style name="SeekBarColorIn" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">@color/black</item>
     </style>
 
-    <style name="progressOut"
-        parent="Widget.AppCompat.ProgressBar">
+    <style name="progressOut" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/white</item>
     </style>
 
-    <style name="progressIn"
-        parent="Widget.AppCompat.ProgressBar">
+    <style name="progressIn" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/black</item>
     </style>
 

@@ -242,6 +242,14 @@ public class AppBack extends Application {
     {
         Global.diaG = tinydb.getListDialog(userId);
     }
+    public void setdialogdbG(String userId)
+    {
+        tinydb.putListDialogG(userId+"Groups", Global.diaGGG);
+    }
+    public void getdialogdbG(String userId)
+    {
+        Global.diaGGG = tinydb.getListDialogG(userId+"Groups");
+    }
     public  void lockscreenE()
     {
         Intent intent = new Intent(this,LockScreen.class);

@@ -2,9 +2,6 @@ package ar.codeslu.plax.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -32,16 +32,15 @@ import ar.codeslu.plax.lists.UserData;
  * Created by mostafa on 04/11/18.
  */
 
-public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder> implements SectionIndexer {
+public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserListViewHolder> implements SectionIndexer {
 
     ArrayList<UserData> userList;
     private ArrayList<Integer> mSectionPositions;
-
     Context context;
     //Firebase
     FirebaseAuth mAuth;
 
-    public ContactsU(ArrayList<UserData> userList) {
+    public GroupsContacts(ArrayList<UserData> userList) {
         this.userList = userList;
 
     }
@@ -54,6 +53,7 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
         layoutView.setLayoutParams(lp);
         context = parent.getContext();
         mAuth = FirebaseAuth.getInstance();
+        Global.groupids = new ArrayList<>();
 
         UserListViewHolder rcv = new UserListViewHolder(layoutView);
         return rcv;
@@ -103,14 +103,16 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
         holder.ava.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, Chat.class);
-                intent.putExtra("id", userList.get(position).getId());
-                intent.putExtra("name", userList.get(position).getName());
-                intent.putExtra("ava", userList.get(position).getAvatar());
-                intent.putExtra("phone", userList.get(position).getPhone());
-                intent.putExtra("ccode", 1);
-                intent.putExtra("screen", userList.get(position).isScreen());
-                context.startActivity(intent);
+                if (Global.groupids.indexOf(userList.get(position).getId()) == -1) {
+                    Global.groupids.add(userList.get(position).getId());
+                    holder.overlay.setVisibility(View.VISIBLE);
+                    holder.done.setVisibility(View.VISIBLE);
+                } else {
+                    Global.groupids.remove(Global.groupids.indexOf(userList.get(position).getId()));
+                    holder.overlay.setVisibility(View.GONE);
+                    holder.done.setVisibility(View.GONE);
+                }
+
             }
         });
         //All layout
@@ -119,40 +121,30 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
         holder.ly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, Chat.class);
-                intent.putExtra("id", userList.get(position).getId());
-                intent.putExtra("name", userList.get(position).getName());
-                intent.putExtra("ava", userList.get(position).getAvatar());
-                intent.putExtra("phone", userList.get(position).getPhone());
-                intent.putExtra("ccode", 1);
-                intent.putExtra("screen", userList.get(position).isScreen());
-                context.startActivity(intent);
+                if(Global.groupids.size() < 256) {
+                    if (Global.groupids.indexOf(userList.get(position).getId()) == -1) {
+                        Global.groupids.add(userList.get(position).getId());
+                        holder.overlay.setVisibility(View.VISIBLE);
+                        holder.done.setVisibility(View.VISIBLE);
+                    } else {
+                        Global.groupids.remove(Global.groupids.indexOf(userList.get(position).getId()));
+                        holder.overlay.setVisibility(View.GONE);
+                        holder.done.setVisibility(View.GONE);
+                    }
+                }else
+                    Toast.makeText(context, context.getString(R.string.reach_max), Toast.LENGTH_SHORT).show();
+
             }
         });
         //avatar
         holder.callV.setFocusableInTouchMode(false);
         holder.callV.setFocusable(false);
-        holder.callV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Global.check_int(context))
-                    Toast.makeText(context, "V", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(context, R.string.check_int, Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.callV.setVisibility(View.GONE);
+
         //avatar
         holder.callA.setFocusableInTouchMode(false);
         holder.callA.setFocusable(false);
-        holder.callA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Global.check_int(context))
-                    Toast.makeText(context, "A", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(context, R.string.check_int, Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.callA.setVisibility(View.GONE);
 
     }
 
@@ -186,14 +178,14 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
     public Object[] getSections() {
         List<String> sections = new ArrayList<>(26);
         mSectionPositions = new ArrayList<>(26);
-            for (int i = 0, size = userList.size(); i < size; i++) {
-                String section = String.valueOf(userList.get(i).getNameL().charAt(0)).toUpperCase();
-                if (!sections.contains(section)) {
-                    sections.add(section);
-                    mSectionPositions.add(i);
-                }
+        for (int i = 0, size = userList.size(); i < size; i++) {
+            String section = String.valueOf(userList.get(i).getNameL().charAt(0)).toUpperCase();
+            if (!sections.contains(section)) {
+                sections.add(section);
+                mSectionPositions.add(i);
             }
-            return sections.toArray(new String[0]);
+        }
+        return sections.toArray(new String[0]);
     }
 
     @Override
@@ -203,16 +195,18 @@ public class ContactsU extends RecyclerView.Adapter<ContactsU.UserListViewHolder
 
     class UserListViewHolder extends RecyclerView.ViewHolder {
         EmojiTextView name, statue;
-        RoundedImageView ava, on_wire;
-        ImageView callA, callV;
+        RoundedImageView ava, on_wire, overlay;
+        ImageView callA, callV,done;
         RelativeLayout ly;
 
         UserListViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.nameC);
+            overlay = view.findViewById(R.id.overlay);
             ava = view.findViewById(R.id.avaC);
             on_wire = view.findViewById(R.id.on_wire);
             statue = view.findViewById(R.id.statue);
+            done = view.findViewById(R.id.done);
             callA = view.findViewById(R.id.callA);
             callV = view.findViewById(R.id.callV);
             ly = view.findViewById(R.id.lyContact);
