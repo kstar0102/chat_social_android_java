@@ -78,14 +78,14 @@ public class IncomeHolder
         } else {
             if(Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
 
-                if (String.valueOf(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId()))).equals("no")) {
+                if (message.getAvatar().equals("no")) {
                     Picasso.get()
                             .load(R.drawable.profile)
                             .error(R.drawable.errorimg)
                             .into(userava);
                 } else {
                     Picasso.get()
-                            .load(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId())))
+                            .load(message.getAvatar())
                             .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
                             .error(R.drawable.errorimg)
                             .into(userava);

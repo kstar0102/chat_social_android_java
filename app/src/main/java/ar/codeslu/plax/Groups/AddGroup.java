@@ -263,14 +263,14 @@ public class AddGroup extends AppCompatActivity {
                             map.put("name", groupName.getText().toString().trim());
                             map.put("id", groupId);
                             map.put("created", ServerValue.TIMESTAMP);
-                            map.put("messDate",ServerValue.TIMESTAMP);
+                            map.put("messDate", ServerValue.TIMESTAMP);
                             map.put("users", Global.groupids);
                             map.put("lastmessage", encryption.encryptOrNull(String.valueOf("777default099////ar.codeslu.plax//")));
                             map.put("admins", admin);
                             map.put("lastsenderava", Global.avaLocal);
-                            map.put("lastsender",mAuth.getCurrentUser().getUid());
-                            map.put("noOfUnread",0);
-                            uploadprofile(Uri.parse(imgLocalpath), groupId, map,map);
+                            map.put("lastsender", mAuth.getCurrentUser().getUid());
+                            map.put("noOfUnread", 0);
+                            uploadprofile(Uri.parse(imgLocalpath), groupId, map, map);
 
 
                         } else
@@ -315,7 +315,8 @@ public class AddGroup extends AppCompatActivity {
                 if (Global.check_int(AddGroup.this)) {
                     for (int i = 0; i < localContacts.size(); i++) {
                         UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false, "");
-                        contactList.add(mContact);
+                        if (!contactList.contains(mContact))
+                            contactList.add(mContact);
                         getUserDetails(mContact);
                     }
                 } else {
@@ -398,7 +399,8 @@ public class AddGroup extends AppCompatActivity {
 
                                 }
                             }
-                        Global.contactsG.add(mUser);
+                        if (!Global.contactsG.contains(mUser))
+                            Global.contactsG.add(mUser);
                         ((AppBack) getApplication()).setContacts();
                         mUserListAdapter.notifyDataSetChanged();
                         if (Global.contactsG.size() == 1)
@@ -580,7 +582,7 @@ public class AddGroup extends AppCompatActivity {
     }
 
 
-    public void uploadprofile(Uri imgLocalpath, String groupid, Map<String, Object> map,Map<String, Object> map2) {
+    public void uploadprofile(Uri imgLocalpath, String groupid, Map<String, Object> map, Map<String, Object> map2) {
         dialog.show();
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -716,7 +718,7 @@ public class AddGroup extends AppCompatActivity {
                                     intent.putExtra("name", String.valueOf(map2.get("name")));
                                     intent.putExtra("ava", encryption.decryptOrNull(String.valueOf(map2.get("avatar"))));
                                     Global.mainActivity.startActivity(intent);
-                                    before =0;
+                                    before = 0;
                                     dialog.dismiss();
                                     finish();
 
@@ -744,8 +746,7 @@ public class AddGroup extends AppCompatActivity {
 
     public void putIndB(Map<String, Object> map2) {
 
-        if (before < Global.groupids.size())
-        {
+        if (before < Global.groupids.size()) {
             mUserDB.child(Global.groupids.get(before)).child("Groups").child(map2.get("id").toString()).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -762,7 +763,7 @@ public class AddGroup extends AppCompatActivity {
                             intent.putExtra("name", String.valueOf(map2.get("name")));
                             intent.putExtra("ava", encryption.decryptOrNull(String.valueOf(map2.get("avatar"))));
                             Global.mainActivity.startActivity(intent);
-                            before =0;
+                            before = 0;
                             dialog.dismiss();
                             finish();
 
@@ -770,7 +771,6 @@ public class AddGroup extends AppCompatActivity {
                     }
                 }
             });
-
 
 
         }

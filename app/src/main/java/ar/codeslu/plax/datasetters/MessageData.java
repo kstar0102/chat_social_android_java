@@ -100,6 +100,36 @@ public class MessageData {
         return chats;
     }
 
+    public static ArrayList<Message> getMessagesG() {
+        messagelist = new ArrayList<>();
+        messagelist.clear();
+        messagelist = Global.messGGG;
+        byte[] iv = new byte[16];
+        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+        ArrayList<Message> chats = new ArrayList<>();
+        if (chats.size() != 0)
+            chats.clear();
+        for (int i = 0; i < messagelist.size(); i++) {
+            Calendar calendar = Calendar.getInstance();
+            timeStamp = messagelist.get(i).getTime();
+            calendar.setTimeInMillis(timeStamp);
+            if (messagelist.get(i).getType().equals("text")) {
+                chats.add(getTextMessage(encryption.decryptOrNull(messagelist.get(i).getMessage()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            } else if (messagelist.get(i).getType().equals("image")) {
+                chats.add(getImageMessage(encryption.decryptOrNull(messagelist.get(i).getLinkI()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            } else if (messagelist.get(i).getType().equals("voice")) {
+                chats.add(getVoiceMessage(encryption.decryptOrNull(messagelist.get(i).getLinkV()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            } else if (messagelist.get(i).getType().equals("file")) {
+                chats.add(getFileMessage(encryption.decryptOrNull(messagelist.get(i).getLinkF()), messagelist.get(i).getFilename(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            } else if (messagelist.get(i).getType().equals("video")) {
+                chats.add(getVideoMessage(encryption.decryptOrNull(messagelist.get(i).getLinkVideo()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).getThumb(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            } else if (messagelist.get(i).getType().equals("map")) {
+                chats.add(getLocationMessage(encryption.decryptOrNull(messagelist.get(i).getLocation()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
+            }
+        }
+        return chats;
+    }
+
     public static Message getMessagesSingle(MessageIn mess) {
         byte[] iv = new byte[16];
         encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);

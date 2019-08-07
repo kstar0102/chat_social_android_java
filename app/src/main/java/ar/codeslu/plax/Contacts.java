@@ -254,6 +254,7 @@ public class Contacts extends AppCompatActivity {
                 if (Global.check_int(Contacts.this)) {
                     for (int i = 0; i < localContacts.size(); i++) {
                         UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false, "");
+                       if(!contactList.contains(mContact))
                         contactList.add(mContact);
                         getUserDetails(mContact);
                     }
@@ -337,7 +338,8 @@ public class Contacts extends AppCompatActivity {
 
                                 }
                             }
-                        Global.contactsG.add(mUser);
+                        if(!Global.contactsG.contains(mUser))
+                            Global.contactsG.add(mUser);
                         ((AppBack) getApplication()).setContacts();
                         mUserListAdapter.notifyDataSetChanged();
                         if (Global.contactsG.size() == 1)

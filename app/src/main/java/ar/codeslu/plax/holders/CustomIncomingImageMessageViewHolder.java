@@ -66,14 +66,15 @@ public class CustomIncomingImageMessageViewHolder
             }
         } else {
             if(Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
-                if (String.valueOf(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId()))).equals("no")) {
+
+                if (message.getAvatar().equals("no")) {
                     Picasso.get()
                             .load(R.drawable.profile)
                             .error(R.drawable.errorimg)
                             .into(userava);
                 } else {
                     Picasso.get()
-                            .load(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId())))
+                            .load(message.getAvatar())
                             .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
                             .error(R.drawable.errorimg)
                             .into(userava);
@@ -91,8 +92,8 @@ public class CustomIncomingImageMessageViewHolder
         image.getLayoutParams().height = imageheight;
 
         int profileWH = (int) Math.round(displaymetrics.widthPixels * 0.11);
-        userAvatar.getLayoutParams().width = profileWH;
-        userAvatar.getLayoutParams().height = profileWH;
+        userava.getLayoutParams().width = profileWH;
+        userava.getLayoutParams().height = profileWH;
 
         int reactWH = (int) Math.round(displaymetrics.widthPixels * 0.069);
         react.getLayoutParams().width = reactWH;

@@ -439,13 +439,13 @@ public class Group extends AppCompatActivity
                             toast = false;
                             Groups.refreshL(friendId);
                             ((AppBack) getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
-                            ((AppBack) getApplication()).getchatsdb(friendId);
+                            ((AppBack) getApplication()).getchatsdbG(friendId);
 
-                            Global.messG.clear();
+                            Global.messGGG.clear();
                             deletebyId(friendId);
 
                             //local store
-                            ((AppBack) getApplication()).setchatsdb(friendId);
+                            ((AppBack) getApplication()).setchatsdbG(friendId);
                             ((AppBack) getApplication()).setdialogdbG(mAuth.getCurrentUser().getUid());
                             Toast.makeText(Group.this, getString(R.string.kicked), Toast.LENGTH_SHORT).show();
                             finish();
@@ -682,11 +682,11 @@ public class Group extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (Global.messG.size() > 0 && Global.messG != null) {
+                if (Global.messGGG.size() > 0 && Global.messGGG != null) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("typing", true);
                     map.put("whoT", Global.nameLocal);
-                    if (Global.messG != null && Global.messG.size() != 0)
+                    if (Global.messGGG != null && Global.messGGG.size() != 0)
                         type.child(friendId).updateChildren(map);
                     stopTT();
                 }
@@ -746,14 +746,14 @@ public class Group extends AppCompatActivity
                     messagesAdapter.clear();
                     messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
                     try {
-                        Global.messG.add(messageLocal);
+                        Global.messGGG.add(messageLocal);
                         //local store
-                        ((AppBack) getApplication()).setchatsdb(friendId);
+                        ((AppBack) getApplication()).setchatsdbG(friendId);
                     } catch (NullPointerException e) {
-                        Global.messG = new ArrayList<>();
-                        Global.messG.add(messageLocal);
+                        Global.messGGG = new ArrayList<>();
+                        Global.messGGG.add(messageLocal);
                         //local store
-                        ((AppBack) getApplication()).setchatsdb(friendId);
+                        ((AppBack) getApplication()).setchatsdbG(friendId);
                     }
 
                     //     update last message if dialog exist
@@ -770,7 +770,7 @@ public class Group extends AppCompatActivity
                     groups.onNewMessage();
 
 
-                    messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                    messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                     messagesAdapter.notifyDataSetChanged();
                     messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
                     ///////
@@ -829,14 +829,14 @@ public class Group extends AppCompatActivity
                                     messagesAdapter.clear();
                                     messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
                                     try {
-                                        Global.messG.add(messageLocal);
+                                        Global.messGGG.add(messageLocal);
                                         //local store
-                                        ((AppBack) getApplication()).setchatsdb(friendId);
+                                        ((AppBack) getApplication()).setchatsdbG(friendId);
                                     } catch (NullPointerException e) {
-                                        Global.messG = new ArrayList<>();
-                                        Global.messG.add(messageLocal);
+                                        Global.messGGG = new ArrayList<>();
+                                        Global.messGGG.add(messageLocal);
                                         //local store
-                                        ((AppBack) getApplication()).setchatsdb(friendId);
+                                        ((AppBack) getApplication()).setchatsdbG(friendId);
                                     }
 
                                     //     update last message if dialog exist
@@ -853,7 +853,7 @@ public class Group extends AppCompatActivity
                                     groups.onNewMessage();
 
 
-                                    messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                                    messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                                     messagesAdapter.notifyDataSetChanged();
                                     messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
                                     ///////
@@ -1008,14 +1008,14 @@ public class Group extends AppCompatActivity
                                         messagesAdapter.clear();
                                         messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map", encryption.encryptOrNull(Global.avaLocal), false);
                                         try {
-                                            Global.messG.add(messageLocal);
+                                            Global.messGGG.add(messageLocal);
                                             //local store
-                                            ((AppBack) getApplication()).setchatsdb(friendId);
+                                            ((AppBack) getApplication()).setchatsdbG(friendId);
                                         } catch (NullPointerException e) {
-                                            Global.messG = new ArrayList<>();
-                                            Global.messG.add(messageLocal);
+                                            Global.messGGG = new ArrayList<>();
+                                            Global.messGGG.add(messageLocal);
                                             //local store
-                                            ((AppBack) getApplication()).setchatsdb(friendId);
+                                            ((AppBack) getApplication()).setchatsdbG(friendId);
                                         }
 
 
@@ -1032,7 +1032,7 @@ public class Group extends AppCompatActivity
                                         Global.Dialogid = friendId;
                                         Global.DialogM = messageLocal;
                                         groups.onNewMessage();
-                                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                                        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
                                         ///////
@@ -1227,7 +1227,7 @@ public class Group extends AppCompatActivity
         new Handler().postDelayed(new Runnable() { //imitation of internet connection
             @Override
             public void run() {
-                ArrayList<Message> messages = MessageData.getMessages();
+                ArrayList<Message> messages = MessageData.getMessagesG();
 //                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
                 messagesAdapter.addToEnd(messages, false);
             }
@@ -1363,13 +1363,13 @@ public class Group extends AppCompatActivity
         final int[] i = {0};
         final int[] onceOnce = {0};
         //getride of old data
-        ((AppBack) getApplication()).getchatsdb(friendId);
+        ((AppBack) getApplication()).getchatsdbG(friendId);
         query = mData.child(friendId).child(Global.Messages).orderByChild("time");
         query.keepSynced(true);
         initAdapter();
         //just init because of the first time offline started chat
         messagesAdapter.clear();
-        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1385,10 +1385,10 @@ public class Group extends AppCompatActivity
         });
 
         if (!Global.check_int(Group.this)) {
-            ((AppBack) getApplication()).getchatsdb(friendId);
+            ((AppBack) getApplication()).getchatsdbG(friendId);
             //update the list
             messagesAdapter.clear();
-            messagesAdapter.addToEnd(MessageData.getMessages(), true);
+            messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
             messagesAdapter.notifyDataSetChanged();
         }
         query.addChildEventListener(new ChildEventListener() {
@@ -1397,10 +1397,10 @@ public class Group extends AppCompatActivity
                 if (dataSnapshot.exists()) {
                         MessageIn message = dataSnapshot.getValue(MessageIn.class);
 
-                        if (messagesAdapter.halbine(Global.messG, message.getMessId()) == -1)
-                            Global.messG.add(message);
+                        if (messagesAdapter.halbine(Global.messGGG, message.getMessId()) == -1)
+                            Global.messGGG.add(message);
                         else
-                            Global.messG.set(messagesAdapter.halbine(Global.messG, message.getMessId()), message);
+                            Global.messGGG.set(messagesAdapter.halbine(Global.messGGG, message.getMessId()), message);
 
                         if (!message.getFrom().equals(mAuth.getCurrentUser().getUid()) && canScroll) {
                             downdown.setVisibility(View.VISIBLE);
@@ -1410,11 +1410,11 @@ public class Group extends AppCompatActivity
                     //check only in global list range
                     if (i[0] >= keyOnce[0] - 1) {
                             //local store
-                            ((AppBack) getApplication()).setchatsdb(friendId);
+                            ((AppBack) getApplication()).setchatsdbG(friendId);
 
                         //update the list
                         messagesAdapter.clear();
-                        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                         messagesAdapter.notifyDataSetChanged();
                         messagesList.scrollBy(0, 0);
 
@@ -1430,14 +1430,14 @@ public class Group extends AppCompatActivity
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 MessageIn message = dataSnapshot.getValue(MessageIn.class);
-                if (messagesAdapter.halbine(Global.messG, message.getMessId()) != -1)
-                    Global.messG.set(messagesAdapter.halbine(Global.messG, message.getMessId()), message);
+                if (messagesAdapter.halbine(Global.messGGG, message.getMessId()) != -1)
+                    Global.messGGG.set(messagesAdapter.halbine(Global.messGGG, message.getMessId()), message);
 
                 //local store
-                ((AppBack) getApplication()).setchatsdb(friendId);
+                ((AppBack) getApplication()).setchatsdbG(friendId);
 
                 messagesAdapter.clear();
-                messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                 messagesAdapter.notifyDataSetChanged();
                 messagesList.scrollBy(0, 0);
 
@@ -1448,14 +1448,14 @@ public class Group extends AppCompatActivity
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 MessageIn message = dataSnapshot.getValue(MessageIn.class);
 
-                if (messagesAdapter.halbine(Global.messG, message.getMessId()) != -1)
-                    Global.messG.remove(messagesAdapter.halbine(Global.messG, message.getMessId()));
+                if (messagesAdapter.halbine(Global.messGGG, message.getMessId()) != -1)
+                    Global.messGGG.remove(messagesAdapter.halbine(Global.messGGG, message.getMessId()));
 
                 //local store
-                ((AppBack) getApplication()).setchatsdb(friendId);
+                ((AppBack) getApplication()).setchatsdbG(friendId);
 
                 messagesAdapter.clear();
-                messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                 messagesAdapter.notifyDataSetChanged();
                 messagesList.scrollBy(0, 0);
 
@@ -1516,10 +1516,10 @@ public class Group extends AppCompatActivity
         this.mActivityTransitionTimer = new Timer();
         this.mActivityTransitionTimerTask = new TimerTask() {
             public void run() {
-                if (Global.messG.size() > 0 && Global.messG != null) {
+                if (Global.messGGG.size() > 0 && Global.messGGG != null) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("typing", false);
-                    if (Global.messG != null && Global.messG.size() != 0)
+                    if (Global.messGGG != null && Global.messGGG.size() != 0)
                         type.child(friendId).updateChildren(map);
                 }
             }
@@ -1543,20 +1543,20 @@ public class Group extends AppCompatActivity
 
     //stop and begin (recording audio)
     public void startAT() {
-        if (Global.messG.size() > 0 && Global.messG != null) {
+        if (Global.messGGG.size() > 0 && Global.messGGG != null) {
             Map<String, Object> map = new HashMap<>();
             map.put("audio", true);
             map.put("whoR", Global.nameLocal);
-            if (Global.messG != null && Global.messG.size() != 0)
+            if (Global.messGGG != null && Global.messGGG.size() != 0)
                 type.child(friendId).updateChildren(map);
         }
     }
 
     public void stopAT() {
-        if (Global.messG.size() > 0 && Global.messG != null) {
+        if (Global.messGGG.size() > 0 && Global.messGGG != null) {
             Map<String, Object> map = new HashMap<>();
             map.put("audio", false);
-            if (Global.messG != null && Global.messG.size() != 0)
+            if (Global.messGGG != null && Global.messGGG.size() != 0)
                 type.child(friendId).updateChildren(map);
         }
     }
@@ -1622,14 +1622,14 @@ public class Group extends AppCompatActivity
                             messagesAdapter.clear();
                             messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no", encryption.encryptOrNull(Global.avaLocal), false);
                             try {
-                                Global.messG.add(messageLocal);
+                                Global.messGGG.add(messageLocal);
                                 //local store
-                                ((AppBack) getApplication()).setchatsdb(friendId);
+                                ((AppBack) getApplication()).setchatsdbG(friendId);
                             } catch (NullPointerException e) {
-                                Global.messG = new ArrayList<>();
-                                Global.messG.add(messageLocal);
+                                Global.messGGG = new ArrayList<>();
+                                Global.messGGG.add(messageLocal);
                                 //local store
-                                ((AppBack) getApplication()).setchatsdb(friendId);
+                                ((AppBack) getApplication()).setchatsdbG(friendId);
                             }
 
                             //update dialog if not exist
@@ -1648,7 +1648,7 @@ public class Group extends AppCompatActivity
                             Global.Dialogid = friendId;
                             Global.DialogM = messageLocal;
                             groups.onNewMessage();
-                            messagesAdapter.addToEnd(MessageData.getMessages(), true);
+                            messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                             messagesAdapter.notifyDataSetChanged();
                             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
                             ///////
@@ -1727,14 +1727,14 @@ public class Group extends AppCompatActivity
         messagesAdapter.clear();
         messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time), encryption.encryptOrNull(Global.avaLocal), false);
         try {
-            Global.messG.add(messageLocal);
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         } catch (NullPointerException e) {
-            Global.messG = new ArrayList<>();
-            Global.messG.add(messageLocal);
+            Global.messGGG = new ArrayList<>();
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         }
         //update dialog if not exist
         encrypV = "Voice " + getHumanTimeText(time);
@@ -1752,7 +1752,7 @@ public class Group extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
         groups.onNewMessage();
-        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
         ///////
@@ -1823,14 +1823,14 @@ public class Group extends AppCompatActivity
         messagesAdapter.clear();
         messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no", encryption.encryptOrNull(Global.avaLocal), false);
         try {
-            Global.messG.add(messageLocal);
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         } catch (NullPointerException e) {
-            Global.messG = new ArrayList<>();
-            Global.messG.add(messageLocal);
+            Global.messGGG = new ArrayList<>();
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         }
 
         //update dialog if not exist
@@ -1849,7 +1849,7 @@ public class Group extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
         groups.onNewMessage();
-        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
         ///////
@@ -2019,14 +2019,14 @@ public class Group extends AppCompatActivity
         messagesAdapter.clear();
         messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false);
         try {
-            Global.messG.add(messageLocal);
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         } catch (NullPointerException e) {
-            Global.messG = new ArrayList<>();
-            Global.messG.add(messageLocal);
+            Global.messGGG = new ArrayList<>();
+            Global.messGGG.add(messageLocal);
             //local store
-            ((AppBack) getApplication()).setchatsdb(friendId);
+            ((AppBack) getApplication()).setchatsdbG(friendId);
         }
 
 
@@ -2046,7 +2046,7 @@ public class Group extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
         groups.onNewMessage();
-        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
         ///////
@@ -2492,22 +2492,22 @@ public class Group extends AppCompatActivity
 
         Global.btnid.clear();
         Global.audiolist.clear();
-        for (int i = 0; i < Global.messG.size(); i++) {
+        for (int i = 0; i < Global.messGGG.size(); i++) {
             //check all failed messages
-            if (Global.messG.get(i).getStatue().equals("..")) {
+            if (Global.messGGG.get(i).getStatue().equals("..")) {
                 //make it false
-                Global.messG.get(i).setStatue("X");
-                ((AppBack) getApplication()).setchatsdb(friendId);
+                Global.messGGG.get(i).setStatue("X");
+                ((AppBack) getApplication()).setchatsdbG(friendId);
 
                 //put to retry
                 ((AppBack) getApplication()).getRetry(friendId);
-                Global.messG.get(i).setStatue("..");
-                Global.retryM.add(Global.messG.get(i));
+                Global.messGGG.get(i).setStatue("..");
+                Global.retryM.add(Global.messGGG.get(i));
                 ((AppBack) getApplication()).setRetry(friendId);
             }
         }
         messagesAdapter.clear();
-        messagesAdapter.addToEnd(MessageData.getMessages(), true);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         super.onDestroy();
     }

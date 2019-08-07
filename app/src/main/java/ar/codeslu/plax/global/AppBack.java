@@ -215,6 +215,15 @@ public class AppBack extends Application {
         Global.messG = tinydb.getListChats(mAuth.getCurrentUser().getUid() + "/" + friendId);
     }
 
+    public void setchatsdbG(String friendId)
+    {
+        tinydb.putListChats(mAuth.getCurrentUser().getUid() + "/Groups/" + friendId, Global.messGGG);
+    }
+    public void getchatsdbG(String friendId)
+    {
+        Global.messGGG = tinydb.getListChats(mAuth.getCurrentUser().getUid() + "/Groups/" + friendId);
+    }
+
 
     public void setRetry(String friendId)
     {

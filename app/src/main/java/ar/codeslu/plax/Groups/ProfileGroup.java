@@ -57,7 +57,7 @@ public class ProfileGroup extends AppCompatActivity {
 
     Toolbar toolbar;
     TextView name;
-    ImageView profile,addContact;
+    ImageView profile, addContact;
     FloatingActionButton fab;
     String friendid;
     Uri imgLocalpath;
@@ -123,7 +123,7 @@ public class ProfileGroup extends AppCompatActivity {
         View viewS = inflater.inflate(R.layout.profile_bar, null);
         actionBar.setCustomView(viewS);
 
-        
+
         if (getIntent() != null)
             friendid = getIntent().getExtras().getString("idP");
 
@@ -155,15 +155,14 @@ public class ProfileGroup extends AppCompatActivity {
                 Global.currGAdmins = groupIn.getAdmins();
                 Global.currGUsers = groupIn.getUsers();
 
-                if(Global.currGAdmins.contains(mAuth.getCurrentUser().getUid()))
+                if (Global.currGAdmins.contains(mAuth.getCurrentUser().getUid()))
                     addContact.setVisibility(View.VISIBLE);
                 else
                     addContact.setVisibility(View.GONE);
 
 
-
-                threadUpdate();
-
+                updateLive();
+               threadUpdate();
             }
 
             @Override
@@ -202,7 +201,7 @@ public class ProfileGroup extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Global.check_int(ProfileGroup.this)) {
+                if (Global.check_int(ProfileGroup.this)) {
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(ProfileGroup.this);
                     builder.setMessage(R.string.exit_group_sure);
                     builder.setTitle(R.string.Leav_grp);
@@ -251,8 +250,7 @@ public class ProfileGroup extends AppCompatActivity {
                         }
                     });
                     builder.show();
-                }
-                else
+                } else
                     Toast.makeText(ProfileGroup.this, R.string.check_int, Toast.LENGTH_SHORT).show();
             }
         });
@@ -260,13 +258,11 @@ public class ProfileGroup extends AppCompatActivity {
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Global.check_int(ProfileGroup.this))
-                {
-                    Intent intent = new Intent(ProfileGroup.this,AddUserGroup.class);
-                    intent.putExtra("id",friendid);
+                if (Global.check_int(ProfileGroup.this)) {
+                    Intent intent = new Intent(ProfileGroup.this, AddUserGroup.class);
+                    intent.putExtra("id", friendid);
                     startActivity(intent);
-                }
-                else
+                } else
                     Toast.makeText(ProfileGroup.this, R.string.check_int, Toast.LENGTH_SHORT).show();
             }
         });
@@ -314,8 +310,8 @@ public class ProfileGroup extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     UserData userData = dataSnapshot.getValue(UserData.class);
+                    if(!Global.currGUsersU.contains(userData))
                     Global.currGUsersU.add(userData);
-
 
                     if (before < Global.currGUsers.size() - 1) {
                         before += 1;
@@ -342,7 +338,8 @@ public class ProfileGroup extends AppCompatActivity {
         dialog.dismiss();
         for (int i = 0; i < Global.currGUsersU.size(); i++) {
             if (Global.currGAdmins.indexOf(Global.currGUsersU.get(i).getId()) != -1) {
-                Global.adminList.add(Global.currGUsersU.get(i));
+                if(!Global.adminList.contains(Global.currGUsersU.get(i)))
+                    Global.adminList.add(Global.currGUsersU.get(i));
                 adminsA.notifyDataSetChanged();
             }
 
@@ -358,7 +355,6 @@ public class ProfileGroup extends AppCompatActivity {
         return (columnCount >= 2 ? columnCount : 2); // if column no. is less than 2, we still display 2 columns
     }
 
-
     public void threadUpdate() {
         runOnUiThread(new Runnable() {
             @Override
@@ -373,7 +369,6 @@ public class ProfileGroup extends AppCompatActivity {
             }
         });
     }
-
 //    public static int calcspace(Context context) {
 //        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
 //        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;

@@ -75,6 +75,7 @@ public  static ArrayList<AudioWife> audiolist;
     public static String idLocal = "";
     public static String phoneLocal = "";
     public static ArrayList<MessageIn> messG;
+    public static ArrayList<MessageIn> messGGG;
     public static ArrayList<MessageIn> retryM;
     public static ArrayList<UserData> contactsG;
     public static boolean myonstate;

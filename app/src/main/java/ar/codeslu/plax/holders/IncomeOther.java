@@ -115,21 +115,21 @@ public class IncomeOther
             }
         } else {
             if(Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
-                if (String.valueOf(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId()))).equals("no")) {
+
+                if (message.getAvatar().equals("no")) {
                     Picasso.get()
                             .load(R.drawable.profile)
                             .error(R.drawable.errorimg)
                             .into(userava);
                 } else {
                     Picasso.get()
-                            .load(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId())))
+                            .load(message.getAvatar())
                             .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
                             .error(R.drawable.errorimg)
                             .into(userava);
                 }
             }
         }
-
 
         //react
         ImageView react = itemView.findViewById(R.id.react);
@@ -597,8 +597,12 @@ public class IncomeOther
             lyFullV.setVisibility(View.GONE);
             map.setVisibility(View.VISIBLE);
             location = message.getMap().getLocation().split(",");
-            lat = location[0];
-            lng = location[1];
+            if(location.length ==2)
+            {
+                lat = location[0];
+                lng = location[1];
+            }
+
 
             url = "https://maps.googleapis.com/maps/api/staticmap?center=" + Double.parseDouble(lat) + "," + Double.parseDouble(lng) + "&zoom=15&size=300x300&maptype=roadmap&format=png&visual_refresh=true&key=" + Global.conA.getResources().getString(R.string.google_maps_key) + "&signature=BASE64_SIGNATURE";
             Picasso.get()
