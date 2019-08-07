@@ -250,6 +250,40 @@ public class AppBack extends Application {
     {
         Global.diaGGG = tinydb.getListDialogG(userId+"Groups");
     }
+    //for group
+    public void setGroupUsers(String userId)
+    {
+        tinydb.putListString(userId+"GroupUsers", Global.currGUsers);
+    }
+    public void getGroupUsers(String userId)
+    {
+        Global.currGUsers = tinydb.getListString(userId+"GroupUsers");
+    }
+    public void setGroupUsersAva(String userId)
+    {
+        tinydb.putListString(userId+"GroupUsersAva", Global.currGUsersAva);
+    }
+    public void getGroupUsersAva(String userId)
+    {
+        Global.currGUsersAva = tinydb.getListString(userId+"GroupUsersAva");
+    }
+    public void setGroupAdmins(String userId)
+    {
+        tinydb.putListString(userId+"GroupAdmins", Global.currGAdmins);
+    }
+    public void getGroupAdmins(String userId)
+    {
+        Global.currGAdmins = tinydb.getListString(userId+"GroupAdmins");
+    }
+    public void setGroupUA(String userId)
+    {
+        tinydb.putGroupUA(userId+"UsersandAdmins", Global.currGUsersU);
+    }
+    public void getGroupUA(String userId)
+    {
+        Global.currGUsersU = tinydb.getGroupUA(userId+"UsersandAdmins");
+    }
+
     public  void lockscreenE()
     {
         Intent intent = new Intent(this,LockScreen.class);

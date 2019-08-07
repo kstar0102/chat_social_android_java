@@ -99,6 +99,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-runtime-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-verifier" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-apk" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-resources" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant_app_manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant_run_app_info_output_file" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant_run_main_apk_resources" />
@@ -295,6 +296,24 @@
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-sdk-api:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.jorgecastilloprz:fillableloaders:1.03@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.farhanahmed95:pico:0.0.1@aar" level="project" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
+    <orderEntry type="module" module-name="chatkitlib" />
+    <orderEntry type="module" module-name="storyview" />
     <orderEntry type="module" module-name="chatkitlib" />
     <orderEntry type="module" module-name="storyview" />
   </component>

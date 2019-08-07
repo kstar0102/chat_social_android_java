@@ -1,4 +1,4 @@
-package ar.codeslu.plax;
+package ar.codeslu.plax.Groups;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -49,7 +49,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,8 +64,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.codeslu.plax.R;
 import ar.codeslu.plax.adapters.GroupsContacts;
-import ar.codeslu.plax.fragments.Groups;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.CountryToPhonePrefix;
@@ -207,12 +206,14 @@ public class AddGroup extends AppCompatActivity {
                 hint.setTextColor(Global.conMain.getResources().getColor(R.color.mid_grey));
                 contactNum.setTextColor(Global.conMain.getResources().getColor(R.color.mid_grey));
                 groupName.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.et_bg_b));
+                groupName.setTextColor(Global.conMain.getResources().getColor(R.color.black));
 
             } else {
                 contact.setTextColor(Global.conMain.getResources().getColor(R.color.white));
                 hint.setTextColor(Global.conMain.getResources().getColor(R.color.light_mid_grey));
                 contactNum.setTextColor(Global.conMain.getResources().getColor(R.color.light_mid_grey));
                 groupName.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.et_bg));
+                groupName.setTextColor(Global.conMain.getResources().getColor(R.color.white));
             }
         }
         groupAva.setOnClickListener(new View.OnClickListener() {
@@ -410,7 +411,6 @@ public class AddGroup extends AppCompatActivity {
 
 
                     }
-                    Log.wtf("keyyyy", secN + "ee" + Global.contactsG.size());
                     if (secN == Global.contactsG.size()) {
                         dialog.dismiss();
                     }
@@ -774,13 +774,6 @@ public class AddGroup extends AppCompatActivity {
 
 
         }
-
-
-
-
-
-
-
 
     }
 

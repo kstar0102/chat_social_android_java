@@ -1,51 +1,64 @@
-package ar.codeslu.plax;
+package ar.codeslu.plax.Groups;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.ContactsContract;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.telephony.TelephonyManager;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.appcompat.widget.Toolbar;
-
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.squareup.picasso.Picasso;
+import com.stfalcon.chatkit.me.GroupIn;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiTextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.provider.ContactsContract;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -53,58 +66,83 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.codeslu.plax.adapters.ContactsU;
+import ar.codeslu.plax.R;
+import ar.codeslu.plax.adapters.GroupsContacts;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.CountryToPhonePrefix;
+import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.lists.UserData;
-import ar.codeslu.plax.story.Stories;
+import ar.codeslu.plax.notify.FCM;
+import ar.codeslu.plax.notify.FCMresp;
+import ar.codeslu.plax.notify.Sender;
+import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
+import id.zelory.compressor.Compressor;
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import se.simbio.encryption.Encryption;
 
-public class Contacts extends AppCompatActivity {
+public class AddUserGroup extends AppCompatActivity {
+
     //view
     private IndexFastScrollRecyclerView mUserList;
-    private ContactsU mUserListAdapter;
-    private ImageView sora, refresh;
-    private EmojiEditText search;
+    private GroupsContacts mUserListAdapter;
+    private ImageView sora;
     private EmojiTextView contact, hint;
     private TextView contactNum;
-    Toolbar toolbar;
-
     //firebase
     FirebaseAuth mAuth;
     DatabaseReference mUserDB;
+    DatabaseReference group;
 
     ArrayList<UserData> contactList, searchL;
     ArrayList<String> localContacts;
     int secN = 0;
     AlertDialog dialog;
+    String imgLocalpath = "no";
+    String groupid;
+    byte[] thumbData;
+    //compress
+    private Bitmap compressedImageFile;
+    Encryption encryption;
+    //fcm
+    FCM fcm;
+    int before = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_add_user_group);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        FloatingActionButton fab = findViewById(R.id.fab);
+        //encryption
+        byte[] iv = new byte[16];
+        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
         //loader
+        //fcm notify
+        fcm = Global.getFCMservies();
         if (Global.DARKSTATE) {
             dialog = new SpotsDialog.Builder()
-                    .setContext(Contacts.this)
+                    .setContext(AddUserGroup.this)
                     .setMessage(R.string.pleasW)
                     .setTheme(R.style.darkDialog)
                     .setCancelable(true)
                     .build();
         } else {
             dialog = new SpotsDialog.Builder()
-                    .setContext(Contacts.this)
+                    .setContext(AddUserGroup.this)
                     .setMessage(R.string.pleasW)
                     .setCancelable(true)
                     .build();
         }
 
-
+        Global.groupids = new ArrayList<>();
         dialog.show();
-
-
         sora = findViewById(R.id.sora);
         mUserList = findViewById(R.id.userlist);
         contactNum = findViewById(R.id.contactNum);
@@ -116,11 +154,12 @@ public class Contacts extends AppCompatActivity {
         localContacts = new ArrayList<>();
         searchL = new ArrayList<>();
         mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
+        group = FirebaseDatabase.getInstance().getReference().child(Global.GROUPS);
         mUserDB.keepSynced(true);
         mAuth = FirebaseAuth.getInstance();
         mUserList.setHasFixedSize(true);
         mUserList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mUserListAdapter = new ContactsU(Global.contactsG);
+        mUserListAdapter = new GroupsContacts(Global.contactsG);
         mUserList.setAdapter(mUserListAdapter);
         //custom recyclerview
         mUserList.setIndexBarTextColor(R.color.white);
@@ -133,58 +172,10 @@ public class Contacts extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
         }
-        //Actionbar init
-        toolbar = (Toolbar) findViewById(R.id.search_toolbar);
-        toolbar.setPadding(0, 0, 0, 0);
 
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-
-        //Action bar design
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewS = inflater.inflate(R.layout.custom_bar, null);
-        actionBar.setCustomView(viewS);
-        search = viewS.findViewById(R.id.searchE);
-        refresh = viewS.findViewById(R.id.refreshC);
-        refresh.setFocusableInTouchMode(false);
-        refresh.setFocusable(false);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!Global.check_int(Contacts.this))
-                    Toast.makeText(Contacts.this, R.string.check_int, Toast.LENGTH_SHORT).show();
-                else {
-                    secN = 0;
-                    dialog.show();
-                    contactList.clear();
-                    Global.contactsG.clear();
-                    localContacts.clear();
-                    mUserListAdapter.notifyDataSetChanged();
-                    getContactList();
-                }
-            }
-        });
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                filter(editable.toString());
-
-            }
-        });
-
+        if (getIntent() != null) {
+            groupid = getIntent().getExtras().getString("id");
+        }
         Global.currentactivity = this;
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.READ_CONTACTS)
@@ -193,12 +184,12 @@ public class Contacts extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            if (Global.check_int(Contacts.this))
+                            if (Global.check_int(AddUserGroup.this))
                                 Global.contactsG.clear();
 
                             getContactList();
                         } else
-                            Toast.makeText(Contacts.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddUserGroup.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -223,11 +214,60 @@ public class Contacts extends AppCompatActivity {
             }
         }
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Global.check_int(AddUserGroup.this)) {
+                    if (Global.groupids.size() == 0)
+                        Snackbar.make(view, getString(R.string.plz_chs_per), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    else {
+                        Global.currGUsers.addAll(Global.groupids);
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(groupid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                GroupIn groupIn = dataSnapshot.getValue(GroupIn.class);
+                                Map<String, Object> map2 = new HashMap<>();
+                                map2.put("users",  Global.currGUsers);
+                                map2.put("admins", Global.currGAdmins);
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("name", groupIn.getName());
+                                map.put("id", groupIn.getId());
+                                map.put("avatar", groupIn.getAvatar());
+                                map.put("created", groupIn.getCreated());
+                                map.put("messDate", groupIn.getMessDate());
+                                map.put("lastmessage", groupIn.getLastmessage());
+                                map.put("lastsenderava", groupIn.getLastsenderava());
+                                map.put("lastsender", groupIn.getLastsender());
+                                map.put("noOfUnread", 0);
+
+                                group.child(groupid).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        putIndB(map);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+                } else
+                    Snackbar.make(view, getString(R.string.check_int), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+            }
+
+        });
+
+
     }
 
     private void getContactList() {
         String ISOPrefix = getCountryISO();
-        Log.d("kkk",ISOPrefix);
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         while (phones.moveToNext()) {
             String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -251,7 +291,7 @@ public class Contacts extends AppCompatActivity {
 
             @Override
             public void run() {
-                if (Global.check_int(Contacts.this)) {
+                if (Global.check_int(AddUserGroup.this)) {
                     for (int i = 0; i < localContacts.size(); i++) {
                         UserData mContact = new UserData("", "", "", "", localContacts.get(i), false, false, "");
                         contactList.add(mContact);
@@ -310,7 +350,7 @@ public class Contacts extends AppCompatActivity {
                             phone = childSnapshot.child("phone").getValue().toString();
                             dialog.dismiss();
                         }
-                        name = getContactName(phone, Contacts.this);
+                        name = getContactName(phone, AddUserGroup.this);
                         if (TextUtils.isEmpty(name) || name == null) {
                             if (childSnapshot.child("name").getValue() != null)
                                 phone = childSnapshot.child("name").getValue().toString();
@@ -329,7 +369,7 @@ public class Contacts extends AppCompatActivity {
                         if (name.equals(phone))
                             for (UserData mContactIterator : contactList) {
                                 if (mContactIterator.getPhone().equals(mUser.getPhone())) {
-                                    mUser.setNameL(getContactName(mUser.getPhone(), Contacts.this));
+                                    mUser.setNameL(getContactName(mUser.getPhone(), AddUserGroup.this));
                                     mUser.setName(mContactIterator.getName());
                                     mUser.setAvatar(mContactIterator.getAvatar());
                                     mUser.setStatue(mContactIterator.getStatue());
@@ -337,20 +377,22 @@ public class Contacts extends AppCompatActivity {
 
                                 }
                             }
-                        Global.contactsG.add(mUser);
-                        ((AppBack) getApplication()).setContacts();
-                        mUserListAdapter.notifyDataSetChanged();
+                        if (!Global.currGUsers.contains(mUser.getId())) {
+                            Global.contactsG.add(mUser);
+                            ((AppBack) getApplication()).setContacts();
+                            mUserListAdapter.notifyDataSetChanged();
+                        }
                         if (Global.contactsG.size() == 1)
                             contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
                         else
                             contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
+
                         sora.setVisibility(View.GONE);
                         contactNum.setVisibility(View.VISIBLE);
                         mUserList.setVisibility(View.VISIBLE);
 
 
                     }
-                    Log.wtf("keyyyy", secN + "ee" + Global.contactsG.size());
                     if (secN == Global.contactsG.size()) {
                         dialog.dismiss();
                     }
@@ -405,9 +447,8 @@ public class Contacts extends AppCompatActivity {
         }
 
         try {
-           countryCode =  CountryToPhonePrefix.getPhone(countryCode.toUpperCase());
-        }catch (NullPointerException e)
-        {
+            countryCode = CountryToPhonePrefix.getPhone(countryCode.toUpperCase());
+        } catch (NullPointerException e) {
             countryCode = CountryToPhonePrefix.getPhone("US");
         }
 
@@ -432,21 +473,6 @@ public class Contacts extends AppCompatActivity {
         return contactName;
     }
 
-    private void filter(String text) {
-        ArrayList<UserData> filteredList = new ArrayList<>();
-
-        for (UserData item : Global.contactsG) {
-            if (item.getNameL().toLowerCase().contains(text.toLowerCase()))
-                filteredList.add(item);
-
-            else if (item.getPhone().toLowerCase().contains(text.toLowerCase()))
-                filteredList.add(item);
-
-
-        }
-
-        mUserListAdapter.filterList(filteredList);
-    }
 
     @Override
     public void onResume() {
@@ -533,6 +559,86 @@ public class Contacts extends AppCompatActivity {
         }
 
         return null;
+    }
+
+
+    private void sendMessNotify(String friendId, Map<String, Object> map2) {
+        String Message = encryption.encryptOrNull(Global.nameLocal + getString(R.string.add_you) + map2.get("name"));
+        String messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+
+        DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
+        mTokenget.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Tokens tokens = dataSnapshot.getValue(Tokens.class);
+                Map<String, String> map = new HashMap<>();
+                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + messidL + "#" + "group990");
+                map.put("message", Message);
+                Sender sender = new Sender(tokens.getTokens(), map);
+                fcm.send(sender)
+                        .enqueue(new Callback<FCMresp>() {
+                            @Override
+                            public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
+
+                                if (before < Global.groupids.size() - 1) {
+                                    before += 1;
+                                    putIndB(map2);
+                                } else {
+//go
+                                    finish();
+                                    before = 0;
+                                    dialog.dismiss();
+                                    finish();
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<FCMresp> call, Throwable t) {
+                                dialog.dismiss();
+                            }
+                        });
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void putIndB(Map<String, Object> map2) {
+
+        if (before < Global.groupids.size()) {
+            mUserDB.child(Global.groupids.get(before)).child("Groups").child(map2.get("id").toString()).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    if (!Global.groupids.get(before).equals(mAuth.getCurrentUser().getUid())) {
+                        sendMessNotify(Global.groupids.get(before), map2);
+                    } else {
+                        if (before < Global.groupids.size() - 1) {
+                            before += 1;
+                            putIndB(map2);
+                        } else {
+//go
+                            finish();
+                            before = 0;
+                            dialog.dismiss();
+                            finish();
+
+                        }
+                    }
+                }
+            });
+
+
+        }
+
     }
 
 }

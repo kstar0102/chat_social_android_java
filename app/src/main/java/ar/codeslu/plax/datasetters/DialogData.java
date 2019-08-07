@@ -74,7 +74,7 @@ public final class DialogData {
     //get last message
     private static Message getMessage(int i,final Date date) {
         return new Message(
-                userList.get(i).getLastsender(),getUser(i),encryption.decryptOrNull(userList.get(i).getLastmessage()),date);
+                userList.get(i).getLastsender(),getUser(i),encryption.decryptOrNull(userList.get(i).getLastmessage()),date,Global.avaLocal,true);
 
     }
     private static void arrange()

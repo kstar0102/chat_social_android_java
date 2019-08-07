@@ -1,4 +1,4 @@
-package ar.codeslu.plax;
+package ar.codeslu.plax.Groups;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,7 +20,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,7 +29,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -86,7 +85,6 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.me.GroupIn;
 import com.stfalcon.chatkit.me.Message;
 import com.stfalcon.chatkit.me.MessageIn;
-import com.stfalcon.chatkit.me.UserIn;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -110,17 +108,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import ar.codeslu.plax.Profile;
+import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.AttachMenu;
 import ar.codeslu.plax.datasetters.MessageData;
 import ar.codeslu.plax.fragments.Chats;
 import ar.codeslu.plax.fragments.Groups;
 import ar.codeslu.plax.global.AppBack;
-import ar.codeslu.plax.global.GetTime;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.holders.CustomIncomingImageMessageViewHolder;
 import ar.codeslu.plax.holders.CustomOutcomingImageMessageViewHolder;
@@ -128,20 +124,15 @@ import ar.codeslu.plax.holders.IncomeHolder;
 import ar.codeslu.plax.holders.IncomeOther;
 import ar.codeslu.plax.holders.OutcomeHolder;
 import ar.codeslu.plax.holders.OutcomeOther;
-import ar.codeslu.plax.lists.OnlineGetter;
-import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.lists.UserData;
 import ar.codeslu.plax.lists.myD;
 import ar.codeslu.plax.notify.FCM;
-import ar.codeslu.plax.notify.FCMresp;
-import ar.codeslu.plax.notify.Sender;
+import ar.codeslu.plax.settingsitems.SecuSetting;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import im.delight.android.location.SimpleLocation;
+import io.github.tonnyl.light.Light;
 import me.leolin.shortcutbadger.ShortcutBadger;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.simbio.encryption.Encryption;
 
 import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER;
@@ -166,7 +157,7 @@ public class Group extends AppCompatActivity
     private int selectionCount;
     private Date lastLoadedDate;
     private MessagesList messagesList;
-    DatabaseReference mDataget, mdatagetme,disc;
+    DatabaseReference mDataget, mdatagetme, disc;
     MessagesListAdapter.HoldersConfig holdersConfig;
     //view
     RelativeLayout ly;
@@ -201,7 +192,7 @@ public class Group extends AppCompatActivity
     CircleImageView ava;
     EmojiTextView name, state;
     //check online
-    DatabaseReference mUserDB;
+    DatabaseReference mUserDB, getAva,kick;
     //shared pref
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -233,26 +224,27 @@ public class Group extends AppCompatActivity
     Boolean canScroll = false;
     //vars
     String filetype = "";
-    String whoT="",whoR="";
-
+    String whoT = "", whoR = "";
+    int getAvasCount = 0;
+    boolean toast = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Global.chatactivity = this;
         Global.audiolist = new ArrayList<>();
         Global.btnid = new ArrayList<>();
 
         setContentView(R.layout.activity_group);
         Global.conA = this;
-        Global.chatactivity = this;
         //firebase
         mAuth = FirebaseAuth.getInstance();
         count = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mData = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         type = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
-        mDataget = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         mdatagetme = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mUserDB = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
+        getAva = FirebaseDatabase.getInstance().getReference().child(Global.USERS);
         disc = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         //init Arrays
         fileA = new ArrayList<>();
@@ -430,16 +422,61 @@ public class Group extends AppCompatActivity
             Global.currentpageid = friendId;
 
 
-            Query query = mDataget.child(friendId);
+            //set users
+            ((AppBack) getApplication()).getGroupUsers(friendId);
+            ((AppBack) getApplication()).getGroupUsersAva(friendId);
+            ((AppBack) getApplication()).getGroupAdmins(friendId);
+
+//remove user if kiked
+            kick = FirebaseDatabase.getInstance().getReference(Global.USERS).child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId);
+            Query query22 = kick.orderByChild("messDate");
+            query22.keepSynced(true);
+            query22.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        if (toast) {
+                            toast = false;
+                            Groups.refreshL(friendId);
+                            ((AppBack) getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
+                            ((AppBack) getApplication()).getchatsdb(friendId);
+
+                            Global.messG.clear();
+                            deletebyId(friendId);
+
+                            //local store
+                            ((AppBack) getApplication()).setchatsdb(friendId);
+                            ((AppBack) getApplication()).setdialogdbG(mAuth.getCurrentUser().getUid());
+                            Toast.makeText(Group.this, getString(R.string.kicked), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            mDataget = FirebaseDatabase.getInstance().getReference(Global.GROUPS).child(friendId);
+            Query query = mDataget.orderByChild("messDate");
             query.keepSynced(true);
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Global.currGAdmins.clear();
+                    Global.currGUsers.clear();
                     userData = dataSnapshot.getValue(GroupIn.class);
                     Global.currname = userData.getName();
                     Global.currAva = encryption.decryptOrNull(userData.getAvatar());
                     Global.currGUsers = userData.getUsers();
                     Global.currGAdmins = userData.getAdmins();
+                    ((AppBack) getApplication()).setGroupUsers(friendId);
+                    ((AppBack) getApplication()).setGroupAdmins(friendId);
+                    Global.currGUsersAva.clear();
+                    getAvas();
                     editInf();
                 }
 
@@ -450,6 +487,8 @@ public class Group extends AppCompatActivity
             });
             code = intent.getExtras().getInt("ccode");
         }
+
+
         //save message
         preferences = getSharedPreferences("messagebox", Context.MODE_PRIVATE);
         editor = preferences.edit();
@@ -467,7 +506,7 @@ public class Group extends AppCompatActivity
         name.setText(Global.currname);
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
-                    .load(R.drawable.profile)
+                    .load(R.drawable.group)
                     .error(R.drawable.errorimg)
                     .into(ava);
         } else {
@@ -478,9 +517,9 @@ public class Group extends AppCompatActivity
         }
         state.setVisibility(View.GONE);
 
-        Map<String,Object> mapp = new HashMap<>();
-        mapp.put("typing",false);
-        mapp.put("audio",false);
+        Map<String, Object> mapp = new HashMap<>();
+        mapp.put("typing", false);
+        mapp.put("audio", false);
         disc.child(friendId).onDisconnect().updateChildren(mapp);
 //typing
         Global.currFid = friendId;
@@ -493,9 +532,9 @@ public class Group extends AppCompatActivity
                 if (groupIn != null) {
                     typingR = groupIn.isTyping();
                     recordingR = groupIn.isAudio();
-                    if(typingR)
+                    if (typingR)
                         whoT = groupIn.getWhoT();
-                    if(recordingR)
+                    if (recordingR)
                         whoR = groupIn.getWhoR();
                     typingit();
                 } else {
@@ -540,7 +579,7 @@ public class Group extends AppCompatActivity
                 //attach menu photo
                 if (String.valueOf(Global.avaLocal).equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.profile)
+                            .load(R.drawable.group)
                             .error(R.drawable.errorimg)
                             .into(attachmenuP);
                 } else {
@@ -609,7 +648,7 @@ public class Group extends AppCompatActivity
             public void loadImage(final ImageView imageView, final String url, Object payload) {
                 if (String.valueOf(url).equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.profile)
+                            .load(R.drawable.group)
                             .error(R.drawable.errorimg)
                             .into(imageView);
                 } else {
@@ -646,7 +685,7 @@ public class Group extends AppCompatActivity
                 if (Global.messG.size() > 0 && Global.messG != null) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("typing", true);
-                    map.put("whoT",Global.nameLocal);
+                    map.put("whoT", Global.nameLocal);
                     if (Global.messG != null && Global.messG.size() != 0)
                         type.child(friendId).updateChildren(map);
                     stopTT();
@@ -703,10 +742,9 @@ public class Group extends AppCompatActivity
                     map.put("lastsender", mAuth.getCurrentUser().getUid());
                     map.put("lastsenderava", Global.avaLocal);
                     map.put("messDate", currTime);
-
                     //local message
                     messagesAdapter.clear();
-                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
                     try {
                         Global.messG.add(messageLocal);
                         //local store
@@ -789,7 +827,7 @@ public class Group extends AppCompatActivity
 
                                     //local message
                                     messagesAdapter.clear();
-                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
                                     try {
                                         Global.messG.add(messageLocal);
                                         //local store
@@ -968,7 +1006,7 @@ public class Group extends AppCompatActivity
                                         map.put("messDate", currTime);
                                         //local message
                                         messagesAdapter.clear();
-                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map");
+                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map", encryption.encryptOrNull(Global.avaLocal), false);
                                         try {
                                             Global.messG.add(messageLocal);
                                             //local store
@@ -987,6 +1025,7 @@ public class Group extends AppCompatActivity
                                         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
                                         ArrayList<GroupIn> tempoo = new ArrayList<>();
                                         tempoo.clear();
+                                        Global.yourM = false;
                                         tempoo.add(dialog);
                                         Global.groupG = dialog;
                                         Global.DialogonelistG = tempoo;
@@ -1263,12 +1302,15 @@ public class Group extends AppCompatActivity
 
     }
 
+
     private void sendM() {
         final Map<String, Object> map = new HashMap<>();
         map.put("message", encrypM);
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("seen", false);
         map.put("type", "text");
         map.put("deleted", false);
@@ -1294,6 +1336,8 @@ public class Group extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("seen", false);
         map.put("type", "map");
         map.put("deleted", false);
@@ -1351,7 +1395,6 @@ public class Group extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    if (Global.check_int(Group.this)) {
                         MessageIn message = dataSnapshot.getValue(MessageIn.class);
 
                         if (messagesAdapter.halbine(Global.messG, message.getMessId()) == -1)
@@ -1361,15 +1404,13 @@ public class Group extends AppCompatActivity
 
                         if (!message.getFrom().equals(mAuth.getCurrentUser().getUid()) && canScroll) {
                             downdown.setVisibility(View.VISIBLE);
-                        }
+
 
                     }
                     //check only in global list range
                     if (i[0] >= keyOnce[0] - 1) {
-                        if (Global.check_int(Group.this)) {
                             //local store
                             ((AppBack) getApplication()).setchatsdb(friendId);
-                        }
 
                         //update the list
                         messagesAdapter.clear();
@@ -1382,7 +1423,6 @@ public class Group extends AppCompatActivity
                             keyOnce[0]++;
                         }
                     }
-
                     i[0]++;
                 }
             }
@@ -1460,15 +1500,16 @@ public class Group extends AppCompatActivity
     }
 
     private void zeroCount() {
+        if (Global.currGUsers.contains(friendId)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("noOfUnread", 0);
+            count.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("noOfUnread", 0);
-        count.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        });
+                }
+            });
+        }
     }
 
     public void startTT() {
@@ -1505,7 +1546,7 @@ public class Group extends AppCompatActivity
         if (Global.messG.size() > 0 && Global.messG != null) {
             Map<String, Object> map = new HashMap<>();
             map.put("audio", true);
-            map.put("whoR",Global.nameLocal);
+            map.put("whoR", Global.nameLocal);
             if (Global.messG != null && Global.messG.size() != 0)
                 type.child(friendId).updateChildren(map);
         }
@@ -1579,7 +1620,7 @@ public class Group extends AppCompatActivity
                             fileA.add(messidL);
                             String locall = encryption.encryptOrNull(String.valueOf(linkL));
                             messagesAdapter.clear();
-                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no");
+                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no", encryption.encryptOrNull(Global.avaLocal), false);
                             try {
                                 Global.messG.add(messageLocal);
                                 //local store
@@ -1600,6 +1641,7 @@ public class Group extends AppCompatActivity
                             GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
                             ArrayList<GroupIn> tempoo = new ArrayList<>();
                             tempoo.clear();
+                            Global.yourM = false;
                             tempoo.add(dialog);
                             Global.groupG = dialog;
                             Global.DialogonelistG = tempoo;
@@ -1683,7 +1725,7 @@ public class Group extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time));
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time), encryption.encryptOrNull(Global.avaLocal), false);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -1703,6 +1745,7 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
+        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
@@ -1778,7 +1821,7 @@ public class Group extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no");
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no", encryption.encryptOrNull(Global.avaLocal), false);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -1799,6 +1842,7 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
+        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
@@ -1973,7 +2017,7 @@ public class Group extends AppCompatActivity
         imageA.add(messidL);
         String locall = encryption.encryptOrNull("file://" + path);
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no");
+        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -1995,6 +2039,7 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
+        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
@@ -2076,6 +2121,8 @@ public class Group extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", imageA.get(iq));
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("seen", false);
         map.put("type", "image");
         map.put("deleted", false);
@@ -2114,6 +2161,8 @@ public class Group extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", fileA.get(fq));
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("filename", filename);
         map.put("seen", false);
         map.put("type", "file");
@@ -2153,6 +2202,8 @@ public class Group extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("duration", getHumanTimeText(time));
         map.put("seen", false);
         map.put("type", "voice");
@@ -2181,6 +2232,8 @@ public class Group extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", false);
         map.put("thumb", thumbL);
         map.put("duration", getHumanTimeText(time));
         map.put("seen", false);
@@ -2264,7 +2317,7 @@ public class Group extends AppCompatActivity
         name.setText(Global.currname);
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
-                    .load(R.drawable.profile)
+                    .load(R.drawable.group)
                     .error(R.drawable.errorimg)
                     .into(ava);
         } else {
@@ -2273,7 +2326,7 @@ public class Group extends AppCompatActivity
                     .error(R.drawable.errorimg)
                     .into(ava);
         }
-            state.setVisibility(View.GONE);
+        state.setVisibility(View.GONE);
 
 
         typingit();
@@ -2283,13 +2336,11 @@ public class Group extends AppCompatActivity
     public void typingit() {
         if (typingR && !whoT.equals(Global.nameLocal)) {
             state.setVisibility(View.VISIBLE);
-            state.setText(whoT +" "+ getResources().getString(R.string.typing));
-        }
-        else if (recordingR && !whoR.equals(Global.nameLocal)) {
+            state.setText(whoT + " " + getResources().getString(R.string.typing));
+        } else if (recordingR && !whoR.equals(Global.nameLocal)) {
             state.setVisibility(View.VISIBLE);
-            state.setText(whoR +" "+ getResources().getString(R.string.recording));
-        }
-        else {
+            state.setText(whoR + " " + getResources().getString(R.string.recording));
+        } else {
             state.setVisibility(View.GONE);
         }
     }
@@ -2351,7 +2402,6 @@ public class Group extends AppCompatActivity
         } catch (NullPointerException e) {
 
         }
-
         setResult(RESULT_CANCELED);
         Global.currentpageid = "";
     }
@@ -2396,8 +2446,8 @@ public class Group extends AppCompatActivity
 
     }
 
-    public void goP(View view) {
-        Intent intent = new Intent(this, Profile.class);
+    public void goPG(View view) {
+        Intent intent = new Intent(this, ProfileGroup.class);
         intent.putExtra("idP", friendId);
         startActivity(intent);
     }
@@ -2461,4 +2511,53 @@ public class Group extends AppCompatActivity
         messagesAdapter.notifyDataSetChanged();
         super.onDestroy();
     }
+
+    void getAvas() {
+        getAva.child(Global.currGUsers.get(getAvasCount)).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Global.currGUsersAva.add(dataSnapshot.getValue(String.class));
+                if (getAvasCount == Global.currGUsers.size() - 1) {
+                    ((AppBack) getApplication()).setGroupUsersAva(friendId);
+                    getAvasCount = 0;
+                } else {
+                    getAvasCount += 1;
+                    getAvas();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public int halbine(ArrayList<GroupIn> ml, String id) {
+        int j = 0, i = 0;
+        for (i = 0; i < ml.size(); i++) {
+            if (ml.get(i).getId().equals(id)) {
+                j = 1;
+                break;
+            }
+
+        }
+        if (j == 1)
+            return i;
+        else
+            return -1;
+
+    }
+    public void deletebyId(String Fid) {
+        int i = 0;
+        for (i = 0; i < Global.diaGGG.size(); i++) {
+            if (Global.diaGGG.get(i).getId().equals(Fid)) {
+                Global.diaGGG.remove(i);
+                break;
+            }
+
+        }
+    }
+
 }

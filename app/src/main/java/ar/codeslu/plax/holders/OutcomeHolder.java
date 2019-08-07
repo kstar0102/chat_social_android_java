@@ -186,7 +186,10 @@ public class OutcomeHolder
             Date date = message.getCreatedAt();
             DateFormat format = new SimpleDateFormat("hh:mm aa");
             String timee = format.format(date);
-            time.setText("  " + timee + " (" + message.getStatus() + ")");
+            if(!message.isChat())
+                time.setText("  " + timee);
+            else
+                time.setText(" " + timee + " (" + message.getStatus() + ")");
             time.setTextSize(10);
             if (message.isDeleted()) {
                 time.setVisibility(View.GONE);

@@ -6,47 +6,8 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Groups.AddGroup"
-    tools:showIn="@layout/activity_add_group">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:layout_height="wrap_content">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/groupAva"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="start"
-            android:src="@drawable/group"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/colorPrimary"/>
-        <com.vanniktech.emoji.EmojiEditText
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/et_bg_b"
-            android:id="@+id/groupName"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:singleLine="true"
-            android:layout_marginEnd="50dp"
-            android:maxLength="20"
-            android:fontFamily="sans-serif-light"
-            android:paddingLeft="15dp"
-            android:hint="@string/group_name"
-            android:paddingRight="15dp"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:background="@color/black"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        android:layout_height="1dp"/>
+    tools:context=".Groups.AddUserGroup"
+    tools:showIn="@layout/activity_add_user_group">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_gravity="center"

@@ -16,6 +16,7 @@ import com.stfalcon.chatkit.me.UserIn;
 import se.simbio.encryption.Encryption;
 
 import static ar.codeslu.plax.datasetters.DialogData.timeStamp;
+import static ar.codeslu.plax.datasetters.DialogData.userList;
 
 /**
  * Created by mostafa on 30/01/19.
@@ -35,36 +36,36 @@ public class MessageData {
     }
 
 
-    public static Message getImageMessage(String link, String id, int i, Date creat, String type, boolean deleted) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getImageMessage(String link, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
         message.setImage(new Message.Image(link));
         return message;
     }
 
-    public static Message getVoiceMessage(String link, String duration, String id, int i, Date creat, String type, boolean deleted) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getVoiceMessage(String link, String duration, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
         message.setVoice(new Message.Voice(link, duration));
         return message;
     }
 
-    public static Message getFileMessage(String link, String filename, String id, int i, Date creat, String type, boolean deleted) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getFileMessage(String link, String filename, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
         message.setFile(new Message.File(link, filename));
         return message;
     }
 
-    public static Message getVideoMessage(String link, String duration, String id, int i, Date creat, String type, String thumb, boolean deleted) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), thumb, messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getVideoMessage(String link, String duration, String id, int i, Date creat, String type, String thumb, boolean deleted,String ava,boolean chat) {
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), thumb, messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
         message.setVideo(new Message.Video(link, duration, thumb));
         return message;
     }
 
-    public static Message getTextMessage(String text, String id, int i, Date creat, String type, boolean deleted) {
-        return new Message(id, getUser(messagelist.get(i).getFrom()), text, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getTextMessage(String text, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
+        return new Message(id, getUser(messagelist.get(i).getFrom()), text, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
     }
 
-    public static Message getLocationMessage(String location, String id, int i, Date creat, String type, boolean deleted) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), location, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact());
+    public static Message getLocationMessage(String location, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), location, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
         message.setMap(new Message.Map(location));
         return message;
     }
@@ -83,17 +84,17 @@ public class MessageData {
             timeStamp = messagelist.get(i).getTime();
             calendar.setTimeInMillis(timeStamp);
             if (messagelist.get(i).getType().equals("text")) {
-                chats.add(getTextMessage(encryption.decryptOrNull(messagelist.get(i).getMessage()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted()));
+                chats.add(getTextMessage(encryption.decryptOrNull(messagelist.get(i).getMessage()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             } else if (messagelist.get(i).getType().equals("image")) {
-                chats.add(getImageMessage(encryption.decryptOrNull(messagelist.get(i).getLinkI()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted()));
+                chats.add(getImageMessage(encryption.decryptOrNull(messagelist.get(i).getLinkI()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             } else if (messagelist.get(i).getType().equals("voice")) {
-                chats.add(getVoiceMessage(encryption.decryptOrNull(messagelist.get(i).getLinkV()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted()));
+                chats.add(getVoiceMessage(encryption.decryptOrNull(messagelist.get(i).getLinkV()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             } else if (messagelist.get(i).getType().equals("file")) {
-                chats.add(getFileMessage(encryption.decryptOrNull(messagelist.get(i).getLinkF()), messagelist.get(i).getFilename(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted()));
+                chats.add(getFileMessage(encryption.decryptOrNull(messagelist.get(i).getLinkF()), messagelist.get(i).getFilename(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             } else if (messagelist.get(i).getType().equals("video")) {
-                chats.add(getVideoMessage(encryption.decryptOrNull(messagelist.get(i).getLinkVideo()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).getThumb(), messagelist.get(i).isDeleted()));
+                chats.add(getVideoMessage(encryption.decryptOrNull(messagelist.get(i).getLinkVideo()), messagelist.get(i).getDuration(), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).getThumb(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             } else if (messagelist.get(i).getType().equals("map")) {
-                chats.add(getLocationMessage(encryption.decryptOrNull(messagelist.get(i).getLocation()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted()));
+                chats.add(getLocationMessage(encryption.decryptOrNull(messagelist.get(i).getLocation()), messagelist.get(i).getFrom(), i, calendar.getTime(), messagelist.get(i).getType(), messagelist.get(i).isDeleted(),encryption.decryptOrNull(messagelist.get(i).getAvatar()),messagelist.get(i).isChat()));
             }
         }
         return chats;
@@ -106,17 +107,17 @@ public class MessageData {
         timeStamp = mess.getTime();
         calendar.setTimeInMillis(timeStamp);
         if (mess.getType().equals("text")) {
-            return getTextMessage(encryption.decryptOrNull(mess.getMessage()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+            return getTextMessage(encryption.decryptOrNull(mess.getMessage()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         } else if (mess.getType().equals("image")) {
-            return getImageMessage(encryption.decryptOrNull(mess.getLinkI()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+            return getImageMessage(encryption.decryptOrNull(mess.getLinkI()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         } else if ( mess.getType().equals("voice")) {
-            return getVoiceMessage(encryption.decryptOrNull(mess.getLinkV()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+            return getVoiceMessage(encryption.decryptOrNull(mess.getLinkV()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         } else if (mess.getType().equals("file")) {
-            return getFileMessage(encryption.decryptOrNull(mess.getLinkF()), mess.getFilename(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+            return getFileMessage(encryption.decryptOrNull(mess.getLinkF()), mess.getFilename(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         } else if (mess.getType().equals("video")) {
-            return getVideoMessage(encryption.decryptOrNull(mess.getLinkVideo()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.getThumb(), mess.isDeleted());
+            return getVideoMessage(encryption.decryptOrNull(mess.getLinkVideo()), mess.getDuration(), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.getThumb(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         } else if (mess.getType().equals("map")) {
-            return getLocationMessage(encryption.decryptOrNull(mess.getLocation()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted());
+            return getLocationMessage(encryption.decryptOrNull(mess.getLocation()), mess.getFrom(), 0, calendar.getTime(), mess.getType(), mess.isDeleted(),encryption.decryptOrNull(mess.getAvatar()),mess.isChat());
         }
 
         return null;

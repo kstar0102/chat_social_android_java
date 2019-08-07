@@ -15,9 +15,9 @@ public class Message implements IMessage,
         MessageContentType.Image, /*this is for default image messages implementation*/
         MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
 
-    private String id,type,react;
+    private String id,type,react,avatar;
     private String text,statue,messid,thumb;
-    private boolean deleted;
+    private boolean deleted,chat;
     private Date createdAt;
     private UserIn user;
     private GroupIn group;
@@ -28,11 +28,12 @@ public class Message implements IMessage,
     private File file;
     private Map map;
 
-    public Message(String id, UserIn user, String text,String statue,String type,String messid,boolean deleted,String react) {
-        this(id, user, text, new Date(),statue,type,messid,deleted,react);
+
+    public Message(String id, UserIn user, String text,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat) {
+        this(id, user, text, new Date(),statue,type,messid,deleted,react,avatar,chat);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,boolean deleted,String react) {
+    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -42,12 +43,14 @@ public class Message implements IMessage,
         this.messid = messid;
         this.deleted = deleted;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
-    public Message(String id, UserIn user, String text,String statue,String type,String messid,String thumb,boolean deleted,String react) {
-        this(id, user, text, new Date(),statue,type,messid,thumb,deleted,react);
+    public Message(String id, UserIn user, String text,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat) {
+        this(id, user, text, new Date(),statue,type,messid,thumb,deleted,react,avatar,chat);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,String thumb,boolean deleted,String react) {
+    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -58,29 +61,63 @@ public class Message implements IMessage,
         this.thumb = thumb;
         this.deleted = deleted;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
-    public Message(String id, UserIn user, String text) {
-        this(id, user, text, new Date());
+    public Message(String id, UserIn user, String text,String avatar,boolean chat) {
+        this(id, user, text, new Date(),avatar,chat);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt) {
+    public Message(String id, UserIn user, String text, Date createdAt,String avatar,boolean chat) {
         this.id = id;
         this.text = text;
         this.user = user;
         this.createdAt = createdAt;
         this.deleted = deleted;
+        this.avatar = avatar;
+        this.chat = chat;
     }
 
-    public Message(String id, GroupIn group, String text, Date createdAt) {
+    public Message(String id, GroupIn group, String text, Date createdAt,String avatar,boolean chat) {
         this.id = id;
         this.text = text;
         this.group = group;
         this.createdAt = createdAt;
         this.deleted = deleted;
+        this.avatar = avatar;
+        this.chat = chat;
     }
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getStatue() {
+        return statue;
+    }
+
+    public boolean isChat() {
+        return chat;
+    }
+
+    public void setChat(boolean chat) {
+        this.chat = chat;
+    }
+
+    public GroupIn getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupIn group) {
+        this.group = group;
     }
 
     public void setDeleted(boolean deleted) {

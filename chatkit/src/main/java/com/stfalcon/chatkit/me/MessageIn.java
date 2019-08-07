@@ -5,14 +5,15 @@ package com.stfalcon.chatkit.me;
  */
 
 public class MessageIn {
-    String message,type,statue,from,linkV,linkI,messId,duration,linkF,filename,linkVideo,location,thumb,react;
+    String message,type,statue,from,linkV,linkI,messId,duration,linkF,filename,linkVideo,location,thumb,react,avatar;
     long time;
-    boolean seen,deleted ;
+    boolean seen,deleted,chat ;
+
 
     public MessageIn() {
     }
 
-    public MessageIn(String message, String type, String statue, String from, String linkV, String linkI, long time, boolean seen,String thumb,boolean deleted) {
+    public MessageIn(String message, String type, String statue, String from, String linkV, String linkI, long time, boolean seen,String thumb,boolean deleted,String avatar,boolean chat) {
         this.message = message;
         this.type = type;
         this.statue = statue;
@@ -23,11 +24,13 @@ public class MessageIn {
         this.seen = seen;
         this.thumb = thumb;
         this.deleted = deleted;
+        this.avatar = avatar;
+        this.chat = chat;
     }
 
     //local messages
     //text
-    public MessageIn(String message, String type, String statue, String from, long time, boolean seen,boolean deleted,String messId,String react) {
+    public MessageIn(String message, String type, String statue, String from, long time, boolean seen,boolean deleted,String messId,String react,String avatar,boolean chat) {
         this.message = message;
         this.type = type;
         this.statue = statue;
@@ -37,10 +40,12 @@ public class MessageIn {
         this.deleted = deleted;
         this.messId = messId;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
 
     //map
-    public MessageIn(String location, String statue, String from, long time, boolean seen,String react,boolean deleted,String messId, String type) {
+    public MessageIn(String location, String statue, String from, long time, boolean seen,String react,boolean deleted,String messId, String type,String avatar,boolean chat) {
         this.location = location;
         this.type = type;
         this.statue = statue;
@@ -50,9 +55,11 @@ public class MessageIn {
         this.deleted = deleted;
         this.messId = messId;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
     //voice
-    public MessageIn(String linkV, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String react,String duration) {
+    public MessageIn(String linkV, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String react,String duration,String avatar,boolean chat) {
         this.type = type;
         this.statue = statue;
         this.from = from;
@@ -63,9 +70,11 @@ public class MessageIn {
         this.messId = messId;
         this.duration = duration;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
     //video
-    public MessageIn(String linkVideo, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String duration,String thumb,String react) {
+    public MessageIn(String linkVideo, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String duration,String thumb,String react,String avatar,boolean chat) {
         this.linkVideo = linkVideo;
         this.type = type;
         this.statue = statue;
@@ -77,9 +86,11 @@ public class MessageIn {
         this.duration = duration;
         this.thumb = thumb;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
     //file
-    public MessageIn(String linkF, String statue, long time, boolean seen,boolean deleted,String messId, String type,String filename,String from,String react) {
+    public MessageIn(String linkF, String statue, long time, boolean seen,boolean deleted,String messId, String type,String filename,String from,String react,String avatar,boolean chat) {
         this.linkF = linkF;
         this.type = type;
         this.statue = statue;
@@ -90,9 +101,11 @@ public class MessageIn {
         this.messId = messId;
         this.filename = filename;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
     }
     //image
-    public MessageIn(String linkI, String type,String messId, String statue, String from, long time, boolean seen,boolean deleted,String react) {
+    public MessageIn(String linkI, String type,String messId, String statue, String from, long time, boolean seen,boolean deleted,String react,String avatar,boolean chat) {
         this.type = type;
         this.statue = statue;
         this.from = from;
@@ -102,6 +115,24 @@ public class MessageIn {
         this.messId = messId;
         this.deleted = deleted;
         this.react = react;
+        this.avatar = avatar;
+        this.chat = chat;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public boolean isChat() {
+        return chat;
+    }
+
+    public void setChat(boolean chat) {
+        this.chat = chat;
     }
 
     public boolean isDeleted() {

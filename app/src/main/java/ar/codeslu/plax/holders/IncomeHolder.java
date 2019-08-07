@@ -62,21 +62,40 @@ public class IncomeHolder
 
 
          userava = itemView.findViewById(R.id.messageUserAvatarC);
-        if (String.valueOf(Global.currAva).equals("no")) {
-            Picasso.get()
-                    .load(R.drawable.profile)
-                    .error(R.drawable.errorimg)
-                    .into(userava);
+        if (message.isChat()) {
+            if (String.valueOf(Global.currAva).equals("no")) {
+                Picasso.get()
+                        .load(R.drawable.profile)
+                        .error(R.drawable.errorimg)
+                        .into(userava);
+            } else {
+                Picasso.get()
+                        .load(Global.currAva)
+                        .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                        .error(R.drawable.errorimg)
+                        .into(userava);
+            }
         } else {
-            Picasso.get()
-                    .load(Global.currAva)
-                    .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
-                    .error(R.drawable.errorimg)
-                    .into(userava);
+            if(Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
+
+                if (String.valueOf(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId()))).equals("no")) {
+                    Picasso.get()
+                            .load(R.drawable.profile)
+                            .error(R.drawable.errorimg)
+                            .into(userava);
+                } else {
+                    Picasso.get()
+                            .load(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId())))
+                            .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                            .error(R.drawable.errorimg)
+                            .into(userava);
+                }
+            }
         }
+
         //react
         ImageView react = itemView.findViewById(R.id.react);
-        if (message.isDeleted()) {
+        if (message.isDeleted() || !message.isChat()) {
             react.setVisibility(View.GONE);
         } else {
             react.setVisibility(View.VISIBLE);

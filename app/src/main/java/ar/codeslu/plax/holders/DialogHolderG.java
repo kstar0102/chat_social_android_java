@@ -39,7 +39,7 @@ public class DialogHolderG extends DialogsListAdapterG.DialogViewHolder<GroupDia
 
             if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
                 Picasso.get()
-                        .load(R.drawable.profile)
+                        .load(R.drawable.group)
                         .error(R.drawable.errorimg)
                         .into(ava);
             } else {
@@ -53,7 +53,7 @@ public class DialogHolderG extends DialogsListAdapterG.DialogViewHolder<GroupDia
             if (dialog.getLastMessage().getId().equals(mAuth.getCurrentUser().getUid())) {
                 if (Global.avaLocal.equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.profile)
+                            .load(R.drawable.group)
                             .error(R.drawable.errorimg)
                             .into(avaSmall);
                 } else {
@@ -66,7 +66,7 @@ public class DialogHolderG extends DialogsListAdapterG.DialogViewHolder<GroupDia
             } else {
                 if (String.valueOf(dialog.getLastSenderAva()).equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.profile)
+                            .load(R.drawable.group)
                             .error(R.drawable.errorimg)
                             .into(avaSmall);
                 } else {

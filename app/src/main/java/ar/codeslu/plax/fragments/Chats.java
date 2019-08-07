@@ -154,6 +154,9 @@ public class Chats extends Fragment
             dialogsAdapter.setItems(DialogData.getDialogs());
             dialogsAdapter.notifyDataSetChanged();
         }
+        else
+            Global.diaG.clear();
+
         //if online
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

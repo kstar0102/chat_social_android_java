@@ -203,12 +203,21 @@ public class EditProfile extends AppCompatActivity {
 
             }
         });
-        //dialog
-        dialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage(R.string.pleasW)
-                .setCancelable(false)
-                .build();
+        //loader
+        if (Global.DARKSTATE) {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setTheme(R.style.darkDialog)
+                    .setCancelable(true)
+                    .build();
+        } else {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setCancelable(true)
+                    .build();
+        }
     }
 
     public void changeprofile(View view) {

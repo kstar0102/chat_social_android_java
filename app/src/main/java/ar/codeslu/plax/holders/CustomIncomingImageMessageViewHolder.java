@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+
 import androidx.core.app.ActivityCompat;
 
 import android.util.DisplayMetrics;
@@ -50,21 +51,35 @@ public class CustomIncomingImageMessageViewHolder
     public void onBind(final Message message) {
         super.onBind(message);
         userava = itemView.findViewById(R.id.messageUserAvatarC);
-        if (String.valueOf(Global.currAva).equals("no")) {
-            Picasso.get()
-                    .load(R.drawable.profile)
-                    .error(R.drawable.errorimg)
-                    .into(userava);
+        if (message.isChat()) {
+            if (String.valueOf(Global.currAva).equals("no")) {
+                Picasso.get()
+                        .load(R.drawable.profile)
+                        .error(R.drawable.errorimg)
+                        .into(userava);
+            } else {
+                Picasso.get()
+                        .load(Global.currAva)
+                        .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                        .error(R.drawable.errorimg)
+                        .into(userava);
+            }
         } else {
-            Picasso.get()
-                    .load(Global.currAva)
-                    .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
-                    .error(R.drawable.errorimg)
-                    .into(userava);
+            if(Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
+                if (String.valueOf(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId()))).equals("no")) {
+                    Picasso.get()
+                            .load(R.drawable.profile)
+                            .error(R.drawable.errorimg)
+                            .into(userava);
+                } else {
+                    Picasso.get()
+                            .load(Global.currGUsersAva.get(Global.currGUsers.indexOf(message.getId())))
+                            .placeholder(Global.conA.getResources().getDrawable(R.drawable.loading))
+                            .error(R.drawable.errorimg)
+                            .into(userava);
+                }
+            }
         }
-
-
-
         //react
         ImageView react = itemView.findViewById(R.id.react);
 
@@ -83,7 +98,7 @@ public class CustomIncomingImageMessageViewHolder
         react.getLayoutParams().width = reactWH;
         react.getLayoutParams().height = reactWH;
 
-        if (message.isDeleted()) {
+        if (message.isDeleted() || !message.isChat()) {
             react.setVisibility(View.GONE);
         } else {
             react.setVisibility(View.VISIBLE);
@@ -178,12 +193,12 @@ public class CustomIncomingImageMessageViewHolder
             public void onClick(View view) {
 
                 Dexter.withActivity(Global.chatactivity)
-                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WAKE_LOCK)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK)
                         .withListener(new MultiplePermissionsListener() {
-                            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                if(report.areAllPermissionsGranted())
-                                {
+                                if (report.areAllPermissionsGranted()) {
                                     Intent intent = new Intent(Global.conA, Photoa.class);
                                     intent.putExtra("url", message.getImageUrl());
                                     intent.putExtra("from", message.getId());
@@ -191,14 +206,14 @@ public class CustomIncomingImageMessageViewHolder
                                     intent.putExtra("ava", Global.currAva);
                                     intent.putExtra("name", Global.currname);
                                     Global.conA.startActivity(intent);
-                                }
-
-                                else
+                                } else
                                     Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
 
 
                             }
-                            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                                 token.continuePermissionRequest();
 

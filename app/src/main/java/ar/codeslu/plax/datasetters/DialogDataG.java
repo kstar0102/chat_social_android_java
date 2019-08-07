@@ -95,7 +95,7 @@ public final class DialogDataG {
             messageL = encryption.decryptOrNull(userList.get(i).getLastmessage());
         }
         return new Message(
-                userList.get(i).getLastsender(), getUser(i), messageL, date);
+                userList.get(i).getLastsender(), getUser(i), messageL, date,Global.avaLocal,false);
 
     }
 

@@ -103,6 +103,9 @@ public  static ArrayList<AudioWife> audiolist;
     public static String currstatue = "";
     public static String currphone = "";
     public static ArrayList<String> currGUsers ;
+    public static ArrayList<UserData> currGUsersU ;
+    public static ArrayList<UserData>  adminList;
+    public static ArrayList<String> currGUsersAva ;
     public static ArrayList<String> currGAdmins;
 
     public static boolean onstate;

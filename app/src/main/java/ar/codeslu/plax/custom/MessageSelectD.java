@@ -6,8 +6,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -64,7 +67,7 @@ public class MessageSelectD extends Dialog {
 
     private Activity c;
     public Dialog d;
-    private Button copy, delete, deleteall,retry;
+    private Button copy, delete, deleteall, retry;
     // private boolean deleted;
     private String messId, friendid, messagetxt, type;
     public long time;
@@ -78,11 +81,12 @@ public class MessageSelectD extends Dialog {
     //delete chat
     boolean deleted = false;
     FirebaseAuth mAuth;
-    DatabaseReference mData;
+    DatabaseReference mData, userD;
     Map<String, Object> map;
     Map<String, Object> mapd;
     LinearLayout dialogM;
-//indicate 1 other // 0 me
+
+    //indicate 1 other // 0 me
     public MessageSelectD(Activity a, Message message, String friendid, int indicat, int position) {
         super(a);
         // TODO Auto-generated constructor stub
@@ -125,10 +129,9 @@ public class MessageSelectD extends Dialog {
         if (!type.equals("text") || deleted)
             copy.setVisibility(View.GONE);
 
-        if (message.getStatus().equals(".."))
+        if (message.getStatus().equals("..") || !message.isChat())
             delete.setVisibility(View.GONE);
-        else if(message.getStatus().equals("X"))
-        {
+        else if (message.getStatus().equals("X")) {
             retry.setVisibility(View.VISIBLE);
             delete.setVisibility(View.VISIBLE);
         }
@@ -147,7 +150,7 @@ public class MessageSelectD extends Dialog {
                 public void onSuccess(HttpsCallableResult httpsCallableResult) {
                     long now = (long) httpsCallableResult.getData();
                     int hours = (int) TimeUnit.MILLISECONDS.toHours(now - time);
-                    if (hours >= 24 || indicat != 0|| message.getStatus().equals("..")||message.getStatus().equals("X")||deleted)
+                    if (hours >= 24 || indicat != 0 || message.getStatus().equals("..") || message.getStatus().equals("X") || deleted)
                         deleteall.setVisibility(View.GONE);
                     else
                         deleteall.setVisibility(View.VISIBLE);
@@ -160,7 +163,6 @@ public class MessageSelectD extends Dialog {
 
                 }
             });
-
 
 
         }
@@ -184,64 +186,82 @@ public class MessageSelectD extends Dialog {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                final DatabaseReference mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
-                final Map<String, Object> map = new HashMap<String, Object>();
-                map.put("type", "delete");
+                if (message.isChat()) {
+                    final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    final DatabaseReference mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+                    final Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("type", "delete");
 
-                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(messId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (position == 0) {
-                            mData.child(mAuth.getCurrentUser().getUid()).child(friendid).updateChildren(mapd).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(Global.conA, R.string.mss_dlt, Toast.LENGTH_SHORT).show();
+                    mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(messId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (position == 0) {
+                                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).updateChildren(mapd).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(Global.conA, R.string.mss_dlt, Toast.LENGTH_SHORT).show();
 
-                                }
-                            });
-                        } else
-                            Toast.makeText(Global.conA, R.string.mss_dlt, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                                    }
+                                });
+                            } else
+                                Toast.makeText(Global.conA, R.string.mss_dlt, Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                dismiss();
+                    dismiss();
 
+                }
             }
         });
         deleteall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
-                mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
-                map = new HashMap<String, Object>();
-                map.put("deleted", true);
-                map.put("message", lastM);
-                map.put("type", "text");
-                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(messId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        mData.child(friendid).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).child(messId).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    deletedChat = false;
-                                    kamelDelete();
-                                } else {
-                                    deletedChat = true;
-                                    kamelDelete();
+                if (message.isChat()) {
+                    mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+                    map = new HashMap<String, Object>();
+                    map.put("deleted", true);
+                    map.put("message", lastM);
+                    map.put("type", "text");
+                    mData.child(mAuth.getCurrentUser().getUid()).child(friendid).child(Global.Messages).child(messId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mData.child(friendid).child(mAuth.getCurrentUser().getUid()).child(Global.Messages).child(messId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        deletedChat = false;
+                                        kamelDelete();
+                                    } else {
+                                        deletedChat = true;
+                                        kamelDelete();
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                        });
-                    }
-                });
-                dismiss();
+                                }
+                            });
+                        }
+                    });
+                    dismiss();
+                } else {
+                    mData = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
+                    map = new HashMap<String, Object>();
+                    map.put("deleted", true);
+                    map.put("message", lastM);
+                    map.put("type", "text");
+                    mData.child(friendid).child(Global.Messages).child(messId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            kameDeleteGG(lastM);
+                        }
+                    });
+                    dismiss();
+                }
             }
+
         });
 
         retry.setOnClickListener(new View.OnClickListener() {
@@ -249,6 +269,24 @@ public class MessageSelectD extends Dialog {
             public void onClick(View v) {
                 Toast.makeText(Global.conA, c.getString(R.string.we_will_soon), Toast.LENGTH_SHORT).show();
 
+            }
+        });
+
+
+    }
+
+    private int getAvasCount = 0;
+
+    private void kameDeleteGG(String mDeleteT) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("lastmessage", mDeleteT);
+        map.put("lastsender", mAuth.getCurrentUser().getUid());
+        map.put("lastsenderava", Global.avaLocal);
+        userD = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        userD.child(Global.currGUsers.get(getAvasCount)).child(Global.GROUPS).child(friendid).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                sendMessNotifyG(mDeleteT);
             }
         });
 
@@ -328,6 +366,49 @@ public class MessageSelectD extends Dialog {
         });
     }
 
+
+    private void sendMessNotifyG(String mDeleteT) {
+        if (getAvasCount == Global.currGUsers.size() - 1) {
+            getAvasCount = 0;
+            Toast.makeText(Global.conA, R.string.mss_dlt, Toast.LENGTH_SHORT).show();
+        } else {
+            getAvasCount += 1;
+            kameDeleteGG(mDeleteT);
+        }
+//        //fcm notify
+//        final FCM fcm = Global.getFCMservies();
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Global.tokens);
+//        databaseReference.orderByKey().equalTo(friendid).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Tokens tokens = snapshot.getValue(Tokens.class);
+//                    String Ptoken = FirebaseInstanceId.getInstance().getToken();
+//                    Map<String, String> map = new HashMap<>();
+//                    map.put("title", Ptoken + "#" + "ID" + "#" + "name" + "#" + "AVAU" + "#" + messId);
+//                    map.put("message", lastM);
+//                    Sender sender = new Sender(tokens.getTokens(), map);
+//                    fcm.send(sender)
+//                            .enqueue(new Callback<FCMresp>() {
+//                                @Override
+//                                public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<FCMresp> call, Throwable t) {
+//                                }
+//                            });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+    }
+
 //    public void sendText()
 //    {
 //            editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
@@ -393,9 +474,6 @@ public class MessageSelectD extends Dialog {
 //            });
 //       
 //    }
-
-
-
 
 
 }

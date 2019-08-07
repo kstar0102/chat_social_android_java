@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:padding="10dp"
+    android:id="@+id/ly"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="30dp"
+        android:src="@drawable/admin"
+        android:id="@+id/admin"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_height="30dp" />
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/avaC"
+        android:layout_width="@dimen/dialog_avatar_width"
+        android:layout_height="@dimen/dialog_avatar_height"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:background="@color/colorPrimary"
+        app:riv_corner_radius_bottom_left="20dip"
+        app:riv_corner_radius_bottom_right="20dip"
+        app:riv_corner_radius_top_left="20dip"
+        app:riv_corner_radius_top_right="20dp"
+        app:riv_mutate_background="true"
+        app:riv_oval="false"/>
+    <com.vanniktech.emoji.EmojiTextView
+        android:id="@+id/nameC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="8sp"
+        android:textColor="@color/black"
+        android:fontFamily="@string/font_fontFamily_medium"
+        android:ellipsize="end"
+        android:maxLines="1"/>
+</LinearLayout>

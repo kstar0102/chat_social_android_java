@@ -32,9 +32,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Group"></activity>
         <activity
-            android:name=".AddGroup"
+            android:name=".Groups.AddUserGroup"
+            android:label="@string/title_activity_add_user_group"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Groups.ProfileGroup"
+            android:parentActivityName=".Groups.Group" />
+        <activity
+            android:name=".Groups.Group"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Groups.AddGroup"
             android:label="@string/title_activity_add_group"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -120,7 +131,7 @@
         </service>
 
         <receiver
-            android:name=".CheckConnectivity"
+            android:name=".global.CheckConnectivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

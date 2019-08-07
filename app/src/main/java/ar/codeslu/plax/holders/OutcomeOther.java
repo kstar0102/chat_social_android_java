@@ -149,7 +149,10 @@ public class OutcomeOther
         Date date = message.getCreatedAt();
         DateFormat format = new SimpleDateFormat("hh:mm aa");
         String timee = format.format(date);
-        time.setText("  " + timee + " (" + message.getStatus() + ")");
+        if(!message.isChat())
+            time.setText("  " + timee);
+        else
+            time.setText(" " + timee + " (" + message.getStatus() + ")");
         time.setTextSize(10);
         TextView duration = itemView.findViewById(R.id.recordduration);
         play = itemView.findViewById(R.id.playV);

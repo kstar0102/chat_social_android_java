@@ -491,5 +491,16 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="cannot_l_g">Can\'t leave Group name empty</string>
     <string name="reach_max">You reached the maximum number</string>
     <string name="add_you">Added you to</string>
+    <string name="name_empty">Please write group name</string>
+    <string name="admins">Admins</string>
+    <string name="Leav_grp">Exit Group</string>
+    <string name="add_to_admins">Add to admins</string>
+    <string name="remove_admin">Remove Admin</string>
+    <string name="remove_user">Remove User</string>
+    <string name="can_mng">You can\'t manage your self</string>
+    <string name="this_usr_adm">This user is already admin</string>
+    <string name="exit_group_sure">Are you sure you want exit the group?</string>
+    <string name="title_activity_add_user_group">AddUserGroup</string>
+    <string name="kicked">You have been kicked from the group</string>
 
 </resources>

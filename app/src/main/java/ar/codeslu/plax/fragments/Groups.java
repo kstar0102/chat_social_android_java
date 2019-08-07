@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +40,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ar.codeslu.plax.AddGroup;
-import ar.codeslu.plax.Group;
+import ar.codeslu.plax.Groups.AddGroup;
+import ar.codeslu.plax.Groups.Group;
 import ar.codeslu.plax.R;
-import ar.codeslu.plax.custom.ChatCelect;
 import ar.codeslu.plax.custom.GroupCelect;
 import ar.codeslu.plax.datasetters.DialogDataG;
 import ar.codeslu.plax.global.AppBack;
@@ -144,12 +144,14 @@ public class Groups extends Fragment
             dialogsAdapter.setItems(DialogDataG.getDialogs(getActivity()));
             dialogsAdapter.notifyDataSetChanged();
         }
+        else
+            Global.diaGGG.clear();
+
 
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    if (Global.check_int(Global.mainActivity)) {
                         GroupIn chats = dataSnapshot.getValue(GroupIn.class);
                         try {
                             if (chats.getId() != null) {
@@ -160,13 +162,12 @@ public class Groups extends Fragment
                             }
                         } catch (NullPointerException e) {
                         }
-                    }
+
                     //check only in global list range
                     if (i[0] >= keyOnce[0] - 1) {
-                        if (Global.check_int(Global.mainActivity)) {
                             //local store
                             ((AppBack) Global.mainActivity.getApplication()).setdialogdbG(mAuth.getCurrentUser().getUid());
-                        }
+
                         //update the list
                         dialogsAdapter.clear();
                         dialogsAdapter.setItems(DialogDataG.getDialogs(getActivity()));
@@ -190,7 +191,7 @@ public class Groups extends Fragment
                     if(tempID.equals(mAuth.getCurrentUser().getUid()))
                         tempID = "DUMMY";
 
-                    if (!tempID.equals("DUMMY") && Global.check_int(getActivity())) {
+                    if (!tempID.equals("DUMMY")) {
 
                         try {
                             if (Global.diaGGG.size() != 0 && chats.getId() != null && dialogsAdapter.halbine(Global.diaGGG, chats.getId()) != -1)
@@ -204,7 +205,7 @@ public class Groups extends Fragment
                         dialogsAdapter.setItems(DialogDataG.getDialogs(getActivity()));
                         dialogsAdapter.notifyDataSetChanged();
                     }
-                    else if(tempID.equals("DUMMY")  && Global.check_int(getActivity()))
+                    else if(tempID.equals("DUMMY"))
                     {
                         boolean isUpdated = dialogsAdapter.updateDialogWithMessage(Global.diaGGG, Global.Dialogid, Global.groupG);
 
@@ -353,7 +354,7 @@ public class Groups extends Fragment
         dialogsAdapter.addItem(dialog);
     }
 
-    public static void refreshL() {
-        dialogsAdapter.deleteById(idR);
+    public static void refreshL(String id) {
+        dialogsAdapter.deleteById(id);
     }
 }

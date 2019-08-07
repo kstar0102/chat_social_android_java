@@ -107,6 +107,8 @@ public class FCMR extends FirebaseMessagingService {
             id = array[1];
             ava = array[3];
             Mid = array[4];
+            Log.wtf("keyyy","yes");
+
             try {
                 if(array.length > 6)
                 {

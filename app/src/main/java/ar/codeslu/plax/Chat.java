@@ -266,6 +266,7 @@ public class Chat extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Global.chatactivity = this;
         Global.audiolist = new ArrayList<>();
         Global.btnid = new ArrayList<>();
         if (getIntent() != null) {
@@ -278,7 +279,6 @@ public class Chat extends AppCompatActivity
 
         setContentView(R.layout.activity_chat);
         Global.conA = this;
-        Global.chatactivity = this;
         //firebase
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
@@ -758,7 +758,7 @@ public class Chat extends AppCompatActivity
 
                     //local message
                     messagesAdapter.clear();
-                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no",encryption.encryptOrNull(Global.avaLocal),true);
                     try {
                         Global.messG.add(messageLocal);
                         //local store
@@ -838,7 +838,7 @@ public class Chat extends AppCompatActivity
 
                                     //local message
                                     messagesAdapter.clear();
-                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no");
+                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no",encryption.encryptOrNull(Global.avaLocal),true);
                                     try {
                                         Global.messG.add(messageLocal);
                                         //local store
@@ -1014,7 +1014,7 @@ public class Chat extends AppCompatActivity
                                         map.put("messDate", currTime);
                                         //local message
                                         messagesAdapter.clear();
-                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map");
+                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map",encryption.encryptOrNull(Global.avaLocal),true);
                                         try {
                                             Global.messG.add(messageLocal);
                                             //local store
@@ -1360,6 +1360,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("seen", false);
         map.put("type", "text");
         map.put("deleted", false);
@@ -1416,6 +1418,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("seen", false);
         map.put("type", "map");
         map.put("deleted", false);
@@ -1747,7 +1751,7 @@ public class Chat extends AppCompatActivity
                             fileA.add(messidL);
                             String locall = encryption.encryptOrNull(String.valueOf(linkL));
                             messagesAdapter.clear();
-                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no");
+                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no",encryption.encryptOrNull(Global.avaLocal),true);
                             try {
                                 Global.messG.add(messageLocal);
                                 //local store
@@ -1853,7 +1857,7 @@ public class Chat extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time));
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time),encryption.encryptOrNull(Global.avaLocal),true);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -1951,7 +1955,7 @@ public class Chat extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no");
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no",encryption.encryptOrNull(Global.avaLocal),true);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -2144,7 +2148,7 @@ public class Chat extends AppCompatActivity
         imageA.add(messidL);
         String locall = encryption.encryptOrNull("file://" + path);
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no");
+        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no",encryption.encryptOrNull(Global.avaLocal),true);
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -2245,6 +2249,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", imageA.get(iq));
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("seen", false);
         map.put("type", "image");
         map.put("deleted", false);
@@ -2314,6 +2320,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", fileA.get(fq));
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("filename", filename);
         map.put("seen", false);
         map.put("type", "file");
@@ -2382,6 +2390,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("duration", getHumanTimeText(time));
         map.put("seen", false);
         map.put("type", "voice");
@@ -2437,6 +2447,8 @@ public class Chat extends AppCompatActivity
         map.put("time", currTime);
         map.put("messId", messidL);
         map.put("react", "no");
+        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+        map.put("chat", true);
         map.put("thumb", thumbL);
         map.put("duration", getHumanTimeText(time));
         map.put("seen", false);
