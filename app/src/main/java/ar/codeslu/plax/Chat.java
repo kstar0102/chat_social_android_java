@@ -95,6 +95,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.sandrios.sandriosCamera.internal.SandriosCamera;
 import com.sandrios.sandriosCamera.internal.configuration.CameraConfiguration;
 import com.sandrios.sandriosCamera.internal.ui.model.Media;
+import com.sinch.android.rtc.SinchClient;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.me.UserIn;
@@ -119,6 +120,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.auth.DataSet;
+import ar.codeslu.plax.calls.BaseActivity;
+import ar.codeslu.plax.calls.CallingActivity;
+import ar.codeslu.plax.calls.CallingActivityVideo;
+import ar.codeslu.plax.calls.SinchService;
 import ar.codeslu.plax.custom.AttachMenu;
 import ar.codeslu.plax.datasetters.MessageData;
 import ar.codeslu.plax.fragments.Chats;
@@ -170,7 +175,7 @@ import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
 
-public class Chat extends AppCompatActivity
+public class Chat extends BaseActivity
         implements
         MessagesListAdapter.OnLoadMoreListener {
 
@@ -261,6 +266,8 @@ public class Chat extends AppCompatActivity
     Boolean canScroll = false;
     //vars
     String filetype = "";
+    //call
+    com.sinch.android.rtc.calling.Call call;
 
 
     @Override
@@ -1243,6 +1250,31 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
+        callA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             //   ((AppBack) getApplication()).callUserA(friendId);
+                Intent jumptocall= new Intent(Chat.this, CallingActivity.class);
+
+                jumptocall.putExtra("Userid", friendId);
+                startActivity(jumptocall);
+            }
+        });
+
+        callV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ((AppBack) getApplication()).callUserV(friendId);
+                call = getSinchServiceInterface().callUserVideo(friendId);
+                String callId = call.getCallId();
+                Intent jumptocall= new Intent(Chat.this, CallingActivityVideo.class);
+                jumptocall.putExtra(SinchService.CALL_ID, callId);
+                jumptocall.putExtra("UserId", friendId);
+                startActivity(jumptocall);
+            }
+        });
+
 
 
     }

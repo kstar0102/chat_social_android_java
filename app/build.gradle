@@ -111,6 +111,8 @@ dependencies {
     implementation 'android.arch.lifecycle:livedata:1.1.1'
     implementation 'com.fxn769:pix:1.4.4'
     implementation 'ja.burhanrashid52:photoeditor:0.4.0'
+    implementation(name:'sinch-android-rtc', version:'+', ext:'aar')
+
     implementation('com.github.ozodrukh:CircularReveal:1.1.1@aar') {
         transitive = true;
     }
@@ -126,4 +128,5 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 repositories {
     mavenCentral()
+
 }

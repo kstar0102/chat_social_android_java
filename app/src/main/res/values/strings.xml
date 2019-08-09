@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Plax</string>
+    <!--Voice and video call keys-->
+    <string name="sich_app_key">18593731-df34-46fa-87c2-e6517ed36454</string>
+    <string name="sich_app_secret">ncgfpeySKE60Vn6XCytMqg==</string>
+    <string name="sich_hostname">clientapi.sinch.com</string>
+    <string name="sich_user_id">136812</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -501,6 +506,7 @@ Cu dolor graeco eam, ut signiferumque necessitatibus vis. Sit ut aeque exerci re
     <string name="this_usr_adm">This user is already admin</string>
     <string name="exit_group_sure">Are you sure you want exit the group?</string>
     <string name="title_activity_add_user_group">AddUserGroup</string>
-    <string name="kicked">You have been kicked from the group</string>
+    <string name="kicked">You have been removed from the group</string>
+
 
 </resources>

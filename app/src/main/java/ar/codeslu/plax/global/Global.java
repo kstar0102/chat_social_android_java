@@ -11,6 +11,7 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sinch.android.rtc.calling.Call;
 import com.stfalcon.chatkit.me.GroupIn;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
@@ -63,6 +64,7 @@ public class Global {
     public static boolean DARKSTATE = false;
     public static boolean netconnect = false;
     public static boolean local_on = true;
+    public static Call callNw = null;
     public static boolean yourM = true;
 public  static ArrayList<AudioWife> audiolist;
     public  static ArrayList<String> btnid;

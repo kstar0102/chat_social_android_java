@@ -285,6 +285,10 @@ public class FCMR extends FirebaseMessagingService {
                                     intent.putExtra("name", name);
                                     intent.putExtra("id", id);
                                     intent.putExtra("ava", ava);
+                                    Global.currname = name;
+                                    Global.currentpageid = id;
+                                    Global.currFid = id;
+                                    Global.currAva = ava;
                                     startActivity(intent);
                                 }
                             })

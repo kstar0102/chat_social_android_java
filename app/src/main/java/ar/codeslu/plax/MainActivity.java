@@ -56,6 +56,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.sinch.android.rtc.SinchError;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -72,6 +73,8 @@ import java.util.Map;
 import ar.codeslu.plax.adapters.Vpadapter;
 import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.auth.Login;
+import ar.codeslu.plax.calls.BaseActivity;
+import ar.codeslu.plax.calls.SinchService;
 import ar.codeslu.plax.custom.BadgedDrawerArrowDrawable;
 import ar.codeslu.plax.fragments.Calls;
 import ar.codeslu.plax.fragments.Chats;
@@ -86,8 +89,8 @@ import eu.long1.spacetablayout.SpaceTabLayout;
 import id.zelory.compressor.Compressor;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener, SinchService.StartFailedListener {
     //Firebase
     FirebaseAuth mAuth;
     DatabaseReference mData;
@@ -305,6 +308,13 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+    @Override
+    protected void onServiceConnected() {
+        getSinchServiceInterface().setStartListener(MainActivity.this);
+        Log.wtf("kkkkkk",mAuth.getCurrentUser().getUid());
+        getSinchServiceInterface().startClient(mAuth.getCurrentUser().getUid());
+
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -344,6 +354,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_signout) {
             if (Global.check_int(this)) {
+                ((AppBack) getApplication()).signOutStop();
                 //clear all notifications
                 NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
                 try {
@@ -685,5 +696,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onStartFailed(SinchError error) {
+
+    }
+
+    @Override
+    public void onStarted() {
+
+    }
 }
 

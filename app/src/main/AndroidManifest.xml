@@ -33,6 +33,15 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".calls.CallingActivityVideo" />
+        <activity
+            android:name=".calls.CallingActivity" />
+        <activity
+            android:name=".calls.IncAudioActivity" />
+        <activity
+            android:name=".calls.IncCallActivity" />
+
+        <activity
             android:name=".Groups.AddUserGroup"
             android:label="@string/title_activity_add_user_group"
             android:theme="@style/AppTheme.NoActionBar"/>
