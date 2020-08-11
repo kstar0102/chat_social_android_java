@@ -4,7 +4,7 @@ public class FriModel {
     private String name, des;
     private int image;
 
-    public FriModel(String name, String des, String day, int image){
+    public FriModel(String name, String des, int image){
         this.name = name;
         this.des = des;
         this.image = image;

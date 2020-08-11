@@ -44,6 +44,9 @@
         <activity android:name=".floatdepart.CreateGroup"/>
         <activity android:name=".floatdepart.AddFriend"/>
         <activity android:name=".floatdepart.RequestNumber"/>
+        <activity android:name=".floatdepart.QRActivity"/>
+        <activity android:name=".notify.FriendActivity"/>
+        <activity android:name=".notify.FriIndiviReq"/>
         <activity
             android:name=".Qr"
             android:label="@string/title_activity_qr"

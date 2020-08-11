@@ -20,6 +20,7 @@ import ar.codeslu.plax.R;
 import ar.codeslu.plax.adapters.HistoryAdapter;
 import ar.codeslu.plax.adapters.NoAdapter;
 import ar.codeslu.plax.models.Notifimodel;
+import ar.codeslu.plax.notify.FriendActivity;
 
 public class Nofragment extends Fragment {
     LinearLayout request;
@@ -61,7 +62,8 @@ public class Nofragment extends Fragment {
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Integer integer = new Intent(getActivity(), )
+                Intent intent = new Intent(getActivity(), FriendActivity.class);
+                startActivity(intent);
             }
         });
         return view;

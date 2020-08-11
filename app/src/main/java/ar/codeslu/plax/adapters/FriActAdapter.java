@@ -33,13 +33,13 @@ public class FriActAdapter extends ArrayAdapter {
 
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        v = inflater.inflate(R.layout.item_friend, null);
-//        TextView textView = (TextView) v.findViewById(R.id.textView_one);
-//        ImageView imageView = (ImageView) v.findViewById(R.id.img_one);
-//        textView.setText(model.getListText());
-//        imageView.setImageResource(R.drawable.ae);
-//        imageView.setImageResource(R.drawable.ae);
-//        imageView.setImageResource(R.drawable.ae);
+        v = inflater.inflate(R.layout.item_friend, null);
+        TextView name = (TextView) v.findViewById(R.id.dialogName);
+        TextView des = (TextView) v.findViewById(R.id.dialogLastMessage);
+        ImageView imageView = (ImageView) v.findViewById(R.id.dialogAvatarC);
+        name.setText(model.getName());
+        des.setText(model.getDes());
+        imageView.setImageResource(model.getImage());
         return v;
 
     }

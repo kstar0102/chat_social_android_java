@@ -47,6 +47,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="3dp"
+            android:alpha="0.3"
             android:background="@color/greystory"/>
 
         <ListView
@@ -54,8 +55,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:scrollbarStyle="outsideOverlay" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
