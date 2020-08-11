@@ -1,0 +1,118 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/dialogRootLayout"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@id/dialogContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/dialogAvatarC"
+            android:layout_width="@dimen/dialog_avatar_width"
+            android:layout_height="@dimen/dialog_avatar_height"
+            android:layout_margin="16dp"
+            android:scaleType="fitXY"
+            app:riv_corner_radius_bottom_left="20dip"
+            app:riv_corner_radius_bottom_right="20dip"
+            app:riv_corner_radius_top_left="20dip"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_mutate_background="true"
+            app:riv_oval="false"/>
+
+        <LinearLayout
+            android:id="@+id/main_txt"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:layout_toEndOf="@+id/dialogAvatarC"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.vanniktech.emoji.EmojiTextView
+                android:id="@id/dialogName"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:fontFamily="@string/font_fontFamily_medium"
+                android:includeFontPadding="false"
+                android:maxLines="1"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dialogName"
+                android:layout_marginTop="7dp"
+                >
+
+                <com.vanniktech.emoji.EmojiTextView
+                    android:id="@id/dialogLastMessage"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:gravity="top|start"
+                    android:textAlignment="viewStart"
+                    android:maxLines="1"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/main_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_avatar_height">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/dialogUnreadcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/dialogAvatarC"
+            android:layout_alignBottom="@+id/dialogAvatarC"
+            android:layout_marginEnd="3dp"
+            android:layout_marginTop="-1dp"
+            android:layout_marginBottom="3dp"
+            android:ellipsize="end"
+            android:background="@drawable/online_check_img"
+            android:src="@color/online_color"
+            android:fontFamily="@string/font_fontFamily_medium"
+            android:gravity="center"
+            android:lines="1"/>
+
+        <FrameLayout
+            android:id="@id/dialogDividerContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="16dp"
+            android:paddingStart="@dimen/dialog_divider_margin_left">
+
+            <View
+                android:id="@id/dialogDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dialog_divider"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

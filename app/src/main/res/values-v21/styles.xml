@@ -14,4 +14,9 @@
         <item name="android:typeface">serif</item>
 
     </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_border</item>
+    </style>
+
 </resources>

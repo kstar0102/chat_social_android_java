@@ -3,11 +3,13 @@ package ar.codeslu.plax;
 import android.content.Intent;
 import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,10 +35,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         Global.currentactivity = this;
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,6 +48,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             avaS = intent.getExtras().getString("ava");
             nameS = intent.getExtras().getString("name");
 
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+
         }
 
 
@@ -62,7 +65,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         LatLng sydney = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
         mMap.addMarker(new MarkerOptions().position(sydney).title(nameS));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(sydney)
+                .zoom(17).build();
+        //Zoom in and animate the camera.
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     @Override
@@ -74,7 +81,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             //init data
             java.util.Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -87,6 +95,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
     }
 
 

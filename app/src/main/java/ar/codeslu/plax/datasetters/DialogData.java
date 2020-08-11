@@ -9,32 +9,32 @@ import java.util.Collections;
 import java.util.Date;
 
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.models.DefaultDialog;
 import com.stfalcon.chatkit.me.Message;
 import com.stfalcon.chatkit.me.UserIn;
-import se.simbio.encryption.Encryption;
+
 
 /**
- * Created by mostafa on 29/01/19.
+ * Created by CodeSlu on 29/01/19.
  */
 
 
 public final class DialogData {
 
     static long timeStamp;
-    static Encryption encryption;
+
     static ArrayList<UserIn> userList;
 
     public DialogData() {
         throw new AssertionError();
     }
 
-    public  static ArrayList<DefaultDialog> getDialogs() {
+    public  static ArrayList<DefaultDialog> getDialogs(ArrayList<UserIn> arrayList) {
         userList = new ArrayList<>();
-        userList = Global.diaG;
+        userList = arrayList;
         arrange();
-        byte[] iv = new byte[16];
-        encryption =  Encryption.getDefault(Global.keyE,Global.salt,iv);
+
         ArrayList<DefaultDialog> chats = new ArrayList<>();
         if(chats.size() != 0)
             chats.clear();
@@ -74,7 +74,7 @@ public final class DialogData {
     //get last message
     private static Message getMessage(int i,final Date date) {
         return new Message(
-                userList.get(i).getLastsender(),getUser(i),encryption.decryptOrNull(userList.get(i).getLastmessage()),date,Global.avaLocal,true);
+                userList.get(i).getLastsender(),getUser(i), encryption.decryptOrNull(userList.get(i).getLastmessage()),date,Global.avaLocal,true,false,false,"");
 
     }
     private static void arrange()

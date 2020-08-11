@@ -2,6 +2,7 @@ package ar.codeslu.plax.holders;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -14,14 +15,15 @@ import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.models.GroupDialog;
 
 /**
- * Created by mostafa on 21/03/19.
+ * Created by CodeSlu on 21/03/19.
  */
 
 
 public class DialogHolderG extends DialogsListAdapterG.DialogViewHolder<GroupDialog> {
 
     FirebaseAuth mAuth;
-    RoundedImageView ava, avaSmall;
+    RoundedImageView ava;
+    ImageView mute, block;
 
     public DialogHolderG(View itemView) {
         super(itemView);
@@ -32,57 +34,41 @@ public class DialogHolderG extends DialogsListAdapterG.DialogViewHolder<GroupDia
         super.onBind(dialog);
         mAuth = FirebaseAuth.getInstance();
         ava = itemView.findViewById(R.id.dialogAvatarC);
-        avaSmall = itemView.findViewById(R.id.dialogLastMessageUserAvatarC);
+        mute = itemView.findViewById(R.id.mute);
+        block = itemView.findViewById(R.id.block);
 
         try {
 
+            block.setVisibility(View.GONE);
 
-            if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
-                Picasso.get()
-                        .load(R.drawable.group)
-                        .error(R.drawable.errorimg)
-                        .into(ava);
-            } else {
-                Picasso.get()
-                        .load(dialog.getDialogPhoto())
-                        .error(R.drawable.errorimg)
-                        .into(ava);
-            }
-
-
-            if (dialog.getLastMessage().getId().equals(mAuth.getCurrentUser().getUid())) {
-                if (Global.avaLocal.equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.group)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                } else {
-                    Picasso.get()
-                            .load(Global.avaLocal)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                }
-
-            } else {
-                if (String.valueOf(dialog.getLastSenderAva()).equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.group)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                } else {
-                    Picasso.get()
-                            .load(dialog.getLastSenderAva())
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                }
-
-            }
+            if (Global.mutelist.contains(dialog.getId()))
+                mute.setVisibility(View.VISIBLE);
+            else
+                mute.setVisibility(View.GONE);
 
 
         } catch (NullPointerException e) {
 
         }
 
+
+        try {
+            if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
+                Picasso.get()
+                        .load(R.drawable.group)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
+                        .into(ava);
+            } else {
+                Picasso.get()
+                        .load(dialog.getDialogPhoto())
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
+                        .into(ava);
+            }
+        } catch (NullPointerException e) {
+
+        }
 
         //dark mode init
         if (mAuth.getCurrentUser() != null) {

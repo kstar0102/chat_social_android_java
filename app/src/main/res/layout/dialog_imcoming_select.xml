@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        android:background="@drawable/imcoming_bg">
+
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
+            android:src="@drawable/like"/>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
+            android:src="@drawable/funny"/>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
+            android:src="@drawable/love"/>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
+            android:src="@drawable/sad"/>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
+            android:src="@drawable/angry"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/imcoming_bg">
+
+        <LinearLayout
+            android:id="@+id/dialogM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/copy"
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_copy"/>
+
+            <ImageView
+                android:id="@+id/translate"
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:visibility="gone"
+                android:src="@drawable/select_translate"/>
+
+            <ImageView
+                android:id="@+id/edit"
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_edit"/>
+
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_share"/>
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_delete"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_save"/>
+
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_remind"/>
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:src="@drawable/select_select"/>
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="35dp"
+                android:layout_height="40dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

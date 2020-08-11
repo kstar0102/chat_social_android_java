@@ -122,3 +122,4 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
         return colorPickerColors;
     }
 }
+

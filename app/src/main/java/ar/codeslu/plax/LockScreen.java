@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.pm.ShortcutManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +35,9 @@ import java.util.Map;
 import ar.codeslu.plax.auth.Login;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import me.leolin.shortcutbadger.ShortcutBadger;
-import se.simbio.encryption.Encryption;
+
 
 public class LockScreen extends AppCompatActivity {
     //view
@@ -43,8 +48,7 @@ public class LockScreen extends AppCompatActivity {
     //Firebase
     FirebaseAuth mAuth;
     DatabaseReference mData;
-    //encrypt
-    Encryption encryption;
+
     //var
     int typeL; //0 is set //1 is get
     String pattren;
@@ -67,8 +71,7 @@ public class LockScreen extends AppCompatActivity {
             }
         }
         //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+        Global.currentactivity = null;
 
         mPatternLockView = (PatternLockView) findViewById(R.id.patter_lock_view);
         profile_image = findViewById(R.id.profile_image);
@@ -77,13 +80,24 @@ public class LockScreen extends AppCompatActivity {
         if (Global.avaLocal.equals("no")) {
             Picasso.get()
                     .load(R.drawable.profile)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(profile_image);
         } else {
-            Picasso.get()
-                    .load(Global.avaLocal)
-                    .error(R.drawable.errorimg)
-                    .into(profile_image);
+            if(!Global.avaLocal.isEmpty()) {
+                Picasso.get()
+                        .load(Global.avaLocal)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
+                        .into(profile_image);
+            }
+            else
+            {
+                Picasso.get()
+                        .load(R.drawable.profile)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+                        .into(profile_image);
+            }
         }
 
         if (getIntent() != null) {
@@ -197,6 +211,10 @@ public class LockScreen extends AppCompatActivity {
                             }
                             ((AppBack) getApplication()).editSharePrefs().putBoolean("lock", false);
                             ((AppBack) getApplication()).editSharePrefs().apply();
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+                                disableshourtcuts();
+
                             mAuth.signOut();
                             startActivity(new Intent(LockScreen.this, Login.class));
                             finish();
@@ -219,13 +237,14 @@ public class LockScreen extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Global.currentactivity = this;
+        Global.currentactivity = null;
         AppBack myApp = (AppBack) this.getApplication();
         if (myApp.wasInBackground) {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
         }
 
@@ -236,6 +255,7 @@ public class LockScreen extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
     }
 
     @Override
@@ -246,5 +266,17 @@ public class LockScreen extends AppCompatActivity {
             finish();
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    public void disableshourtcuts()
+    {
+        List<String> idds = new ArrayList<>();
+        idds.add("addstory");
+        idds.add("group");
+        idds.add("user1");
+        idds.add("user2");
+        ShortcutManager shortcutManager2 = this.getSystemService(ShortcutManager.class);
+        shortcutManager2.disableShortcuts(idds);
     }
 }

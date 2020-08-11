@@ -56,6 +56,7 @@ import ar.codeslu.plax.Groups.ProfileGroup;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.auth.DataSet;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMresp;
@@ -66,10 +67,10 @@ import id.zelory.compressor.Compressor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import se.simbio.encryption.Encryption;
+
 
 /**
- * Created by mostafa on 01/11/18.
+ * Created by CodeSlu on 01/11/18.
  */
 
 
@@ -79,7 +80,7 @@ public class EditProfile extends Dialog {
     private FirebaseAuth mAuth;
     private DatabaseReference mData, mUser;
     private String friendid;
-    private Encryption encryption;
+
     private LinearLayout reactMenu;
     private Button next;
     private EmojiTextView txt;
@@ -153,21 +154,20 @@ public class EditProfile extends Dialog {
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
                     .load(R.drawable.group)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(ava);
         } else {
             Picasso.get()
                     .load(Global.currAva)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(ava);
         }
         nameE.setText(Global.currname);
 
 
         //encrypt
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
 
         ava.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,12 +220,14 @@ public class EditProfile extends Dialog {
         if (imgpathL == null) {
             Picasso.get()
                     .load(R.drawable.group)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(ava);
         } else {
             Picasso.get()
                     .load(imgpathL)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(ava);
         }
         compress(Uri.parse(imgpathL));

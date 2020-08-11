@@ -1,0 +1,134 @@
+{
+  "rules": {
+  	"Phones":{
+    ".read" : "auth != null",
+    "$phone":{
+      ".write":"auth != null ",
+      ".validate":"(!data.exists()||data.child('id').val() == auth.uid)"
+      
+    ,"$user_id":{
+      ".validate":"$user_id == 'id' && newData.val() == auth.uid "    
+    
+    }
+    }
+  },
+  	"Tokens":{
+    ".read" : "auth != null",
+".write" : "auth != null",
+       "$id":{
+       ".validate":"$id == auth.uid"
+          ,"$token":{
+      ".validate":" $token == 'tokens' "    
+    
+    }
+       }
+  }
+   , "Time":{
+         ".read" : "auth != null",
+".write" : "auth != null",
+  "$time":{
+    ".validate":"$time == 'time' && newData.val() == now"
+  }
+      
+    }
+    ,"Favourite":{
+      ".read" : "auth != null",
+      "$id":{
+        ".read" : "$id == auth.uid",
+        ".write" : "$id == auth.uid"
+      }    
+    }
+    ,"Mute":{
+      ".read" : "auth != null",
+      "$id":{
+        ".read" : "$id == auth.uid",
+        ".write" : "$id == auth.uid"
+      }    
+    },
+    "Block":{
+      ".read" : "auth != null",
+      "$id":{
+        ".write" : "$id == auth.uid"
+      }    
+    }
+    ,"Calls":{
+      ".read":"auth !=null",
+        ".write":"auth != null",
+      "$myid":{
+        ".read":"$myid == auth.uid",
+          "$otherid":{
+            "$callid":{
+	              ".validate":"(newData.child('to').val() == $myid ||newData.child('to').val() == $otherid)&&(newData.child('from').val()==$myid||newData.child('from').val()==$otherid) && newData.child('id').val() == $callid &&( newData.hasChildren(['ava','from','to','incall','name','time']) || newData.hasChildren(['dur']))"
+          }
+          }
+      }
+    }
+    ,"Users":{
+      ".read":"auth != null",
+      "$uid":{
+        ".write":"$uid == auth.uid",
+          "MyStories":{
+            ".read":"$uid == auth.uid",
+             ".write":"$uid == auth.uid"
+          }
+        	,"Stories":{
+            ".read":"$uid == auth.uid",
+            ".write":"auth != null",
+            "$contactid":{
+            	"$storyid":{
+                ".validate":"$storyid.contains($contactid)&&newData.hasChildren(['ava','id','link','name','time'])&& newData.child('id').val() == $storyid"
+              }
+            }
+          },
+            "Groups":{
+              ".read":"$uid == auth.uid",
+                ".write":"auth !=null"
+              ,"$groupid":{
+            ".validate":"$groupid.contains('groups-')&&	newData.hasChildren(['created','messDate','avatar','id','lastmessage','lastsender','lastsenderava','name'])&&newData.child('id').val()==$groupid" 
+                       
+              }
+            }
+      }
+    }
+    ,"Chats":{
+      ".read": "false",
+      
+        "$user_id":{
+          ".read":"$user_id == auth.uid"
+          ,".write":"$user_id == auth.uid",
+            "$senderid":{
+            	".write":"$user_id == auth.uid ||	$senderid == auth.uid"
+             , ".read" : "$user_id == auth.uid || $senderid == auth.uid"
+              ,".validate":"(newData.hasChildren(['avatar','id','lastmessage','lastsender','lastsenderava','name','nameL','phone','messDate'])&&newData.child('id').val() == $senderid&&(newData.child('lastsender').val() == $senderid ||newData.child('lastsender').val() == $user_id))||(!newData.child('id').exists())"
+            ,"messasges":{
+              "$messid":{
+						".validate":"(newData.child('from').val()== $senderid||newData.child('from').val()== $user_id)&&($messid.contains($user_id)&&$messid.contains($senderid))&&(newData.hasChildren(['avatar','chat','deleted','from','messId','react','seen','statue','time','type']))&&(newData.child('messId').val().contains($user_id)&&newData.child('messId').val().contains($senderid))"            
+              }
+            }
+        }
+            
+    }
+  }
+    ,"Groups":{
+      ".read":"false"
+     , ".write":"false"
+     , "$groupid":{
+      	".read":"$groupid.contains(auth.uid)||root.child('Users').child(auth.uid).child('Groups').child($groupid).exists()"
+      , ".write":"$groupid.contains(auth.uid)||root.child('Users').child(auth.uid).child('Groups').child($groupid).exists()"
+        ,".validate":"(newData.hasChildren(['lastsender','lastmessage','lastsenderava']) || newData.hasChildren(['noOfUnread']))&&(!newData.child('id').exists()|| newData.child('id').val() == $groupid)"
+        ,"admins":{
+          ".validate":"(!root.child('Users').child(auth.uid).child('Groups').child($groupid).exists()&&$groupid.contains(auth.uid))||(root.child('Groups/'+$groupid+'/admins/0/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/1/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/2/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/3/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/4/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/5/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/6/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/7/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/8/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/9/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/10/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/11/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/12/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/13/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/14/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/15/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/16/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/17/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/18/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/19/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/20/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/21/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/22/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/23/').val()==auth.uid||root.child('Groups/'+$groupid+'/admins/24/').val()==auth.uid)"
+        }
+    ,"messages":{
+      "$messid":{
+              ".read":"$groupid.contains(auth.uid)||root.child('Users').child(auth.uid).child('Groups').child($groupid).exists()"
+              , ".write":"$groupid.contains(auth.uid)||root.child('Users').child(auth.uid).child('Groups').child($groupid).exists()"
+	,".validate":"(($messid.contains($groupid)&&$messid.contains(newData.child('from').val()))&&($messid == newData.child('messId').val())&&newData.hasChildren(['avatar','chat','deleted','from','messId','seen','statue','time','type','react']))"
+        
+        
+      }
+    }
+      }
+    }
+  }
+}

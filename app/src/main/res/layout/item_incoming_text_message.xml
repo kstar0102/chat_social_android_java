@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:layout_height="wrap_content">
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/messageUserAvatarC"
+            android:id="@+id/messAva"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="start|bottom"
@@ -52,21 +52,71 @@
                 android:linksClickable="true"/>
         </com.google.android.flexbox.FlexboxLayout>
 
-        <ImageView
-            android:id="@+id/react"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical|start"
-            android:src="@drawable/emoji_blue" />
+<!--        <ImageView-->
+<!--            android:id="@+id/react"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_gravity="center_vertical|start"-->
+<!--            android:src="@drawable/emoji_blue" />-->
 
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/replyb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start"
+        android:layout_marginTop="-7dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="53dp"
+        android:background="@drawable/shape_reply_message"
+        >
+
+        <com.stfalcon.chatkit.link.AutoLinkTextView
+            android:id="@+id/replytext"
+            android:layout_margin="7dp"
+            android:autoLink="web"
+            android:textColor="@color/white"
+            android:linksClickable="true"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="33dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@id/messageTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/forward"
+            android:src="@drawable/forward"
+            android:tint="@color/colorPrimary"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical|end"
+            android:layout_gravity="center_vertical|end" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/call"
+            android:src="@drawable/ic_call"
+            android:tint="@color/colorPrimary"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical|end"
+            android:layout_gravity="center_vertical|end" />
     </LinearLayout>
 
 
-    <TextView
-        android:id="@id/messageTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="33dp"
-        android:gravity="center_vertical|end" />
+
 
 </LinearLayout>

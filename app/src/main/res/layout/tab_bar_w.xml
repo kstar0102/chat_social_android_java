@@ -4,7 +4,7 @@
     android:id="@+id/main_app_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:contentInsetStart="0dp"
+    app:contentInsetRight="0dp"
     app:contentInsetLeft="0dp"
     android:background="@color/white"
     android:theme="@style/ThemeOverlay.AppCompat.Light">

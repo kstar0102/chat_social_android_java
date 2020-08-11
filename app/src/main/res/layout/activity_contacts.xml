@@ -11,25 +11,51 @@
         layout="@layout/tab_bar" />
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        android:id="@+id/invitecontact"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_person_add_b"
+            />
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="wrap_content"
+            android:id="@+id/invitecontactT"
+            android:textColor="@color/black"
+            android:layout_gravity="start|center_vertical"
+            android:gravity="start|center_vertical"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="Invite your phonebook contacts"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+    <com.vanniktech.emoji.EmojiTextView
+        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:id="@+id/contacts"
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:text="@string/contacts"
+        android:layout_height="wrap_content"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <com.vanniktech.emoji.EmojiTextView
-            android:layout_width="wrap_content"
-            android:textColor="@color/black"
-            android:id="@+id/contacts"
-            android:layout_gravity="start"
-            android:gravity="start"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:textStyle="bold"
-            android:textSize="30dp"
-            android:text="@string/contacts"
-            android:layout_height="wrap_content"
-            />
         <in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView
             android:id="@+id/userlist"
             android:padding="10dp"
@@ -40,9 +66,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:id="@+id/sora"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_gravity="center"
-            android:src="@drawable/small"/>
+            android:src="@drawable/list_bg4"/>
         <TextView
             android:layout_width="wrap_content"
             android:textColor="@color/mid_grey"

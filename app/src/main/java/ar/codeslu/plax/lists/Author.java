@@ -4,7 +4,7 @@ import com.stfalcon.chatkit.commons.models.IUser;
 
 
 /**
- * Created by mostafa on 24/01/19.
+ * Created by CodeSlu on 24/01/19.
  */
 public class Author implements IUser {
 

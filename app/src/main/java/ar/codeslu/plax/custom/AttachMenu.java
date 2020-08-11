@@ -8,12 +8,13 @@ import android.view.Window;
 import ar.codeslu.plax.R;
 
 /**
- * Created by mostafa on 05/03/19.
+ * Created by CodeSlu on 05/03/19.
  */
 
 
 public class AttachMenu extends Dialog {
 
+    DiaHisSelect longSelDig;
     private Activity c;
     public Dialog d;
 
@@ -26,6 +27,6 @@ public class AttachMenu extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.attach_menu);
+        setContentView(R.layout.dialog_chatadd);
     }
 }

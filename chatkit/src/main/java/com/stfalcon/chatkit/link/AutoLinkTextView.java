@@ -107,7 +107,7 @@ public class AutoLinkTextView extends EmojiTextView {
 
             if (anAutoLinkMode == AutoLinkMode.MODE_PHONE) {
                 while (matcher.find()) {
-                    if (matcher.group().length() > MIN_PHONE_NUMBER_LENGTH)
+                    if (matcher.group()!=null && matcher.group().length() > MIN_PHONE_NUMBER_LENGTH)
                         autoLinkItems.add(new AutoLinkItem(
                                 matcher.start(),
                                 matcher.end(),

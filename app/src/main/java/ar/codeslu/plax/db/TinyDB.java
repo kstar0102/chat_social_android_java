@@ -42,12 +42,17 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.stfalcon.chatkit.me.GroupIn;
+import com.stfalcon.chatkit.me.MessageFav;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
+import ar.codeslu.plax.lists.StoryListRetr;
 import ar.codeslu.plax.lists.UserData;
+import ar.codeslu.plax.lists.UserDetailsStory;
+import ar.codeslu.plax.lists.calls;
+import xute.storyview.StoryModel;
 
-
+@SuppressWarnings("unchecked")
 public class TinyDB {
 
     private SharedPreferences preferences;
@@ -346,6 +351,55 @@ public class TinyDB {
     	}
     	return objects;
     }
+
+    public ArrayList<MessageFav> getListFav(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<MessageFav> objects =  new ArrayList<MessageFav>();
+
+        for(String jObjString : objStrings){
+            MessageFav value  = gson.fromJson(jObjString,  MessageFav.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+    public ArrayList<UserDetailsStory> getListCS(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<UserDetailsStory> objects =  new ArrayList<UserDetailsStory>();
+
+        for(String jObjString : objStrings){
+            UserDetailsStory value  = gson.fromJson(jObjString,  UserDetailsStory.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+    public ArrayList<StoryModel> getMyStory(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<StoryModel> objects =  new ArrayList<StoryModel>();
+
+        for(String jObjString : objStrings){
+            StoryModel value  = gson.fromJson(jObjString,  StoryModel.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+    public ArrayList<StoryListRetr> getStory(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<StoryListRetr> objects =  new ArrayList<StoryListRetr>();
+
+        for(String jObjString : objStrings){
+            StoryListRetr value  = gson.fromJson(jObjString,  StoryListRetr.class);
+            objects.add(value);
+        }
+        return objects;
+    }
     public ArrayList<MessageIn> getListRetry(String key){
         Gson gson = new Gson();
 
@@ -385,6 +439,30 @@ public class TinyDB {
         return objects;
     }
     public ArrayList<UserData> getGroupUA(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<UserData> objects =  new ArrayList<UserData>();
+
+        for(String jObjString : objStrings){
+            UserData value  = gson.fromJson(jObjString,  UserData.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+    public ArrayList<calls> getCalls(String key){
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<calls> objects =  new ArrayList<calls>();
+
+        for(String jObjString : objStrings){
+            calls value  = gson.fromJson(jObjString,  calls.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+    public ArrayList<UserData> getCallsAva(String key){
         Gson gson = new Gson();
 
         ArrayList<String> objStrings = getListString(key);
@@ -566,6 +644,54 @@ public class TinyDB {
     	putListString(key, objStrings);
     }
 
+    public void putListFav(String key, ArrayList<MessageFav> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(MessageFav obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+    public void putListArch(String key, ArrayList<MessageFav> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(MessageFav obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+
+    public void putListCS(String key, ArrayList<UserDetailsStory> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(UserDetailsStory obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+
+    public void putMyStory(String key, ArrayList<StoryModel> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(StoryModel obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+    public void putStory(String key, ArrayList<StoryListRetr> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(StoryListRetr obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+
     public void putListRetry(String key, ArrayList<MessageIn> objArray){
         checkForNullKey(key);
         Gson gson = new Gson();
@@ -585,6 +711,24 @@ public class TinyDB {
         putListString(key, objStrings);
     }
     public void putGroupUA(String key, ArrayList<UserData> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(UserData obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+    public void putCalls(String key, ArrayList<calls> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for(calls obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+    public void putCallsAva(String key, ArrayList<UserData> objArray){
         checkForNullKey(key);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();

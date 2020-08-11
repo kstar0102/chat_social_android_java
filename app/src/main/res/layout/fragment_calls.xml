@@ -1,13 +1,57 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context=".fragments.Calls">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context="ar.codeslu.plax.fragments.Calls">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="1" />
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/callList"
+            android:layout_width="match_parent"
+            app:reverseLayout="true"
+            android:layout_marginBottom="50dp"
+            app:dialogDateColor="#000"
+            app:dialogUnreadBubbleBackgroundColor="@color/red"
+            app:dialogUnreadItemBackground="#fdfdfd"
+            app:dialogUnreadTitleTextStyle="bold"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/sora"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:src="@drawable/call_ly"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calls"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        app:backgroundTint="@color/white"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="80dp"
+        app:srcCompat="@drawable/ic_call_b" />
 </FrameLayout>

@@ -13,30 +13,29 @@ import java.util.Date;
 
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.models.GroupDialog;
-import se.simbio.encryption.Encryption;
+
 
 /**
- * Created by mostafa on 29/01/19.
+ * Created by CodeSlu on 29/01/19.
  */
 
 
 public final class DialogDataG {
 
     static long timeStamp;
-    static Encryption encryption;
+
     static ArrayList<GroupIn> userList;
 
     public DialogDataG() {
         throw new AssertionError();
     }
 
-    public static ArrayList<GroupDialog> getDialogs(Context conn) {
+    public static ArrayList<GroupDialog> getDialogs(Context conn,ArrayList<GroupIn> arrayList) {
         userList = new ArrayList<>();
-        userList = Global.diaGGG;
+        userList = arrayList;
         arrange();
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
         ArrayList<GroupDialog> chats = new ArrayList<>();
         if (chats.size() != 0)
             chats.clear();
@@ -95,7 +94,7 @@ public final class DialogDataG {
             messageL = encryption.decryptOrNull(userList.get(i).getLastmessage());
         }
         return new Message(
-                userList.get(i).getLastsender(), getUser(i), messageL, date,Global.avaLocal,false);
+                userList.get(i).getLastsender(), getUser(i), messageL, date,Global.avaLocal,false,false,false,"");
 
     }
 

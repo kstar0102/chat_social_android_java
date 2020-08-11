@@ -18,7 +18,7 @@
         app:civ_border_color="@color/white"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/avaC"
+            android:layout_toEndOf="@+id/avaC"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
             android:onClick="goP"
@@ -35,9 +35,9 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:layout_height="0dp"
-                android:textAlignment="textStart"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
+                android:textAlignment="viewStart"
+                android:gravity="center_vertical|start"
+                android:layout_gravity="center_vertical|start"
 
                 />
         </LinearLayout>
@@ -46,8 +46,8 @@
         android:layout_width="25dp"
         android:layout_alignParentEnd="true"
         android:layout_height="25dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="40dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_share"
         android:id="@+id/share"

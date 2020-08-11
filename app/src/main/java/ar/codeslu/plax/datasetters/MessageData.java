@@ -8,18 +8,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 
 import com.stfalcon.chatkit.me.Message;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.me.UserIn;
 
-import se.simbio.encryption.Encryption;
+
 
 import static ar.codeslu.plax.datasetters.DialogData.timeStamp;
 import static ar.codeslu.plax.datasetters.DialogData.userList;
 
 /**
- * Created by mostafa on 30/01/19.
+ * Created by CodeSlu on 30/01/19.
  */
 
 
@@ -28,7 +29,7 @@ public class MessageData {
     static ArrayList<MessageIn> messagelist;
     static ArrayList<Message> chats;
     DatabaseReference mData;
-    static Encryption encryption;
+
 
 
     private MessageData() {
@@ -37,35 +38,35 @@ public class MessageData {
 
 
     public static Message getImageMessage(String link, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(), encryption.decryptOrNull(messagelist.get(i).getReply()));
         message.setImage(new Message.Image(link));
         return message;
     }
 
     public static Message getVoiceMessage(String link, String duration, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(),encryption.decryptOrNull(messagelist.get(i).getReply()));
         message.setVoice(new Message.Voice(link, duration));
         return message;
     }
 
     public static Message getFileMessage(String link, String filename, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(),encryption.decryptOrNull(messagelist.get(i).getReply()));
         message.setFile(new Message.File(link, filename));
         return message;
     }
 
     public static Message getVideoMessage(String link, String duration, String id, int i, Date creat, String type, String thumb, boolean deleted,String ava,boolean chat) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), thumb, messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), link, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), thumb, messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(),encryption.decryptOrNull(messagelist.get(i).getReply()));
         message.setVideo(new Message.Video(link, duration, thumb));
         return message;
     }
 
     public static Message getTextMessage(String text, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
-        return new Message(id, getUser(messagelist.get(i).getFrom()), text, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        return new Message(id, getUser(messagelist.get(i).getFrom()), text, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(),encryption.decryptOrNull(messagelist.get(i).getReply()));
     }
 
     public static Message getLocationMessage(String location, String id, int i, Date creat, String type, boolean deleted,String ava,boolean chat) {
-        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), location, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat);
+        Message message = new Message(id, getUser(messagelist.get(i).getFrom()), location, creat, messagelist.get(i).getStatue(), type, messagelist.get(i).getMessId(), messagelist.get(i).isDeleted(),messagelist.get(i).getReact(),ava,chat,messagelist.get(i).isForw(),messagelist.get(i).isCall(),encryption.decryptOrNull(messagelist.get(i).getReply()));
         message.setMap(new Message.Map(location));
         return message;
     }
@@ -74,8 +75,6 @@ public class MessageData {
         messagelist = new ArrayList<>();
         messagelist.clear();
         messagelist = Global.messG;
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
         ArrayList<Message> chats = new ArrayList<>();
         if (chats.size() != 0)
             chats.clear();
@@ -104,8 +103,7 @@ public class MessageData {
         messagelist = new ArrayList<>();
         messagelist.clear();
         messagelist = Global.messGGG;
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+
         ArrayList<Message> chats = new ArrayList<>();
         if (chats.size() != 0)
             chats.clear();
@@ -131,8 +129,7 @@ public class MessageData {
     }
 
     public static Message getMessagesSingle(MessageIn mess) {
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+
         Calendar calendar = Calendar.getInstance();
         timeStamp = mess.getTime();
         calendar.setTimeInMillis(timeStamp);

@@ -9,15 +9,18 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -41,6 +44,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devlomi.record_view.OnBasketAnimationEnd;
@@ -49,7 +54,6 @@ import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
-import com.farhanahmed.pico.Pico;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
@@ -72,11 +76,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.jaiselrahman.filepicker.activity.FilePickerActivity;
+import com.jaiselrahman.filepicker.config.Configurations;
+import com.jaiselrahman.filepicker.model.MediaFile;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.rosberry.mediapicker.MediaPicker;
+import com.rosberry.mediapicker.data.MediaResult;
+import com.rosberry.mediapicker.data.PhotoParams;
 import com.sandrios.sandriosCamera.internal.SandriosCamera;
 import com.sandrios.sandriosCamera.internal.configuration.CameraConfiguration;
 import com.sandrios.sandriosCamera.internal.ui.model.Media;
@@ -110,49 +120,60 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import ar.codeslu.plax.Profile;
+import ar.codeslu.plax.Forward;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.AttachMenu;
 import ar.codeslu.plax.datasetters.MessageData;
-import ar.codeslu.plax.fragments.Chats;
 import ar.codeslu.plax.fragments.Groups;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.holders.CustomIncomingImageMessageViewHolder;
 import ar.codeslu.plax.holders.CustomOutcomingImageMessageViewHolder;
 import ar.codeslu.plax.holders.IncomeHolder;
 import ar.codeslu.plax.holders.IncomeOther;
 import ar.codeslu.plax.holders.OutcomeHolder;
 import ar.codeslu.plax.holders.OutcomeOther;
+import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.lists.UserData;
 import ar.codeslu.plax.lists.myD;
 import ar.codeslu.plax.notify.FCM;
-import ar.codeslu.plax.settingsitems.SecuSetting;
+import ar.codeslu.plax.notify.FCMresp;
+import ar.codeslu.plax.notify.Sender;
+import ar.codeslu.plax.story.StickerBSFragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import im.delight.android.location.SimpleLocation;
-import io.github.tonnyl.light.Light;
 import me.leolin.shortcutbadger.ShortcutBadger;
-import se.simbio.encryption.Encryption;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import safety.com.br.android_shake_detector.core.ShakeCallback;
+import safety.com.br.android_shake_detector.core.ShakeDetector;
+import safety.com.br.android_shake_detector.core.ShakeOptions;
+
 
 import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER;
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 
+/**
+ * Created by CodeSlu
+ */
 public class Group extends AppCompatActivity
         implements
-        MessagesListAdapter.OnLoadMoreListener {
+        MessagesListAdapter.OnLoadMoreListener, StickerBSFragment.StickerListener, MediaPicker.OnMediaListener {
 
     //input
-    FirebaseAuth mAuth;
+    static FirebaseAuth mAuth;
     String friendId = "";
     DatabaseReference type;
-    DatabaseReference mData, count, myData;
+    DatabaseReference mData, myData;
     ArrayList<UserData> mylist;
     GroupIn userData;
     myD data;
     //output
     protected ImageLoader imageLoader;
-    protected MessagesListAdapter<Message> messagesAdapter;
+    protected static MessagesListAdapter<Message> messagesAdapter;
     private static final int TOTAL_MESSAGES_COUNT = 0;
     private int selectionCount;
     private Date lastLoadedDate;
@@ -161,8 +182,8 @@ public class Group extends AppCompatActivity
     MessagesListAdapter.HoldersConfig holdersConfig;
     //view
     RelativeLayout ly;
-    Encryption encryption;
-    ImageView add, send, emoji, bg;
+
+    ImageView add, send, emoji, bg, sticker;
     private RecordButton voice;
     RecordView recordView;
     EmojiEditText message;
@@ -192,7 +213,7 @@ public class Group extends AppCompatActivity
     CircleImageView ava;
     EmojiTextView name, state;
     //check online
-    DatabaseReference mUserDB, getAva,kick;
+    DatabaseReference mUserDB, getAva, kick;
     //shared pref
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -211,8 +232,8 @@ public class Group extends AppCompatActivity
     MessageIn messageLocal;
     //data query lists
     ArrayList<String> fileA, imageA;
-    int fq = 0, iq = 0;
-    boolean fqb = true, iqb = true;
+    int iq = 0;
+    boolean iqb = true;
     //dialog
     AttachMenu cdd;
     CircleImageView attachmenuP;
@@ -227,6 +248,30 @@ public class Group extends AppCompatActivity
     String whoT = "", whoR = "";
     int getAvasCount = 0;
     boolean toast = true;
+    //events
+    ChildEventListener child;
+    //handler
+    Handler mHandler;
+    boolean isRunning = true;
+    boolean prevstate = true;
+    LinearLayout connectE;
+    boolean open = true;
+
+    private StickerBSFragment mStickerBSFragment;
+    private MediaPicker mediaPicker;
+    PhotoParams params;
+    //reply
+    static Message replyM;
+    static String messidNew;
+    static boolean replyBollean = false;
+    static LinearLayout replyLy;
+    static EmojiTextView replyU, replyT;
+    static ImageView replyClose;
+    private ShakeDetector shakeDetector;
+    static long duration = Global.SHAKE_UNDO_TIMEOUT * 1000;
+    static long tick = 1000;
+    static CountDownTimer counter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,12 +279,23 @@ public class Group extends AppCompatActivity
         Global.chatactivity = this;
         Global.audiolist = new ArrayList<>();
         Global.btnid = new ArrayList<>();
-
         setContentView(R.layout.activity_group);
         Global.conA = this;
+        Global.currentactivity = this;
+        Global.stickerIcon = true;
+        Global.currAva = "";
+        Global.currname = "";
+        //media picker
+        mediaPicker = MediaPicker.from(this).to(this);
+
+        params = new PhotoParams.Builder()
+                .type(MediaPicker.Type.VIDEO)
+                .duration(5)
+                .facing(false)
+                .highQuality(true)
+                .build();
         //firebase
         mAuth = FirebaseAuth.getInstance();
-        count = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mData = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         type = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         mdatagetme = FirebaseDatabase.getInstance().getReference(Global.USERS);
@@ -256,7 +312,9 @@ public class Group extends AppCompatActivity
         send = findViewById(R.id.send);
         imm = findViewById(R.id.imm);
         bg = findViewById(R.id.bg);
+        connectE = findViewById(R.id.connectE);
         emoji = findViewById(R.id.emoji);
+        sticker = findViewById(R.id.sticker);
         messagebox = findViewById(R.id.messagebox);
         messagesList = (MessagesList) findViewById(R.id.messagesList);
         recordView = (RecordView) findViewById(R.id.record_view);
@@ -265,6 +323,22 @@ public class Group extends AppCompatActivity
         downdown = findViewById(R.id.downdown);
         downdown.setVisibility(View.GONE);
         overdark.setVisibility(View.GONE);
+
+        mStickerBSFragment = new StickerBSFragment();
+        mStickerBSFragment.setStickerListener(this);
+
+        replyLy = findViewById(R.id.reply);
+        replyT = findViewById(R.id.replyT);
+        replyU = findViewById(R.id.replyU);
+        replyClose = findViewById(R.id.closeR);
+        replyLy.setVisibility(View.GONE);
+        replyClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replyBollean = false;
+                replyLy.setVisibility(View.GONE);
+            }
+        });
 
 //set Wallpapers
         if (!((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
@@ -305,6 +379,42 @@ public class Group extends AppCompatActivity
         cdd.dismiss();
         isHidden = true;
 
+        prevstate = Global.check_int(this);
+
+        if (Global.check_int(this))
+            connectE.setVisibility(View.GONE);
+        else
+            connectE.setVisibility(View.VISIBLE);
+
+        mHandler = new Handler();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                while (isRunning) {
+                    try {
+                        Thread.sleep(500);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if (prevstate != Global.check_int(Group.this)) {
+                                    if (!Global.check_int(Group.this))
+                                        connectE.setVisibility(View.VISIBLE);
+                                    else
+                                        connectE.setVisibility(View.GONE);
+
+                                    prevstate = Global.check_int(Group.this);
+                                }
+
+                            }
+                        });
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }).start();
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -323,6 +433,8 @@ public class Group extends AppCompatActivity
                 downdown.setBackground(getResources().getDrawable(R.drawable.circle));
                 imm.setBackground(getResources().getDrawable(R.drawable.circle));
                 reactD.setBackground(getResources().getDrawable(R.drawable.react_bg));
+                replyLy.setBackground(getResources().getDrawable(R.drawable.reply_bg_w));
+
                 Global.DARKSTATE = false;
 //wallpaper
                 overdark.setVisibility(View.GONE);
@@ -355,6 +467,8 @@ public class Group extends AppCompatActivity
                 downdown.setBackground(getResources().getDrawable(R.drawable.circle_d));
                 imm.setBackground(getResources().getDrawable(R.drawable.circle_d));
                 reactD.setBackground(getResources().getDrawable(R.drawable.react_bg_d));
+                replyLy.setBackground(getResources().getDrawable(R.drawable.reply_bg_d));
+
                 Global.DARKSTATE = true;
                 //wallpaper
                 overdark.setVisibility(View.VISIBLE);
@@ -380,8 +494,7 @@ public class Group extends AppCompatActivity
             }
         }
 
-        //location
-        location = new SimpleLocation(this);
+
         //fcm notify
         fcm = Global.getFCMservies();
         Global.currentactivity = this;
@@ -412,9 +525,7 @@ public class Group extends AppCompatActivity
                 .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(getApplicationContext(), config);
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+
         voice.setRecordView(recordView);
         if (getIntent() != null) {
             Intent intent = getIntent();
@@ -434,24 +545,26 @@ public class Group extends AppCompatActivity
             query22.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (!dataSnapshot.exists()) {
-                        if (toast) {
-                            toast = false;
-                            Groups.refreshL(friendId);
-                            ((AppBack) getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
-                            ((AppBack) getApplication()).getchatsdbG(friendId);
+                    if (mAuth.getCurrentUser() != null) {
 
-                            Global.messGGG.clear();
-                            deletebyId(friendId);
+                        if (!dataSnapshot.exists()) {
+                            if (toast) {
+                                toast = false;
+                                Groups.refreshL(friendId);
+                                ((AppBack) getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
+                                ((AppBack) getApplication()).getchatsdbG(friendId);
 
-                            //local store
-                            ((AppBack) getApplication()).setchatsdbG(friendId);
-                            ((AppBack) getApplication()).setdialogdbG(mAuth.getCurrentUser().getUid());
-                            Toast.makeText(Group.this, getString(R.string.kicked), Toast.LENGTH_SHORT).show();
-                            finish();
+                                Global.messGGG.clear();
+                                deletebyId(friendId);
+
+                                //local store
+                                ((AppBack) getApplication()).setchatsdbG(friendId);
+                                ((AppBack) getApplication()).setdialogdbG(mAuth.getCurrentUser().getUid());
+                                Toast.makeText(Group.this, getString(R.string.kicked), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                     }
-
 
                 }
 
@@ -460,24 +573,39 @@ public class Group extends AppCompatActivity
 
                 }
             });
+            code = intent.getExtras().getInt("ccode");
             mDataget = FirebaseDatabase.getInstance().getReference(Global.GROUPS).child(friendId);
             Query query = mDataget.orderByChild("messDate");
             query.keepSynced(true);
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Global.currGAdmins.clear();
-                    Global.currGUsers.clear();
-                    userData = dataSnapshot.getValue(GroupIn.class);
-                    Global.currname = userData.getName();
-                    Global.currAva = encryption.decryptOrNull(userData.getAvatar());
-                    Global.currGUsers = userData.getUsers();
-                    Global.currGAdmins = userData.getAdmins();
-                    ((AppBack) getApplication()).setGroupUsers(friendId);
-                    ((AppBack) getApplication()).setGroupAdmins(friendId);
-                    Global.currGUsersAva.clear();
-                    getAvas();
-                    editInf();
+                    if (mAuth.getCurrentUser() != null) {
+                        try {
+                            ((AppBack) getApplication()).getGroupUsers(friendId);
+                            ((AppBack) getApplication()).getGroupUsersAva(friendId);
+                            ((AppBack) getApplication()).getGroupAdmins(friendId);
+
+                            Global.currGAdmins.clear();
+                            Global.currGUsers.clear();
+                            userData = dataSnapshot.getValue(GroupIn.class);
+                            Global.currname = userData.getName();
+                            Global.currAva = encryption.decryptOrNull(userData.getAvatar());
+                            Global.currGUsers = userData.getUsers();
+                            Global.currGAdmins = userData.getAdmins();
+                            ((AppBack) getApplication()).setGroupUsers(friendId);
+                            ((AppBack) getApplication()).setGroupAdmins(friendId);
+                            Global.currGUsersAva.clear();
+                            if (code == 0) {
+                                zeroCount();
+                                readM();
+                            }
+                            getAvas();
+                            editInf();
+                        } catch (NullPointerException e) {
+
+                        }
+                    }
                 }
 
                 @Override
@@ -485,7 +613,6 @@ public class Group extends AppCompatActivity
 
                 }
             });
-            code = intent.getExtras().getInt("ccode");
         }
 
 
@@ -507,12 +634,14 @@ public class Group extends AppCompatActivity
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
                     .load(R.drawable.group)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(ava);
         } else {
             Picasso.get()
                     .load(Global.currAva)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(ava);
         }
         state.setVisibility(View.GONE);
@@ -528,21 +657,23 @@ public class Group extends AppCompatActivity
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GroupIn groupIn = dataSnapshot.getValue(GroupIn.class);
-                if (groupIn != null) {
-                    typingR = groupIn.isTyping();
-                    recordingR = groupIn.isAudio();
-                    if (typingR)
-                        whoT = groupIn.getWhoT();
-                    if (recordingR)
-                        whoR = groupIn.getWhoR();
-                    typingit();
-                } else {
-                    typingR = false;
-                    recordingR = false;
-                    typingit();
-                }
+                if (mAuth.getCurrentUser() != null) {
 
+                    GroupIn groupIn = dataSnapshot.getValue(GroupIn.class);
+                    if (groupIn != null) {
+                        typingR = groupIn.isTyping();
+                        recordingR = groupIn.isAudio();
+                        if (typingR)
+                            whoT = groupIn.getWhoT();
+                        if (recordingR)
+                            whoR = groupIn.getWhoR();
+                        typingit();
+                    } else {
+                        typingR = false;
+                        recordingR = false;
+                        typingit();
+                    }
+                }
             }
 
             @Override
@@ -580,12 +711,14 @@ public class Group extends AppCompatActivity
                 if (String.valueOf(Global.avaLocal).equals("no")) {
                     Picasso.get()
                             .load(R.drawable.group)
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                             .into(attachmenuP);
                 } else {
                     Picasso.get()
                             .load(Global.avaLocal)
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                             .into(attachmenuP);
                 }
             }
@@ -636,11 +769,6 @@ public class Group extends AppCompatActivity
                 }
             });
         }
-
-        if (code == 0) {
-            zeroCount();
-            readM();
-        }
         //output
         imageLoader = new ImageLoader() {
 
@@ -649,13 +777,14 @@ public class Group extends AppCompatActivity
                 if (String.valueOf(url).equals("no")) {
                     Picasso.get()
                             .load(R.drawable.group)
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                             .into(imageView);
                 } else {
                     Picasso.get()
                             .load(url)
-                            .placeholder(getResources().getDrawable(R.drawable.loading))
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                             .into(imageView);
                 }
             }
@@ -730,66 +859,52 @@ public class Group extends AppCompatActivity
                         emoji.setImageResource(R.drawable.ic_emoji);
                         emojiPopup.dismiss();
                     }
-                    Global.yourM = false;
-                    encrypM = String.valueOf(input[0]).trim();
-                    encrypM = encryption.encryptOrNull(encrypM);
-                    currTime = ServerValue.TIMESTAMP;
-                    messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-                    //send owner data to friend
-                    mAuth = FirebaseAuth.getInstance();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("lastmessage", encrypM);
-                    map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", Global.avaLocal);
-                    map.put("messDate", currTime);
-                    //local message
-                    messagesAdapter.clear();
-                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
-                    try {
-                        Global.messGGG.add(messageLocal);
-                        //local store
-                        ((AppBack) getApplication()).setchatsdbG(friendId);
-                    } catch (NullPointerException e) {
-                        Global.messGGG = new ArrayList<>();
-                        Global.messGGG.add(messageLocal);
-                        //local store
-                        ((AppBack) getApplication()).setchatsdbG(friendId);
-                    }
 
-                    //     update last message if dialog exist
-                    Groups groups = new Groups();
-                    //       update dialog if not exist
-                    GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
-                    ArrayList<GroupIn> tempoo = new ArrayList<>();
-                    tempoo.clear();
-                    tempoo.add(dialog);
-                    Global.groupG = dialog;
-                    Global.DialogonelistG = tempoo;
-                    Global.Dialogid = friendId;
-                    Global.DialogM = messageLocal;
-                    groups.onNewMessage();
+                    if (!replyBollean) {
 
+                        encrypM = String.valueOf(input[0]).trim();
+                        encrypM = encryption.encryptOrNull(encrypM);
+                        currTime = ServerValue.TIMESTAMP;
+                        messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+                        //send owner data to friend
+                        mAuth = FirebaseAuth.getInstance();
 
-                    messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
-                    messagesAdapter.notifyDataSetChanged();
-                    messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-                    ///////
-
-                    mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                int j = i;
-                                mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        if (j == Global.currGUsers.size() - 1)
-                                            sendM();
-                                    }
-                                });
-                            }
+                        //local message
+                        messagesAdapter.clear();
+                        messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
+                        try {
+                            Global.messGGG.add(messageLocal);
+                            //local store
+                            ((AppBack) getApplication()).setchatsdbG(friendId);
+                        } catch (NullPointerException e) {
+                            Global.messGGG = new ArrayList<>();
+                            Global.messGGG.add(messageLocal);
+                            //local store
+                            ((AppBack) getApplication()).setchatsdbG(friendId);
                         }
-                    });
+
+                        //     update last message if dialog exist
+                        Groups groups = new Groups();
+                        //       update dialog if not exist
+                        GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+                        ArrayList<GroupIn> tempoo = new ArrayList<>();
+                        tempoo.clear();
+                        tempoo.add(dialog);
+                        Global.groupG = dialog;
+                        Global.DialogonelistG = tempoo;
+                        Global.Dialogid = friendId;
+                        Global.DialogM = messageLocal;
+                        groups.updatedialog(Group.this);
+
+
+                        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+                        messagesAdapter.notifyDataSetChanged();
+                        messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+                        ///////
+
+                        sendM();
+                    } else
+                        goReply(String.valueOf(input[0]).trim());
                 } else
                     Snackbar.make(ly, R.string.empty_mess, Snackbar.LENGTH_SHORT).show();
             }
@@ -812,67 +927,50 @@ public class Group extends AppCompatActivity
                                         emoji.setImageResource(R.drawable.ic_emoji);
                                         emojiPopup.dismiss();
                                     }
-                                    Global.yourM = false;
-                                    encrypM = String.valueOf(input[0]).trim();
-                                    encrypM = encryption.encryptOrNull(encrypM);
-                                    currTime = ServerValue.TIMESTAMP;
-                                    messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
-                                    //send owner data to friend
-                                    mAuth = FirebaseAuth.getInstance();
-                                    Map<String, Object> map = new HashMap<>();
-                                    map.put("lastmessage", encrypM);
-                                    map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                    map.put("lastsenderava", Global.avaLocal);
-                                    map.put("messDate", currTime);
+                                    if (!replyBollean) {
 
-                                    //local message
-                                    messagesAdapter.clear();
-                                    messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false);
-                                    try {
-                                        Global.messGGG.add(messageLocal);
-                                        //local store
-                                        ((AppBack) getApplication()).setchatsdbG(friendId);
-                                    } catch (NullPointerException e) {
-                                        Global.messGGG = new ArrayList<>();
-                                        Global.messGGG.add(messageLocal);
-                                        //local store
-                                        ((AppBack) getApplication()).setchatsdbG(friendId);
-                                    }
-
-                                    //     update last message if dialog exist
-                                    Groups groups = new Groups();
-                                    //       update dialog if not exist
-                                    GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
-                                    ArrayList<GroupIn> tempoo = new ArrayList<>();
-                                    tempoo.clear();
-                                    tempoo.add(dialog);
-                                    Global.groupG = dialog;
-                                    Global.DialogonelistG = tempoo;
-                                    Global.Dialogid = friendId;
-                                    Global.DialogM = messageLocal;
-                                    groups.onNewMessage();
-
-
-                                    messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
-                                    messagesAdapter.notifyDataSetChanged();
-                                    messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
-                                    ///////
-
-                                    mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                                int j = i;
-                                                mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        if (j == Global.currGUsers.size() - 1)
-                                                            sendM();
-                                                    }
-                                                });
-                                            }
+                                        encrypM = String.valueOf(input[0]).trim();
+                                        encrypM = encryption.encryptOrNull(encrypM);
+                                        currTime = ServerValue.TIMESTAMP;
+                                        messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+                                        //send owner data to friend
+                                        mAuth = FirebaseAuth.getInstance();
+                                        //local message
+                                        messagesAdapter.clear();
+                                        messageLocal = new MessageIn(encrypM, "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
+                                        try {
+                                            Global.messGGG.add(messageLocal);
+                                            //local store
+                                            ((AppBack) getApplication()).setchatsdbG(friendId);
+                                        } catch (NullPointerException e) {
+                                            Global.messGGG = new ArrayList<>();
+                                            Global.messGGG.add(messageLocal);
+                                            //local store
+                                            ((AppBack) getApplication()).setchatsdbG(friendId);
                                         }
-                                    });
+
+                                        //     update last message if dialog exist
+                                        Groups groups = new Groups();
+                                        //       update dialog if not exist
+                                        GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, messageLocal.getMessage(), mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+                                        ArrayList<GroupIn> tempoo = new ArrayList<>();
+                                        tempoo.clear();
+                                        tempoo.add(dialog);
+                                        Global.groupG = dialog;
+                                        Global.DialogonelistG = tempoo;
+                                        Global.Dialogid = friendId;
+                                        Global.DialogM = messageLocal;
+                                        groups.updatedialog(Group.this);
+
+
+                                        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+                                        messagesAdapter.notifyDataSetChanged();
+                                        messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+                                        ///////
+                                        sendM();
+                                    } else
+                                        goReply(String.valueOf(input[0]).trim());
+
                                 } else
                                     Snackbar.make(ly, R.string.empty_mess, Snackbar.LENGTH_SHORT).show();
                                 return true;
@@ -911,17 +1009,21 @@ public class Group extends AppCompatActivity
         btnF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (fqb) {
-                    cdd.dismiss();
-                    isHidden = true;
-                    Intent intent4 = new Intent(Group.this, NormalFilePickActivity.class);
-                    intent4.putExtra(Constant.MAX_NUMBER, Global.fileS);
-                    intent4.putExtra(IS_NEED_FOLDER_LIST, true);
-                    intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf", "txt"});
-                    startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
-                } else
-                    Toast.makeText(Group.this, R.string.wait, Toast.LENGTH_SHORT).show();
+                cdd.dismiss();
+                isHidden = true;
+                Intent intent = new Intent(Group.this, FilePickerActivity.class);
+                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                        .setCheckPermission(true)
+                        .setShowImages(false)
+                        .enableImageCapture(false)
+                        .setMaxSelection(Global.fileS)
+                        .setShowVideos(false)
+                        .setShowFiles(true)
+                        .setSkipZeroSizeFiles(false)
+                        .build());
+                startActivityForResult(intent, 1023);
             }
+
 
         });
         btnVideo.setOnClickListener(new View.OnClickListener() {
@@ -930,7 +1032,7 @@ public class Group extends AppCompatActivity
                 cdd.dismiss();
                 isHidden = true;
 
-                Pico.openMultipleFiles(Group.this, Pico.TYPE_VIDEO);
+                mediaPicker.with(params).pick();
 
             }
         });
@@ -986,6 +1088,8 @@ public class Group extends AppCompatActivity
                             public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                                 if (report.areAllPermissionsGranted()) {
+                                    //location
+                                    location = new SimpleLocation(Group.this);
                                     // if we can't access the location yet
                                     if (!location.hasLocationEnabled()) {
                                         // ask the user to enable location access
@@ -999,14 +1103,9 @@ public class Group extends AppCompatActivity
                                         messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
                                         //send owner data to friend
                                         mAuth = FirebaseAuth.getInstance();
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("lastmessage", encrypMap);
-                                        map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                        map.put("lastsenderava", Global.avaLocal);
-                                        map.put("messDate", currTime);
                                         //local message
                                         messagesAdapter.clear();
-                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map", encryption.encryptOrNull(Global.avaLocal), false);
+                                        messageLocal = new MessageIn(encrypL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidL, "map", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
                                         try {
                                             Global.messGGG.add(messageLocal);
                                             //local store
@@ -1025,33 +1124,18 @@ public class Group extends AppCompatActivity
                                         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypMap, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
                                         ArrayList<GroupIn> tempoo = new ArrayList<>();
                                         tempoo.clear();
-                                        Global.yourM = false;
                                         tempoo.add(dialog);
                                         Global.groupG = dialog;
                                         Global.DialogonelistG = tempoo;
                                         Global.Dialogid = friendId;
                                         Global.DialogM = messageLocal;
-                                        groups.onNewMessage();
+                                        groups.updatedialog(Group.this);
                                         messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
                                         ///////
-                                        mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                                    int j = i;
-                                                    mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            if (j == Global.currGUsers.size() - 1)
-                                                                sendMap();
+                                        sendMap();
 
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
 
                                     }
                                 } else
@@ -1081,6 +1165,23 @@ public class Group extends AppCompatActivity
                     emojiPopup.dismiss();
                 }
 
+            }
+        });
+
+        sticker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (Global.stickerIcon) {
+                        if (iqb) {
+                            Global.stickerIcon = false;
+                            mStickerBSFragment.show(getSupportFragmentManager(), mStickerBSFragment.getTag());
+                        } else
+                            Toast.makeText(Group.this, R.string.wait, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IllegalStateException e) {
+
+                }
             }
         });
 
@@ -1125,7 +1226,6 @@ public class Group extends AppCompatActivity
                 try {
                     stopRecording(false);
                 } catch (RuntimeException e) {
-                    mOutputFile.delete();
                     stopAT();
                 }
                 setResult(RESULT_CANCELED);
@@ -1141,7 +1241,6 @@ public class Group extends AppCompatActivity
                         stopRecording(true);
                         Uri uri = Uri.parse("file://" + mOutputFile.getAbsolutePath());
                         setResult(Activity.RESULT_OK, new Intent().setData(uri));
-                        Log.wtf("keyyy", "1122");
 
                         uploadV(uri, recordTime);
                     } catch (NullPointerException e) {
@@ -1161,7 +1260,6 @@ public class Group extends AppCompatActivity
                     try {
                         stopRecording(false);
                     } catch (RuntimeException e) {
-                        mOutputFile.delete();
                         stopAT();
                     }
                     setResult(RESULT_CANCELED);
@@ -1192,6 +1290,11 @@ public class Group extends AppCompatActivity
             }
         });
 
+        //  deleteTodoItem();
+
+        if (((AppBack) getApplication()).shared().getBoolean("shake", true))
+            onShakeDelete();
+
 
     }
 
@@ -1203,7 +1306,6 @@ public class Group extends AppCompatActivity
         } catch (RuntimeException e) {
         }
         setResult(RESULT_CANCELED);
-        Global.currentpageid = "";
     }
 
     @Override
@@ -1315,12 +1417,42 @@ public class Group extends AppCompatActivity
         map.put("type", "text");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
+
         mData.child(friendId).child(Global.Messages).child(messidL)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypM, messidL);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypM);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypM, messidL);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -1342,12 +1474,41 @@ public class Group extends AppCompatActivity
         map.put("type", "map");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
         mData.child(friendId).child(Global.Messages).child(messidL)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypM, messidL);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypMap);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypMap, messidL);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -1391,10 +1552,14 @@ public class Group extends AppCompatActivity
             messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
             messagesAdapter.notifyDataSetChanged();
         }
-        query.addChildEventListener(new ChildEventListener() {
+
+
+        child = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
+                    try {
+
                         MessageIn message = dataSnapshot.getValue(MessageIn.class);
 
                         if (messagesAdapter.halbine(Global.messGGG, message.getMessId()) == -1)
@@ -1406,24 +1571,27 @@ public class Group extends AppCompatActivity
                             downdown.setVisibility(View.VISIBLE);
 
 
-                    }
-                    //check only in global list range
-                    if (i[0] >= keyOnce[0] - 1) {
+                        }
+                        //check only in global list range
+                        if (i[0] >= keyOnce[0] - 1) {
                             //local store
                             ((AppBack) getApplication()).setchatsdbG(friendId);
 
-                        //update the list
-                        messagesAdapter.clear();
-                        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
-                        messagesAdapter.notifyDataSetChanged();
-                        messagesList.scrollBy(0, 0);
+                            //update the list
+                            messagesAdapter.clear();
+                            messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+                            messagesAdapter.notifyDataSetChanged();
+                            messagesList.scrollBy(0, 0);
 
 
-                        if (onceOnce[0] == 0) {
-                            keyOnce[0]++;
+                            if (onceOnce[0] == 0) {
+                                keyOnce[0]++;
+                            }
                         }
+                        i[0]++;
+                    } catch (NullPointerException e) {
+
                     }
-                    i[0]++;
                 }
             }
 
@@ -1436,6 +1604,7 @@ public class Group extends AppCompatActivity
                 //local store
                 ((AppBack) getApplication()).setchatsdbG(friendId);
 
+                messagesAdapter.notifyDataSetChanged();
                 messagesAdapter.clear();
                 messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                 messagesAdapter.notifyDataSetChanged();
@@ -1500,16 +1669,26 @@ public class Group extends AppCompatActivity
     }
 
     private void zeroCount() {
-        if (Global.currGUsers.contains(friendId)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("noOfUnread", 0);
-            count.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
+        try {
+            if (open) {
+                DatabaseReference count = FirebaseDatabase.getInstance().getReference(Global.USERS);
+                if (Global.currGUsers.contains(mAuth.getCurrentUser().getUid())) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("noOfUnread", 0);
+                    count.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
+                        }
+                    });
                 }
-            });
+            }
         }
+        catch (NullPointerException e)
+        {
+
+        }
+
     }
 
     public void startTT() {
@@ -1543,21 +1722,27 @@ public class Group extends AppCompatActivity
 
     //stop and begin (recording audio)
     public void startAT() {
-        if (Global.messGGG.size() > 0 && Global.messGGG != null) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("audio", true);
-            map.put("whoR", Global.nameLocal);
-            if (Global.messGGG != null && Global.messGGG.size() != 0)
-                type.child(friendId).updateChildren(map);
+        if (mAuth.getCurrentUser() != null) {
+
+            if (Global.messGGG.size() > 0 && Global.messGGG != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("audio", true);
+                map.put("whoR", Global.nameLocal);
+                if (Global.messGGG != null && Global.messGGG.size() != 0)
+                    type.child(friendId).updateChildren(map);
+            }
         }
     }
 
     public void stopAT() {
-        if (Global.messGGG.size() > 0 && Global.messGGG != null) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("audio", false);
-            if (Global.messGGG != null && Global.messGGG.size() != 0)
-                type.child(friendId).updateChildren(map);
+        if (mAuth.getCurrentUser() != null) {
+
+            if (Global.messGGG.size() > 0 && Global.messGGG != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("audio", false);
+                if (Global.messGGG != null && Global.messGGG.size() != 0)
+                    type.child(friendId).updateChildren(map);
+            }
         }
     }
 
@@ -1612,6 +1797,12 @@ public class Group extends AppCompatActivity
                                 filetype = ".txt";
                             } else if (filett.contains("/binary")) {
                                 filetype = "";
+                            } else if (filett.contains("/zip")) {
+                                filetype = ".zip";
+                            } else if (filett.contains("/rar")) {
+                                filetype = ".rar";
+                            } else if (filett.contains("/apk")) {
+                                filetype = ".apk";
                             } else {
                                 filetype = filett;
                             }
@@ -1620,7 +1811,7 @@ public class Group extends AppCompatActivity
                             fileA.add(messidL);
                             String locall = encryption.encryptOrNull(String.valueOf(linkL));
                             messagesAdapter.clear();
-                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no", encryption.encryptOrNull(Global.avaLocal), false);
+                            messageLocal = new MessageIn(locall, "..", System.currentTimeMillis(), false, false, messidL, "file", fileL + filetype, mAuth.getCurrentUser().getUid(), "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
                             try {
                                 Global.messGGG.add(messageLocal);
                                 //local store
@@ -1641,13 +1832,12 @@ public class Group extends AppCompatActivity
                             GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypF, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
                             ArrayList<GroupIn> tempoo = new ArrayList<>();
                             tempoo.clear();
-                            Global.yourM = false;
                             tempoo.add(dialog);
                             Global.groupG = dialog;
                             Global.DialogonelistG = tempoo;
                             Global.Dialogid = friendId;
                             Global.DialogM = messageLocal;
-                            groups.onNewMessage();
+                            groups.updatedialog(Group.this);
                             messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
                             messagesAdapter.notifyDataSetChanged();
                             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1677,26 +1867,7 @@ public class Group extends AppCompatActivity
                                         currTime = ServerValue.TIMESTAMP;
                                         //send owner data to friend
                                         mAuth = FirebaseAuth.getInstance();
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("lastmessage", encrypF);
-                                        map.put("lastsender", mAuth.getCurrentUser().getUid());
-                                        map.put("lastsenderava", Global.avaLocal);
-                                        map.put("messDate", currTime);
-                                        mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                                    int j = i;
-                                                    mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            if (j == Global.currGUsers.size() - 1)
-                                                                sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
+                                        sendFpre(String.valueOf(downloadUrl), filename + finalFiletype);
 
 
                                     }
@@ -1725,7 +1896,7 @@ public class Group extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time), encryption.encryptOrNull(Global.avaLocal), false);
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "voice", "no", getHumanTimeText(time), encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
         try {
             Global.messGGG.add(messageLocal);
             //local store
@@ -1745,13 +1916,12 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypV, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
-        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-        groups.onNewMessage();
+        groups.updatedialog(Group.this);
         messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1786,30 +1956,10 @@ public class Group extends AppCompatActivity
                     currTime = ServerValue.TIMESTAMP;
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("lastmessage", encrypV);
-                    map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", Global.avaLocal);
-                    map.put("messDate", currTime);
-                    mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                int j = i;
-                                mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        if (j == Global.currGUsers.size() - 1)
-                                            sendVpre(String.valueOf(downloadUrl), time);
-                                    }
-                                });
-                            }
-                        }
-                    });
+                    sendVpre(String.valueOf(downloadUrl), time);
 
 
-                } else
-                    Log.wtf("keyyy", task.getException().getMessage());
+                }
 
             }
         });
@@ -1821,7 +1971,7 @@ public class Group extends AppCompatActivity
         String locall = encryption.encryptOrNull(String.valueOf(linkL));
         //local message
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no", encryption.encryptOrNull(Global.avaLocal), false);
+        messageLocal = new MessageIn(locall, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidL, "video", getHumanTimeText(time), "file:///android_asset/loading.jpg", "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
         try {
             Global.messGGG.add(messageLocal);
             //local store
@@ -1842,13 +1992,12 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypVideo, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
-        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-        groups.onNewMessage();
+        groups.updatedialog(Group.this);
         messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1877,11 +2026,6 @@ public class Group extends AppCompatActivity
                     currTime = ServerValue.TIMESTAMP;
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("lastmessage", encrypVideo);
-                    map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", Global.avaLocal);
-                    map.put("messDate", currTime);
                     thumb = ThumbnailUtils.createVideoThumbnail(local, MediaStore.Video.Thumbnails.MINI_KIND);
                     ByteArrayOutputStream bao = new ByteArrayOutputStream();
                     thumb.compress(Bitmap.CompressFormat.PNG, 100, bao);
@@ -1904,23 +2048,8 @@ public class Group extends AppCompatActivity
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
-                                mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                            int j = i;
-                                            mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    if (j == Global.currGUsers.size() - 1) {
-                                                        Uri thumbD = task.getResult();
-                                                        sendVideopre(String.valueOf(downloadUrl), time, String.valueOf(thumbD));
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
+                                Uri thumbD = task.getResult();
+                                sendVideopre(String.valueOf(downloadUrl), time, String.valueOf(thumbD));
                             }
                         }
                     });
@@ -1958,40 +2087,25 @@ public class Group extends AppCompatActivity
 
                 }
                 break;
-            case Constant.REQUEST_CODE_PICK_FILE:
+            case 1023:
                 if (resultCode == RESULT_OK) {
+
+                    ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
                     if (Global.check_int(Group.this)) {
-                        fqb = false;
                         fileA.clear();
-                        fq = 0;
                     }
-                    ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
-                    for (int i = 0; i < list.size(); i++) {
-                        uploadF(Uri.parse("file:///" + list.get(i).getPath()), list.get(i).getName(), list.get(i).getMimeType());
+                    for (int i = 0; i < files.size(); i++) {
+                        uploadF(Uri.parse("file:///" + files.get(i).getPath()), files.get(i).getName(), files.get(i).getMimeType());
                     }
                 }
                 break;
         }
-        Pico.onActivityResult(this, requestCode, resultCode, data, new Pico.onActivityResultHandler() {
+        try {
+            mediaPicker.process(requestCode, resultCode, data);
 
-            @Override
-            public void onActivityResult(List<File> files) {
-                for (File file : files) {
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                    retriever.setDataSource(Group.this, Uri.fromFile(file));
-                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                    long timeInMillisec = Long.parseLong(time);
-                    retriever.release();
-                    uploadVideo(Uri.parse("file:///" + file.getAbsolutePath()), timeInMillisec, file.getAbsolutePath());
+        } catch (NullPointerException e) {
 
-                }
-            }
-
-            @Override
-            public void onFailure(Exception error) {
-
-            }
-        });
+        }
         if (resultCode == Activity.RESULT_OK
                 && requestCode == SandriosCamera.RESULT_CODE
                 && data != null) {
@@ -2017,7 +2131,7 @@ public class Group extends AppCompatActivity
         imageA.add(messidL);
         String locall = encryption.encryptOrNull("file://" + path);
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false);
+        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
         try {
             Global.messGGG.add(messageLocal);
             //local store
@@ -2039,13 +2153,12 @@ public class Group extends AppCompatActivity
         GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
         ArrayList<GroupIn> tempoo = new ArrayList<>();
         tempoo.clear();
-        Global.yourM = false;
         tempoo.add(dialog);
         Global.groupG = dialog;
         Global.DialogonelistG = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-        groups.onNewMessage();
+        groups.updatedialog(Group.this);
         messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2088,26 +2201,7 @@ public class Group extends AppCompatActivity
                     currTime = ServerValue.TIMESTAMP;
                     //send owner data to friend
                     mAuth = FirebaseAuth.getInstance();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("lastmessage", encrypI);
-                    map.put("lastsender", mAuth.getCurrentUser().getUid());
-                    map.put("lastsenderava", Global.avaLocal);
-                    map.put("messDate", currTime);
-                    mData.child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            for (int i = 0; i < Global.currGUsers.size(); i++) {
-                                int j = i;
-                                mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        if (j == Global.currGUsers.size() - 1)
-                                            sendIpre(String.valueOf(downloadUrl));
-                                    }
-                                });
-                            }
-                        }
-                    });
+                    sendIpre(String.valueOf(downloadUrl));
                 }
             }
         });
@@ -2127,13 +2221,44 @@ public class Group extends AppCompatActivity
         map.put("type", "image");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
         final String mssgid = imageA.get(iq);
         mData.child(friendId).child(Global.Messages).child(mssgid)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypM, mssgid);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypI);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypI, mssgid);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+
                 if (iq <= imageA.size() - 2) {
                     //nothing
                 } else {
@@ -2159,7 +2284,7 @@ public class Group extends AppCompatActivity
         final Map<String, Object> map = new HashMap<>();
         map.put("linkF", encrypL);
         map.put("time", currTime);
-        map.put("messId", fileA.get(fq));
+        map.put("messId", fileA.get(0));
         map.put("react", "no");
         map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
         map.put("chat", false);
@@ -2168,30 +2293,50 @@ public class Group extends AppCompatActivity
         map.put("type", "file");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
-        final String mssgid = fileA.get(fq);
+        final String mssgid = fileA.get(0);
         mData.child(friendId).child(Global.Messages).child(mssgid)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypF, mssgid);
-                if (fq <= fileA.size() - 2) {
-                    //nothing
-                } else {
-                    fqb = true;
 
-                }
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypF);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypF, mssgid);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                fqb = true;
             }
         });
-
-
-        if (fq <= fileA.size() - 2)
-            fq++;
     }
 
     private void sendVpre(String link, long time) {
@@ -2209,12 +2354,41 @@ public class Group extends AppCompatActivity
         map.put("type", "voice");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
         mData.child(friendId).child(Global.Messages).child(messidL)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypM, messidL);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypV);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypV, messidL);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -2240,12 +2414,41 @@ public class Group extends AppCompatActivity
         map.put("type", "video");
         map.put("deleted", false);
         map.put("statue", "✔");
+        map.put("reply", encryption.encryptOrNull(""));
+        map.put("forw", false);
+        map.put("call", false);
         map.put("from", mAuth.getCurrentUser().getUid());
         mData.child(friendId).child(Global.Messages).child(messidL)
                 .updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendMessNotify(encrypVideo, messidL);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("lastmessage", encrypVideo);
+                map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                map2.put("lastsenderava", Global.avaLocal);
+                map2.put("messDate", currTime);
+
+                mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                sendMessNotify(encrypVideo, messidL);
+                                for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                    int j = i;
+                                    if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                                        mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -2275,7 +2478,6 @@ public class Group extends AppCompatActivity
             startAT();
             return true;
         } catch (Exception e) {
-            Log.wtf("keyyyy", e.getMessage());
             return false;
         }
     }
@@ -2294,7 +2496,6 @@ public class Group extends AppCompatActivity
         } catch (NullPointerException e) {
             stopAT();
         } catch (RuntimeException e) {
-            mOutputFile.delete();
             stopAT();
         }
 
@@ -2318,12 +2519,14 @@ public class Group extends AppCompatActivity
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
                     .load(R.drawable.group)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(ava);
         } else {
             Picasso.get()
                     .load(Global.currAva)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(ava);
         }
         state.setVisibility(View.GONE);
@@ -2347,7 +2550,18 @@ public class Group extends AppCompatActivity
 
     @Override
     public void onResume() {
+        open = true;
         pausebreak = false;
+        Global.stickerIcon = true;
+
+
+        try {
+            if (shakeDetector != null)
+                shakeDetector.start(getBaseContext());
+        } catch (NullPointerException e) {
+
+        }
+
         //resume
         super.onResume();
 
@@ -2356,7 +2570,8 @@ public class Group extends AppCompatActivity
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            myData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if (mAuth.getCurrentUser() != null)
+                myData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -2366,6 +2581,7 @@ public class Group extends AppCompatActivity
         //clear all notifications
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         try {
+            messagesAdapter.notifyDataSetChanged();
             if (notificationManager != null) {
                 notificationManager.cancelAll();
                 int count = 0;
@@ -2388,12 +2604,31 @@ public class Group extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
+        open = false;
+        Global.currentactivity = null;
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
         pausebreak = true;
         try {
+            AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+            audioManager.setRingerMode(AudioManager.USE_DEFAULT_STREAM_TYPE );
+            audioManager.setSpeakerphoneOn(false);
+        }catch (NullPointerException e)
+        {
+
+        }
+        try {
+            if(shakeDetector !=null)
+                shakeDetector.stopShakeDetector(getBaseContext());
+            timerStopDeleted();
+        }
+        catch (NullPointerException e)
+        {
+
+        }
+        try {
             stopRecording(false);
         } catch (RuntimeException e) {
-            mOutputFile.delete();
         }
 
         try {
@@ -2415,34 +2650,46 @@ public class Group extends AppCompatActivity
 
     private void sendMessNotify(final String message, final String Mid) {
 
+        for (int i = 0; i < Global.currGUsers.size(); i++) {
+            if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+                DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
+                int finalI = i;
+                mTokenget.child(Global.currGUsers.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Tokens tokens = dataSnapshot.getValue(Tokens.class);
+                        Map<String, String> map = new HashMap<>();
+                        map.put("nType","messageGroup");
+                        map.put("tokens",tokens.toString());
+                        map.put("senderId",friendId);
+                        map.put("senderName",Global.currname);
+                        map.put("senderAva",Global.currAva);
+                        map.put("Mid",Mid);
+                        map.put("to", Global.currGUsers.get(finalI));
+                        map.put("message", message);
+                        Sender sender = new Sender(tokens.getTokens(), map);
+                        fcm.send(sender)
+                                .enqueue(new Callback<FCMresp>() {
+                                    @Override
+                                    public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
+                                    }
 
-//        DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
-//        mTokenget.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Tokens tokens = dataSnapshot.getValue(Tokens.class);
-//                Map<String, String> map = new HashMap<>();
-//                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid);
-//                map.put("message", message);
-//                Sender sender = new Sender(tokens.getTokens(), map);
-//                fcm.send(sender)
-//                        .enqueue(new Callback<FCMresp>() {
-//                            @Override
-//                            public void onResponse(Call<FCMresp> call, Response<FCMresp> response) {
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<FCMresp> call, Throwable t) {
-//
-//                            }
-//                        });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+                                    @Override
+                                    public void onFailure(Call<FCMresp> call, Throwable t) {
+                                    }
+                                });
+
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
 
     }
 
@@ -2481,34 +2728,49 @@ public class Group extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-
-        try {
-            for (int i = 0; i < Global.audiolist.size(); i++)
-                Global.audiolist.get(i).pause();
-        } catch (NullPointerException e) {
-
-        }
+        if (mAuth.getCurrentUser() != null) {
+            query.removeEventListener(child);
 
 
-        Global.btnid.clear();
-        Global.audiolist.clear();
-        for (int i = 0; i < Global.messGGG.size(); i++) {
-            //check all failed messages
-            if (Global.messGGG.get(i).getStatue().equals("..")) {
-                //make it false
-                Global.messGGG.get(i).setStatue("X");
-                ((AppBack) getApplication()).setchatsdbG(friendId);
-
-                //put to retry
-                ((AppBack) getApplication()).getRetry(friendId);
-                Global.messGGG.get(i).setStatue("..");
-                Global.retryM.add(Global.messGGG.get(i));
-                ((AppBack) getApplication()).setRetry(friendId);
+            try {
+                if(shakeDetector !=null)
+                    shakeDetector.destroy(getBaseContext());
+                timerStopDeleted();
             }
+            catch (NullPointerException e)
+            {
+
+            }
+
+            try {
+                for (int i = 0; i < Global.audiolist.size(); i++)
+                    Global.audiolist.get(i).pause();
+            } catch (NullPointerException e) {
+
+            }
+
+
+            Global.btnid.clear();
+            Global.audiolist.clear();
+            for (int i = 0; i < Global.messGGG.size(); i++) {
+                //check all failed messages
+                if (Global.messGGG.get(i).getStatue().equals("..")) {
+                    //make it false
+                    Global.messGGG.get(i).setStatue("X");
+                    ((AppBack) getApplication()).setchatsdbG(friendId);
+
+                    //todo when add retry after online
+                    //put to retry
+//                    ((AppBack) getApplication()).getRetry(friendId);
+//                    Global.messGGG.get(i).setStatue("..");
+//                    Global.retryM.add(Global.messGGG.get(i));
+//                    ((AppBack) getApplication()).setRetry(friendId);
+                }
+            }
+            messagesAdapter.clear();
+            messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+            messagesAdapter.notifyDataSetChanged();
         }
-        messagesAdapter.clear();
-        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
-        messagesAdapter.notifyDataSetChanged();
         super.onDestroy();
     }
 
@@ -2549,6 +2811,7 @@ public class Group extends AppCompatActivity
             return -1;
 
     }
+
     public void deletebyId(String Fid) {
         int i = 0;
         for (i = 0; i < Global.diaGGG.size(); i++) {
@@ -2558,6 +2821,622 @@ public class Group extends AppCompatActivity
             }
 
         }
+    }
+
+    @Override
+    public void onStickerClick(Bitmap bitmap, int position) {
+        if (Global.check_int(Group.this)) {
+            iqb = false;
+            imageA.clear();
+            iq = 0;
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        stickerUpload(data, position);
+    }
+
+    public void stickerUpload(byte[] thumbData, int position) {
+        //local message
+        messidL = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + String.valueOf(System.currentTimeMillis());
+        imageA.add(messidL);
+        String locall = encryption.encryptOrNull(getURLForResource(position));
+        messagesAdapter.clear();
+        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, "");
+        try {
+            Global.messGGG.add(messageLocal);
+            //local store
+            ((AppBack) getApplication()).setchatsdbG(friendId);
+        } catch (NullPointerException e) {
+            Global.messGGG = new ArrayList<>();
+            Global.messGGG.add(messageLocal);
+            //local store
+            ((AppBack) getApplication()).setchatsdbG(friendId);
+        }
+
+
+        encrypI = "Sticker";
+        encrypI = encryption.encryptOrNull(encrypI);
+
+        //     update last message if dialog exist
+        Groups groups = new Groups();
+        //       update dialog if not exist
+        GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, encrypI, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+        ArrayList<GroupIn> tempoo = new ArrayList<>();
+        tempoo.clear();
+        tempoo.add(dialog);
+        Global.groupG = dialog;
+        Global.DialogonelistG = tempoo;
+        Global.Dialogid = friendId;
+        Global.DialogM = messageLocal;
+        groups.updatedialog(Group.this);
+        messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+        messagesAdapter.notifyDataSetChanged();
+        messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+
+
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference riversRef = mStorageRef.child(Global.GROUPS + "/" + friendId + "/" + mAuth.getCurrentUser().getUid() + "/Images/" + mAuth.getCurrentUser().getUid() + friendId + System.currentTimeMillis() + ".png");
+        UploadTask uploadTask = riversRef.putBytes(thumbData);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return riversRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    message.setText("");
+                    currTime = ServerValue.TIMESTAMP;
+                    //send owner data to friend
+                    mAuth = FirebaseAuth.getInstance();
+                    sendIpre(String.valueOf(downloadUrl));
+                }
+            }
+        });
+    }
+
+
+    public String getURLForResource(int resourceId) {
+        return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + resourceId).toString();
+    }
+
+    public static void refreshAdapter() {
+        try {
+            messagesAdapter.notifyDataSetChanged();
+
+        } catch (NullPointerException e) {
+
+        }
+
+    }
+
+    @Override
+    public void onPickMediaStateChanged(boolean inProgress) {
+
+    }
+
+    @Override
+    public void onPickMediaResult(@NonNull MediaResult result, @Nullable CharSequence errorMsg) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(Group.this, Uri.parse(result.getPath()));
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInMillisec = Long.parseLong(time);
+        retriever.release();
+        uploadVideo(Uri.parse("file:///" + result.getPath()), timeInMillisec, result.getPath());
+
+    }
+
+    private void deleteTodoItem() {
+        //Swipe to delete currentTodo Item
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            private Drawable replyI = ContextCompat.getDrawable(getApplicationContext(), R.drawable.reply);
+            private Drawable forwardI = ContextCompat.getDrawable(getApplicationContext(), R.drawable.forward);
+
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = (Global.messGGG.size() - viewHolder.getAdapterPosition()) - 1;
+                messagesAdapter.notifyDataSetChanged();
+
+                if (direction == 8) {
+                    try {
+                        if (messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()) != null && !messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getStatus().equals("..") && !messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getStatus().equals("X")) {
+                            replyM = messagesAdapter.halbins2(Global.messGGG.get(position).getMessId());
+                            replyBollean = true;
+                            replyLy.setVisibility(View.VISIBLE);
+                            if (messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getReply().isEmpty()) {
+                                switch (messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getType()) {
+                                    case "text":
+                                        replyT.setText(messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getText());
+                                        break;
+                                    case "image":
+                                        replyT.setText(getResources().getString(R.string.image));
+                                        break;
+                                    case "video":
+                                        replyT.setText(getResources().getString(R.string.video));
+                                        break;
+                                    case "voice":
+                                        replyT.setText(getResources().getString(R.string.voice));
+                                        break;
+                                    case "file":
+                                        replyT.setText(getResources().getString(R.string.file));
+                                        break;
+                                    case "map":
+                                        replyT.setText(getResources().getString(R.string.map_location));
+                                        break;
+                                    case "gif":
+                                        replyT.setText("GIF");
+                                        break;
+                                }
+                            } else {
+                                replyT.setText(messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getReply());
+                            }
+
+
+                            if (Global.messGGG.get(position).getFrom().equals(mAuth.getCurrentUser().getUid()))
+                                replyU.setText(getResources().getString(R.string.you));
+                            else
+                                replyU.setText(Global.currname);
+
+                        } else {
+                            Toast.makeText(Group.this, getString(R.string.cant_reply), Toast.LENGTH_SHORT).show();
+                            replyBollean = false;
+                            replyLy.setVisibility(View.GONE);
+                        }
+                    } catch (NullPointerException e) {
+                        Toast.makeText(Group.this, getString(R.string.cant_reply), Toast.LENGTH_SHORT).show();
+                        replyBollean = false;
+                        replyLy.setVisibility(View.GONE);
+                    }
+
+
+                } else if (direction == 4) {
+                    try {
+                        if (messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()) != null && !messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getStatus().equals("..") && !messagesAdapter.halbins2(Global.messGGG.get(position).getMessId()).getStatus().equals("X")) {
+                            Global.forwardMessage = messagesAdapter.halbins2(Global.messGGG.get(position).getMessId());
+                            startActivity(new Intent(Group.this, Forward.class));
+                        } else
+                            Toast.makeText(Group.this, getString(R.string.cant_forw), Toast.LENGTH_SHORT).show();
+                    } catch (NullPointerException e) {
+                        Toast.makeText(Group.this, getString(R.string.cant_forw), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                View itemView = viewHolder.itemView;
+
+                if (dX > 0) { // Swiping to the right
+                    replyI.setBounds(0, 0, 0, 0);
+                    forwardI.setBounds(0, 0, 0, 0);
+                } else if (dX < 0) { // Swiping to the left
+                    replyI.setBounds(0, 0, 0, 0);
+                    forwardI.setBounds(0, 0, 0, 0);
+                } else { // view is unSwiped
+                    replyI.setBounds(0, 0, 0, 0);
+                    forwardI.setBounds(0, 0, 0, 0);
+                }
+                replyI.draw(c);
+                forwardI.draw(c);
+            }
+        }).attachToRecyclerView(messagesList);
+    }
+
+    public void goReply(String messageReply) {
+        {
+            replyBollean = false;
+            replyLy.setVisibility(View.GONE);
+            Map<String, Object> map = new HashMap<>();
+
+            Object currT = ServerValue.TIMESTAMP;
+            messidNew = mAuth.getCurrentUser().getUid() + "_" + friendId + "_" + System.currentTimeMillis();
+
+
+            if (replyM.getReply().isEmpty()) {
+                switch (replyM.getType()) {
+                    case "text":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getText()), "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidNew, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("message", encryption.encryptOrNull(replyM.getText()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("seen", false);
+                        map.put("type", "text");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        break;
+                    case "map":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getMap().getLocation()), "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, "no", false, messidNew, "map", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("location", encryption.encryptOrNull(replyM.getMap().getLocation()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("seen", false);
+                        map.put("type", "map");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        break;
+                    case "voice":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getVoice().getUrl()), "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidNew, "voice", "no", replyM.getVoice().getDuration(), encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("linkV", encryption.encryptOrNull(replyM.getVoice().getUrl()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("duration", replyM.getVoice().getDuration());
+                        map.put("seen", false);
+                        map.put("type", "voice");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        break;
+                    case "video":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getVideo().getUrl()), "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidNew, replyM.getVideo().getDuration(), replyM.getVideo().getThumb(), "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("linkVideo", encryption.encryptOrNull(replyM.getVideo().getUrl()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("thumb", replyM.getVideo().getThumb());
+                        map.put("duration", replyM.getVideo().getDuration());
+                        map.put("seen", false);
+                        map.put("type", "video");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        break;
+                    case "file":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getFile().getUrl()), "..", System.currentTimeMillis(), false, false, messidNew, "file", replyM.getFile().getFilename(), mAuth.getCurrentUser().getUid(), "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("linkF", encryption.encryptOrNull(replyM.getFile().getUrl()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("filename", replyM.getFile().getFilename());
+                        map.put("seen", false);
+                        map.put("type", "file");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+
+
+                        break;
+                    case "image":
+                        messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getImageUrl()), "image", messidNew, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                        map.put("linkI", encryption.encryptOrNull(replyM.getImageUrl()));
+                        map.put("time", currT);
+                        map.put("react", "no");
+                        map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                        map.put("seen", false);
+                        map.put("type", "image");
+                        map.put("deleted", false);
+                        map.put("statue", "✔");
+                        map.put("reply", encryption.encryptOrNull(messageReply));
+                        map.put("forw", false);
+                        map.put("call", false);
+                        map.put("from", mAuth.getCurrentUser().getUid());
+                        map.put("chat", false);
+                        map.put("messId", messidNew);
+                        if (!replyM.getImageUrl().contains(".png"))
+                            updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        else
+                            updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+                        break;
+
+
+                }
+            } else {
+                messageLocal = new MessageIn(encryption.encryptOrNull(replyM.getReply()), "text", "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, messidNew, "no", encryption.encryptOrNull(Global.avaLocal), false, false, false, encryption.encryptOrNull(messageReply));
+
+                map.put("message", encryption.encryptOrNull(replyM.getReply()));
+                map.put("time", currT);
+                map.put("react", "no");
+                map.put("avatar", encryption.encryptOrNull(Global.avaLocal));
+                map.put("seen", false);
+                map.put("type", "text");
+                map.put("deleted", false);
+                map.put("statue", "✔");
+                map.put("reply", encryption.encryptOrNull(messageReply));
+                map.put("forw", false);
+                map.put("call", false);
+                map.put("from", mAuth.getCurrentUser().getUid());
+                map.put("chat", true);
+                map.put("messId", messidNew);
+                updateData(encryption.encryptOrNull(messageReply), messidNew, currT, map);
+            }
+
+
+        }
+
+    }
+
+    public void updateData(String mess, String messid, Object currTime, Map<String, Object> MessMap) {
+        if (mAuth.getCurrentUser() != null) {
+
+
+            //local message
+            messagesAdapter.clear();
+            try {
+                Global.messGGG.add(messageLocal);
+                //local store
+                ((AppBack) getApplication()).setchatsdbG(friendId);
+            } catch (NullPointerException e) {
+                Global.messGGG = new ArrayList<>();
+                Global.messGGG.add(messageLocal);
+                //local store
+                ((AppBack) getApplication()).setchatsdbG(friendId);
+            }
+
+            //     update last message if dialog exist
+            Groups groups = new Groups();
+            //       update dialog if not exist
+            GroupIn dialog = new GroupIn(Global.currname, Global.currAva, friendId, mess, mAuth.getCurrentUser().getUid(), Global.avaLocal, messageLocal.getTime(), 0);
+            ArrayList<GroupIn> tempoo = new ArrayList<>();
+            tempoo.clear();
+            tempoo.add(dialog);
+            Global.groupG = dialog;
+            Global.DialogonelistG = tempoo;
+            Global.Dialogid = friendId;
+            Global.DialogM = messageLocal;
+            groups.updatedialog(Group.this);
+
+
+            messagesAdapter.addToEnd(MessageData.getMessagesG(), true);
+            messagesAdapter.notifyDataSetChanged();
+            messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
+            ///////
+
+
+            mData.child(friendId).child(Global.Messages).child(messid)
+                    .updateChildren(MessMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Map<String, Object> map2 = new HashMap<>();
+                    map2.put("lastmessage", mess);
+                    map2.put("lastsender", mAuth.getCurrentUser().getUid());
+                    map2.put("lastsenderava", Global.avaLocal);
+                    map2.put("messDate", currTime);
+
+                    mData.child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                            mUserDB.child(mAuth.getCurrentUser().getUid()).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    sendMessNotify(mess, messid);
+                                    for (int i = 0; i < Global.currGUsers.size(); i++) {
+                                        int j = i;
+                                        if (!Global.currGUsers.get(i).equals(mAuth.getCurrentUser().getUid())) {
+
+                                            mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+
+                                                }
+                                            });
+                                        }
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+
+
+        }
+    }
+
+    public static void replyMOut(Message message, Context con) {
+        try {
+            if (message != null && !message.getStatus().equals("..") && !message.getStatus().equals("X")) {
+                replyM = message;
+                replyBollean = true;
+                replyLy.setVisibility(View.VISIBLE);
+                if (message.getReply().isEmpty()) {
+                    switch (message.getType()) {
+                        case "text":
+                            replyT.setText(message.getText());
+                            break;
+                        case "image":
+                            replyT.setText(con.getResources().getString(R.string.image));
+                            break;
+                        case "video":
+                            replyT.setText(con.getResources().getString(R.string.video));
+                            break;
+                        case "voice":
+                            replyT.setText(con.getResources().getString(R.string.voice));
+                            break;
+                        case "file":
+                            replyT.setText(con.getResources().getString(R.string.file));
+                            break;
+                        case "map":
+                            replyT.setText(con.getResources().getString(R.string.map_location));
+                            break;
+                        case "gif":
+                            replyT.setText("GIF");
+                            break;
+                    }
+                } else {
+                    replyT.setText(message.getReply());
+                }
+
+
+                if (message.getId().equals(mAuth.getCurrentUser().getUid()))
+                    replyU.setText(con.getResources().getString(R.string.you));
+                else
+                    replyU.setText(Global.currname);
+
+            } else {
+                Toast.makeText(con, con.getString(R.string.cant_reply), Toast.LENGTH_SHORT).show();
+                replyBollean = false;
+                replyLy.setVisibility(View.GONE);
+
+            }
+        } catch (NullPointerException e) {
+            Toast.makeText(con, con.getString(R.string.cant_reply), Toast.LENGTH_SHORT).show();
+            replyBollean = false;
+            replyLy.setVisibility(View.GONE);
+        }
+    }
+
+    public static void timerForDeleted() {
+
+        timerStopDeleted();
+
+        counter = new CountDownTimer(duration, tick) {
+
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                Global.lastDeletedMessage = null;
+
+
+            }
+        }.start();
+    }
+
+    public static void timerStopDeleted() {
+        try {
+            if (counter != null)
+                counter.cancel();
+        } catch (NullPointerException e) {
+
+        }
+    }
+
+    public void onShakeDelete() {
+        ShakeOptions options = new ShakeOptions()
+                .background(false)
+                .interval(1000)
+                .shakeCount(2)
+                .sensibility(2.0f);
+
+        shakeDetector = new ShakeDetector(options).start(this, new ShakeCallback() {
+            @Override
+            public void onShake() {
+                if (Global.lastDeletedMessage != null && Global.check_int(Group.this)) {
+                    if (Global.lastDeletedMessage.getMessid().contains(friendId)) {
+
+                        try {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("deleted", false);
+                            map.put("message", encryption.encryptOrNull(Global.lastDeletedMessage.getText()));
+                            map.put("type", Global.lastDeletedMessage.getType());
+                            mData.child(friendId).child(Global.Messages).child(Global.lastDeletedMessage.getMessid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    try {
+                                        if (messagesAdapter.halbine(Global.messGGG, Global.lastDeletedMessage.getMessid()) == Global.messGGG.size() - 1)
+                                            kameDeleteGG();
+                                        else {
+                                            Global.lastDeletedMessage = null;
+                                            timerForDeleted();
+                                        }
+                                    }catch (NullPointerException e)
+                                    {
+
+                                    }
+
+                                }
+                            });
+                        } catch (NullPointerException e) {
+
+                        }
+
+                    }
+                }
+
+
+            }
+        });
+    }
+
+    private void kameDeleteGG() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("lastmessage", encryption.encryptOrNull(getString(R.string.mess_edited)));
+        map.put("lastsender", mAuth.getCurrentUser().getUid());
+        map.put("lastsenderava", Global.avaLocal);
+        for (int i = 0; i < Global.currGUsers.size(); i++) {
+            int finalI = i;
+            mUserDB.child(Global.currGUsers.get(i)).child(Global.GROUPS).child(friendId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+
+                    if (finalI == Global.currGUsers.size() - 1) {
+                        Global.lastDeletedMessage = null;
+                        timerForDeleted();
+                    }
+                }
+            });
+        }
+
+
     }
 
 }

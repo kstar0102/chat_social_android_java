@@ -2,8 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
     android:orientation="vertical"
@@ -14,7 +14,7 @@
     android:orientation="horizontal"
     android:layout_height="wrap_content">
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/messageUserAvatarC"
+        android:id="@+id/messAva"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="start|bottom"
@@ -52,7 +52,7 @@
                 android:src="@drawable/loading"
                 android:layout_gravity="start|center_vertical"
                 android:gravity="start|center_vertical"
-                app:riv_corner_radius_bottom_left="0dip"
+                app:riv_corner_radius_bottom_left="15dip"
                 app:riv_corner_radius_bottom_right="15dip"
                 app:riv_corner_radius_top_left="15dip"
                 app:riv_corner_radius_top_right="15dp"
@@ -70,11 +70,59 @@
 
     </LinearLayout>
 </LinearLayout>
-    <TextView
-        android:id="@id/messageTime"
+    <LinearLayout
+        android:id="@+id/replyb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start"
+        android:layout_marginTop="-9dp"
+        android:layout_marginStart="53dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_reply_message"
+        >
+
+        <com.stfalcon.chatkit.link.AutoLinkTextView
+            android:id="@+id/replytext"
+            android:layout_margin="7dp"
+            android:autoLink="web"
+            android:textColor="@color/white"
+            android:linksClickable="true"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="70dp"
-        android:textColor="@color/dark_grey_two" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@id/messageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:textColor="@color/dark_grey_two" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/forward"
+            android:src="@drawable/forward"
+            android:tint="@color/colorPrimary"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical|end"
+            android:layout_gravity="center_vertical|end" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/call"
+            android:src="@drawable/ic_call"
+            android:tint="@color/colorPrimary"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical|end"
+            android:layout_gravity="center_vertical|end" />
+    </LinearLayout>
 </LinearLayout>

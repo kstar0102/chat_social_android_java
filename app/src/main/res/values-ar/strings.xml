@@ -1,4 +1,557 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Plax</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="title_activity_login">تسجيل الدخول</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="phone_hint">رقم الهاتف</string>
+    <string name="invalid_phone">الرقم غير صحيح</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="phone">الهاتف</string>
+    <string name="next">التالى</string>
+    <string name="verify">تحقق</string>
+    <string name="code">الرمز</string>
+    <string name="check_conn">تحقق من الاتصال</string>
+    <string name="cannt_verify">لا يمكن التحقق من الرقم</string>
+    <string name="invalid_code">الرمز غير صحيح…</string>
+    <string name="fix_it">حدث خطأ…</string>
+    <string name="resend">يمكنك الحصول على رمز اّخر بعد دقيقة</string>
+    <string name="enter_code">ادخل الرمز</string>
+    <string name="friends">الأصدقاء</string>
+    <string name="you_added">تم اضافتك الى</string>
+    <!--Tab Names-->
+    <string name="calls">المكالمات</string>
+    <string name="chats">الدردشات</string>
+    <string name="groups">المجموعات</string>
+    <string name="edit">تعديل الملف الشخصى</string>
+    <string name="check_int">من فضلك تحقق من الاتصال بالانترنت</string>
+    <string name="cannot_user">تعذر الوصول بالمستخدم</string>
+    <string name="image_update">تم تحديث الصورة</string>
+    <string name="image_fail">فشل  تحديث الصورة</string>
+    <string name="statue">الحالة</string>
+    <string name="name">الاسم</string>
+    <string name="plz_name">من فضلك اكتب اسمك</string>
+    <string name="error">حدث خطأ</string>
+    <string name="signup_succ">مرحبا :)</string>
+    <string name="signin_succ">مرحبا مرة اخرى :)</string>
+    <string name="loading">جارى التحميل…</string>
+    <string name="now">الاّن</string>
+    <string name="minute">منذ دقيقة</string>
+    <string name="min_ago">دقيقة</string>
+    <string name="hour">منذ ساعة</string>
+    <string name="hours">ساعات</string>
+    <string name="yesterday">امس</string>
+    <string name="days">ايام</string>
+    <string name="m_e_s_s_a_g_e">مراسلة</string>
+    <string name="voice_call">مكالمة صوتية</string>
+    <string name="online_nw">متصل الاّن</string>
+    <string name="view_pro">عرض الملف الشخصى</string>
+    <string name="prfl_updt">تم تحديث الملف الشخصى</string>
+    <string name="photo_dlete">تم حذف الصورة</string>
+    <string name="contacts">جهات الاتصال</string>
+    <string name="online">متصل الاّن</string>
+    <string name="search_on_name_and_phone">بحث عن طريق الاسم و رقم الهاتف</string>
+    <string name="pleasW">من فضلك انتظر…</string>
+    <string name="ending"> جارى انهاء المكالمة…</string>
+
+    <string name="hint_enter_a_message" />
+    <string name="date_header_yesterday">أمس</string>
+    <string name="Failed">فشل ارسال الرسالة</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_copy">نسخ</string>
+    <string name="copied_message">تم نسخ الرسالة</string>
+    <string name="date_header_today">اليوم</string>
+    <string name="empty_mess">لا يمكنك ارسال رسالة فارغة</string>
+    <string name="menu_gallery">صورة</string>
+    <string name="menu_audio">ملفات الصوت</string>
+    <string name="menu_location">موقع</string>
+    <string name="SLC">مرر للالغاء</string>
+    <string name="file">ملف</string>
+    <string name="video">فيديو</string>
+    <string name="cannot_play">لا يمكن تشغيل ملف الصوت</string>
+    <string name="cannot_open">لا يمكن فتح الملف</string>
+    <string name="title_activity_map">الخريطة</string>
+    <string name="friendlocation">موقع الصديق</string>
+    <string name="map_location">الموقع على الخريطة</string>
+    <string name="typing">يكتب…</string>
+    <string name="recording">يقوم بالتسجيل…</string>
+    <string name="downloadcomplete">تم التحميل</string>
+    <string name="downloadstart">جارى التحميل…</string>
+    <string name="copy">نسخ</string>
+    <string name="delete_for_me">حذف من عندى</string>
+    <string name="delete_for_all">حذف للجميع</string>
+    <string name="mssg_cpd">تم نسخ الرسالة</string>
+    <string name="mss_dlt">تم حذف الرسالة</string>
+    <string name="notcontact">يبدو ان هذا الرقم ليس موجودا بجهات الاتصال</string>
+    <string name="add_contact">اضافة الرقم</string>
+    <string name="block">حظر</string>
+    <string name="unblock">فك الحظر</string>
+    <string name="deletechat">حذف الدردشة</string>
+    <string name="mute">كتم</string>
+    <string name="unmute">فك الكتم</string>
+    <string name="chat_dee">تم حذف الدردشة</string>
+    <string name="call_dee">تم حذف سجل المكالمات</string>
+    <string name="contacts_alert">من فضلك ضع شريحة لأفضل اداء</string>
+    <string name="contact">جهة اتصال</string>
+    <string name="stories">اضافة حالة</string>
+    <string name="favorite_messages">الرسائل المفضلة</string>
+    <string name="muted">قائمة الكتم</string>
+    <string name="blocked">قائمة الحظر</string>
+    <string name="setting">الاعدادات</string>
+    <string name="others">اخرى</string>
+    <string name="share">مشاركة</string>
+    <string name="pleasew8">من فضلك انتظر تحميل ملف الصوت</string>
+
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="title_activity_setting">الاعدادات</string>
+    <string name="about">عنا</string>
+    <string name="description">هو برنامج دردشة متقدم يعتمد على الفايربايس الخاص ب جوجل و يدعم اللغات المتعددة</string>
+    <string name="ok">حسنا</string>
+    <string name="privacy">السياسة و الخصوصية</string>
+    <string name="per_delete_acc">حذف الحساب للأبد</string>
+    <string name="acc_delete_hint">هل انت متأكد من انك تريد ان تحذف الحساب للأبد \n تحذير: سوف يتم فقد جميع البيانات </string>
+    <string name="cancel">الغاء</string>
+    <string name="yes">نعم</string>
+    <string name="choose_lang">اختر لغة</string>
+    <string name="choose_not">اختر نغمة تنبيه</string>
+
+    <string name="restart">من فضلك قم باعادة تشغيل التطبيق</string>
+    <string name="restart_hint">من فضلك قم باعادة تشغيل التطبيق لكى يتم تغيير اللغة بالكامل</string>
+    <string name="wait">من فضلك انتظر حتى يتم ارسال البيانات</string>
+    <string name="timeerror">لا يمكن جلب وقت السيرفر</string>
+    <!--React Messages-->
+    <string name="likeR">اعجبته الرسالة</string>
+    <string name="funnyR">اضحكته الرسالة</string>
+    <string name="loveR">احب الرسالة</string>
+    <string name="sadR">احزنته السالة</string>
+    <string name="angryR">اغضبته الرسالة</string>
+    <!--Arrays-->
+    <string-array name="lang">
+        <item>Default</item>
+        <item>العربية</item>
+        <item>Deutch</item>
+        <item>English</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Portuguese</item>
+        <item>فارسی</item>
+        <item>हिंदी</item>
+        <item>한국어</item>
+        <item>русский язык</item>
+
+    </string-array>
+    <string-array name="langCodes">
+        <item>def</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>fa</item>
+        <item>hi</item>
+        <item>ko</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="font">
+        <item>Chapinero Blackletter</item>
+        <item>Wake The Warrior</item>
+        <item>Historea</item>
+        <item>FunSized</item>
+        <item>Thundergood</item>
+        <item>Elmira</item>
+        <item>Squizers Marker</item>
+        <item>Default</item>
+    </string-array>
+    <string-array name="fontCodes">
+        <item>ch</item>
+        <item>wa</item>
+        <item>hi</item>
+        <item>fun</item>
+        <item>th</item>
+        <item>el</item>
+        <item>squ</item>
+        <item>def</item>
+    </string-array>
+
+
+    <string-array name="settingmain">
+        <item>اعدادات الدردشة</item>
+        <item>اعدادات المكالمات</item>
+        <item>اعدادات الامان</item>
+        <item>اعدادات التنبيهات</item>
+        <item>تغيير اللغة</item>
+        <item>حذف الحساب</item>
+        <item>السياسة و الخصوصية</item>
+        <item>عنا</item>
+    </string-array>
+
+
+    <string-array name="ringN">
+        <item>Default</item>
+        <item>Notification 1</item>
+        <item>Notification 2</item>
+        <item>Notification 3</item>
+        <item>Notification 4</item>
+    </string-array>
+
+
+    <!--Country codes-->
+
+    <string-array name="CountryCodes">
+        <item>93,AF</item>
+        <item>355,AL</item>
+        <item>213,DZ</item>
+        <item>376,AD</item>
+        <item>244,AO</item>
+        <item>672,AQ</item>
+        <item>54,AR</item>
+        <item>374,AM</item>
+        <item>297,AW</item>
+        <item>61,AU</item>
+        <item>43,AT</item>
+        <item>994,AZ</item>
+        <item>973,BH</item>
+        <item>880,BD</item>
+        <item>375,BY</item>
+        <item>32,BE</item>
+        <item>501,BZ</item>
+        <item>229,BJ</item>
+        <item>975,BT</item>
+        <item>591,BO</item>
+        <item>387,BA</item>
+        <item>267,BW</item>
+        <item>55,BR</item>
+        <item>673,BN</item>
+        <item>359,BG</item>
+        <item>226,BF</item>
+        <item>95,MM</item>
+        <item>257,BI</item>
+        <item>855,KH</item>
+        <item>237,CM</item>
+        <item>1,CA</item>
+        <item>238,CV</item>
+        <item>236,CF</item>
+        <item>235,TD</item>
+        <item>56,CL</item>
+        <item>86,CN</item>
+        <item>61,CX</item>
+        <item>61,CC</item>
+        <item>57,CO</item>
+        <item>269,KM</item>
+        <item>242,CG</item>
+        <item>243,CD</item>
+        <item>682,CK</item>
+        <item>506,CR</item>
+        <item>385,HR</item>
+        <item>53,CU</item>
+        <item>357,CY</item>
+        <item>420,CZ</item>
+        <item>45,DK</item>
+        <item>253,DJ</item>
+        <item>670,TL</item>
+        <item>593,EC</item>
+        <item>20,EG</item>
+        <item>503,SV</item>
+        <item>240,GQ</item>
+        <item>291,ER</item>
+        <item>372,EE</item>
+        <item>251,ET</item>
+        <item>500,FK</item>
+        <item>298,FO</item>
+        <item>679,FJ</item>
+        <item>358,FI</item>
+        <item>33,FR</item>
+        <item>689,PF</item>
+        <item>241,GA</item>
+        <item>220,GM</item>
+        <item>995,GE</item>
+        <item>49,DE</item>
+        <item>233,GH</item>
+        <item>350,GI</item>
+        <item>30,GR</item>
+        <item>299,GL</item>
+        <item>502,GT</item>
+        <item>224,GN</item>
+        <item>245,GW</item>
+        <item>592,GY</item>
+        <item>509,HT</item>
+        <item>504,HN</item>
+        <item>852,HK</item>
+        <item>36,HU</item>
+        <item>91,IN</item>
+        <item>62,ID</item>
+        <item>98,IR</item>
+        <item>964,IQ</item>
+        <item>353,IE</item>
+        <item>44,IM</item>
+        <item>972,IL</item>
+        <item>39,IT</item>
+        <item>225,CI</item>
+        <item>81,JP</item>
+        <item>962,JO</item>
+        <item>7,KZ</item>
+        <item>254,KE</item>
+        <item>686,KI</item>
+        <item>965,KW</item>
+        <item>996,KG</item>
+        <item>856,LA</item>
+        <item>371,LV</item>
+        <item>961,LB</item>
+        <item>266,LS</item>
+        <item>231,LR</item>
+        <item>218,LY</item>
+        <item>423,LI</item>
+        <item>370,LT</item>
+        <item>352,LU</item>
+        <item>853,MO</item>
+        <item>389,MK</item>
+        <item>261,MG</item>
+        <item>265,MW</item>
+        <item>60,MY</item>
+        <item>960,MV</item>
+        <item>223,ML</item>
+        <item>356,MT</item>
+        <item>692,MH</item>
+        <item>222,MR</item>
+        <item>230,MU</item>
+        <item>262,YT</item>
+        <item>52,MX</item>
+        <item>691,FM</item>
+        <item>373,MD</item>
+        <item>377,MC</item>
+        <item>976,MN</item>
+        <item>382,ME</item>
+        <item>212,MA</item>
+        <item>258,MZ</item>
+        <item>264,NA</item>
+        <item>674,NR</item>
+        <item>977,NP</item>
+        <item>31,NL</item>
+        <item>599,AN</item>
+        <item>687,NC</item>
+        <item>64,NZ</item>
+        <item>505,NI</item>
+        <item>227,NE</item>
+        <item>234,NG</item>
+        <item>683,NU</item>
+        <item>850,KP</item>
+        <item>47,NO</item>
+        <item>968,OM</item>
+        <item>92,PK</item>
+        <item>680,PW</item>
+        <item>507,PA</item>
+        <item>675,PG</item>
+        <item>595,PY</item>
+        <item>51,PE</item>
+        <item>63,PH</item>
+        <item>870,PN</item>
+        <item>48,PL</item>
+        <item>351,PT</item>
+        <item>1,PR</item>
+        <item>974,QA</item>
+        <item>40,RO</item>
+        <item>7,RU</item>
+        <item>250,RW</item>
+        <item>590,BL</item>
+        <item>685,WS</item>
+        <item>378,SM</item>
+        <item>239,ST</item>
+        <item>966,SA</item>
+        <item>221,SN</item>
+        <item>381,RS</item>
+        <item>248,SC</item>
+        <item>232,SL</item>
+        <item>65,SG</item>
+        <item>421,SK</item>
+        <item>386,SI</item>
+        <item>677,SB</item>
+        <item>252,SO</item>
+        <item>27,ZA</item>
+        <item>82,KR</item>
+        <item>34,ES</item>
+        <item>94,LK</item>
+        <item>290,SH</item>
+        <item>508,PM</item>
+        <item>249,SD</item>
+        <item>597,SR</item>
+        <item>268,SZ</item>
+        <item>46,SE</item>
+        <item>41,CH</item>
+        <item>963,SY</item>
+        <item>886,TW</item>
+        <item>992,TJ</item>
+        <item>255,TZ</item>
+        <item>66,TH</item>
+        <item>228,TG</item>
+        <item>690,TK</item>
+        <item>676,TO</item>
+        <item>216,TN</item>
+        <item>90,TR</item>
+        <item>993,TM</item>
+        <item>688,TV</item>
+        <item>971,AE</item>
+        <item>256,UG</item>
+        <item>44,GB</item>
+        <item>380,UA</item>
+        <item>598,UY</item>
+        <item>1,US</item>
+        <item>998,UZ</item>
+        <item>678,VU</item>
+        <item>39,VA</item>
+        <item>58,VE</item>
+        <item>84,VN</item>
+        <item>681,WF</item>
+        <item>967,YE</item>
+        <item>260,ZM</item>
+        <item>263,ZW</item>
+    </string-array>
+    <string name="download">من فضلك قم بتحميل الملف اولا</string>
+    <string name="shareimage">مشاركة الصورة</string>
+    <string name="title_activity_chat_settings">اعدادات الدردشة</string>
+    <string name="change_app_font">تغيير خط التطبيق</string>
+    <string name="change_chat_wallpaper">تغيير خلفية الدردشة</string>
+    <string name="plz">من فضلك اختر خطا</string>
+   <string name="set_wallpaper">تعيين كخلفية</string>
+    <string name="hi">مرحبا</string>
+    <string name="username1">اسم المستخدم</string>
+    <string name="wallsucc">تم تغيير الخلفية بنجاح</string>
+    <string name="walldsucc">تم حذف الخلفية بنجاح</string>
+    <string name="click_enter_to_send">اضغط للارسال</string>
+    <string name="new_message_sound">صوت الرسالة الجديدة</string>
+    <string name="title_activity_secu_setting">اعدادات الأمن</string>
+    <string name="prevent_chat_screen_shot">منع الّاخرين من لقط الشاشة فى الدردشة</string>
+    <string name="screen_lock">قفل الشاشة</string>
+    <string name="change_passcode">تغيير رمز الدخول</string>
+    <string name="patt_set">تم حفظ النمط</string>
+    <string name="chnge_pattern">تم تغيير النمط</string>
+    <string name="welcome">مرحبا</string>
+    <string name="clear_pattern">حذف النمط</string>
+    <string name="this_feature_only">لن تتمكن من لقط الشاشة فى الدردشة</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_stories">الحالات</string>
+    <string name="forgot_password">هل نسيت كلمة المرور</string>
+    <string name="logout_forgot">اذا نسيت النمط اضغط حسنا سوف يتم تسجيل خروج الحساب و يتم تعطيل النمط</string>
+    <string name="approve_upload">اقبل التصريح لرفع الصورة</string>
+
+
+    <string name="label_brush">الفرشاة</string>
+    <string name="label_emoji">رمز تعبيرى</string>
+    <string name="label_sticker">ملصق</string>
+    <string name="label_eraser">الممحاة</string>
+    <string name="label_text">نص</string>
+    <string name="label_filter">منقى</string>
+    <string name="label_adjust">تعديل</string>
+    <string name="add_to_my_story">اضافة الى حالتى</string>
+    <string name="my_statue">حالتى</string>
+    <string name="saving">جارى الحفظ…</string>
+    <string name="save_succ">تم حفظ الصورة بنجاح</string>
+    <string name="save_fail">فشل اثناء حفظ الصورة</string>
+    <string name="story_add">تم اضافة الحالة</string>
+    <string name="select">اختر صورة</string>
+    <string name="exitq">هل انت متأكد انك تريد الخروج بدون حفظ الصورة؟</string>
+    <string name="save">حفظ</string>
+    <string name="disc">الغاء</string>
+    <string name="ups">جارى الرفع</string>
+    <string name="me">انا</string>
+    <string name="acc_per">من فضلك اقبل التصريح</string>
+    <string name="patt_err_mess">من فضلك قم بتوصيل اربع نقاط أو أكثر كى نضمن أن معلوماتك بأمان :)</string>
+    <string name="weak_pp">نمط ضعيف</string>
+    <string name="title_activity_notif_setting">اعدادات التنبيهات</string>
+    <string name="defaultt">افتراضى</string>
+    <string name="blue">أزرق</string>
+    <string name="notification_sound">صوت التنبيه</string>
+    <string name="led_color">لون الوميض</string>
+    <string name="slec">اختر تنبيه</string>
+    <string name="set">ضع التنبيه</string>
+    <string name="retry">اعادة المحاولة</string>
+    <string name="we_will_soon">سوف نضع هذه الخاصية قريبا</string>
+    <string name="snap">فيديو قصير</string>
+    <string name="chatss">اعدادات الدردشة</string>
+    <string name="chos_noti">اختر نغمة التنبيهات</string>
+    <string name="title_activity_add_group">مجموعة جديدة</string>
+    <string name="group_name">اسم المجموعة</string>
+    <string name="plz_chs_per">من فضلك اختر شخص واحد على الأقل</string>
+    <string name="cannot_l_g">لا يمكنك ان تترك اسم المجموعة فارغا</string>
+    <string name="reach_max">لقد وصلت للحد الأقصى</string>
+    <string name="add_you">أضافك</string>
+    <string name="name_empty">من فضلك اكتب اسم المجموعة</string>
+    <string name="admins">المشرفين</string>
+    <string name="Leav_grp">الخروج من المجموعة</string>
+    <string name="add_to_admins">اضافة الى المشرفين</string>
+    <string name="remove_admin">صرف عن منصب مشرف</string>
+    <string name="remove_user">ازالة المستخدم</string>
+    <string name="can_mng">لا يمكنك ادارة نفسك</string>
+    <string name="this_usr_adm">هذا المستخدم مشرف بالفعل</string>
+    <string name="maxadmin">لقد وصلت لأقصى عدد من المشرفيين</string>
+    <string name="exit_group_sure">هل انت متأكد انك تريد ان تترك المجموعة؟</string>
+    <string name="title_activity_add_user_group">اضافة مستخدم للمجموعة</string>
+    <string name="kicked">لقد تم ازالتك من المجموعة</string>
+    <string name="can_t_fetch_last_messages">تعذر الحصول على اّخر رسالة</string>
+    <string name="title_activity_edit_story">تعديل الحالات</string>
+    <string name="delet_sto">حذف الحالة</string>
+    <string name="delete_story_mess">هل انت متأكد انك تريد ان تحذف هذه الحالة؟</string>
+    <string name="fail_st">فشل اثناء حذف الحالة</string>
+    <string name="video_call">مكالمة فيديو</string>
+    <string name="calls_rev">فشل اثناء جلب المكالمات</string>
+    <string name="est">تم التوصيل</string>
+    <string name="clear_c">حذف كل الدردشات</string>
+    <string name="title_activity_calls_setting">اعدادات المكالمات</string>
+    <string name="call_ringtone">نغمة الرنين</string>
+    <string name="clear_call_logs">حذف سجل المكالمات</string>
+    <string name="choose_ring">اختر نغمة</string>
+    <string name="add_blok">تمت الاضافة الى قائمة الحظر</string>
+    <string name="re_blok">تم الحذف من قائمة الحظر</string>
+    <string name="add_mute">تمت الاضافة الى قائمة الكتم</string>
+    <string name="re_mute">تم الحذف من قائمة الكتم</string>
+    <string name="you_can_t_reply_this_conversation">لا يمكنك الرد على هذه المحادثة</string>
+    <string name="title_activity_block">حظر</string>
+    <string name="title_activity_mute">كتم</string>
+    <string name="calling_ser">خدمة التحقق من المكالمات</string>
+    <string name="favourite">اضافة الى الرسائل المفضلة</string>
+    <string name="notfavourite">حذف من الرسائل المفضلة</string>
+    <string name="title_activity_favourite">الرسائل المفضلة</string>
+    <string name="account_deleted">تم حذف هذا الحساب</string>
+    <string name="wrong_code">رمز خطأ من فضلك حاول مرة اخرى</string>
+    <string name="verify_to_delete">حذف</string>
+    <string name="you">انت</string>
+    <string name="connecting">جارى التوصيل…</string>
+    <string name="userbusy">المستخدم مشغول</string>
+    <string name="today">اليوم</string>
+    <string name="title_activity_qr">Qr</string>
+    <string name="title_signout">لقد سجلت الدخول من جهاز اّخر</string>
+    <string name="mess_signout">يمكنك فقط استخدام جهاز واحد لكل حساب</string>
+    <string name="easy_chat">دردشة سهلة</string>
+    <string name="high_perform">كفاءة عالية</string>
+    <string name="feel_secure">اشعر بالأمان</string>
+    <string name="modern_design">تصميم حديث</string>
+    <string name="light_weii">خفيف</string>
+    <string name="you_can_hint">يمكنك بدء الدردشة مع اصدقاءك من هنا</string>
+    <string name="restarttheapp">يرجى إعادة تشغيل التطبيق والمحاولة مرة أخرى</string>
+    <string name="title_activity_invite">دعوة</string>
+    <string name="inviteuser">دعوة</string>
+    <string name="hello">مرحبا ، أنا أستخدم</string>
+    <string name="downloadnw">قم بتنزيله الآن من متجر Google play:</string>
+    <string name="title_activity_archieve">قصص الأرشيف</string>
+    <string name="you_can_manage">يمكنك إدارة القصص حتى تصل إلى 24 ساعة</string>
+    <string name="your_qr">رمزك</string>
+    <string name="scan_friends_qr">مسح رمز الاصدقاء</string>
+    <string name="invaled"> غير صالح</string>
+    <string name="chat">ابدأ الدردشة</string>
+    <string name="forward">اعادة توجيه</string>
+    <string name="cant_forw">لا يمكن اعادة توجيه هذه الرسالة</string>
+    <string name="cant_reply">لا يمكن الرد على هذه الرسالة</string>
+    <string name="voice">رسالة صوتية</string>
+    <string name="image">صورة</string>
+    <string name="shake_mobile">رج الهاتف لارجاع الرسالة</string>
+
 </resources>

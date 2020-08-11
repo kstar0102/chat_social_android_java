@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Plax.iml" filepath="$PROJECT_DIR$/Plax.iml" group="Plax" />
+      <module fileurl="file://$PROJECT_DIR$/alerter/alerter.iml" filepath="$PROJECT_DIR$/alerter/alerter.iml" group="Plax/alerter" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Plax/app" />
+      <module fileurl="file://$PROJECT_DIR$/chatkit/chatkitlib.iml" filepath="$PROJECT_DIR$/chatkit/chatkitlib.iml" group="Plax/chatkitlib" />
+      <module fileurl="file://$PROJECT_DIR$/storyview/storyview.iml" filepath="$PROJECT_DIR$/storyview/storyview.iml" group="Plax/storyview" />
+    </modules>
+  </component>
+</project>

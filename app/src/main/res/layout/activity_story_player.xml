@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grays"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".story.StoryPlayer">
+
+
+    <ImageView
+        android:adjustViewBounds="true"
+        android:id="@+id/storyImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/edit"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_edit"/>
+
+    <RelativeLayout
+        android:padding="4dp"
+        android:background="#2D000000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <xute.storyview.StoryPlayerProgressView
+            app:gapBetweenProgressBar="2dp"
+            app:progressBarHeight="1dp"
+            app:progressBarPrimaryColor="#ffffff"
+            app:progressBarSecondaryColor="#3effffff"
+            android:id="@+id/progressBarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginStart="8dp"
+            android:id="@+id/storyUserName"
+            android:layout_below="@+id/progressBarView"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginStart="8dp"
+            android:layout_below="@+id/storyUserName"
+            android:id="@+id/storyTime"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

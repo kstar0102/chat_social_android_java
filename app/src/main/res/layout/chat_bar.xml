@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="43dp"
     android:layout_gravity="center_vertical"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:background="@color/colorPrimary">
+    android:background="@color/white">
+
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/avaC"
@@ -16,61 +18,92 @@
         android:onClick="goP"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/white"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/dialogUnreadcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/avaC"
+        android:layout_alignBottom="@+id/avaC"
+        android:layout_marginEnd="-1dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginBottom="3dp"
+        android:ellipsize="end"
+        android:background="@drawable/online_check_img"
+        android:src="@color/online_color"
+        android:fontFamily="@string/font_fontFamily_medium"
+        android:gravity="center"
+        android:lines="1"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/avaC"
+            android:layout_marginEnd="130dp"
+            android:layout_toEndOf="@+id/avaC"
             android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             android:onClick="goP"
             android:layout_marginStart="10dp"
             android:layout_height="43dp">
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/nameC"
-                android:layout_width="100dp"
-                android:ellipsize="end"
+                android:layout_width="match_parent"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_weight="1"
                 android:scrollHorizontally="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_height="0dp"
-                android:textAlignment="textStart"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-
+                android:textAlignment="viewStart"
+                android:gravity="center_vertical|start"
+                android:layout_gravity="center_vertical|start"
                 />
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/stateC"
-                android:layout_width="wrap_content"
-                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
                 android:textSize="13sp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-
+                android:textAlignment="viewStart"
+                android:gravity="center_vertical|start"
+                android:layout_gravity="center_vertical|start"
                 />
         </LinearLayout>
 
     <ImageView
-        android:layout_width="25dp"
+        android:layout_width="40dp"
         android:layout_alignEnd="@+id/callVC"
-        android:layout_marginEnd="35dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="8dp"
+        android:padding="5dp"
+        android:layout_marginEnd="50dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/ic_call"
         android:id="@+id/callAC"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"/>
     <ImageView
-        android:layout_width="25dp"
-        android:layout_alignParentEnd="true"
-        android:layout_height="25dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="40dp"
+        android:layout_alignEnd="@+id/chatmenu"
+        android:padding="5dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginStart="13dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_video"
         android:id="@+id/callVC"
+        android:layout_gravity="center_vertical"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:padding="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_height="35dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="13dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/chat_menu_img"
+        android:id="@+id/chatmenu"
         android:layout_gravity="center_vertical"/>
 
 

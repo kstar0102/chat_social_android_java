@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/friend_req"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@id/dialogContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/dialogAvatarC"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/janate"
+                app:riv_corner_radius_bottom_left="20dip"
+                app:riv_corner_radius_bottom_right="20dip"
+                app:riv_corner_radius_top_left="20dip"
+                app:riv_corner_radius_top_right="20dp"
+                app:riv_mutate_background="true"
+                app:riv_oval="false"/>
+
+            <TextView
+                android:id="@id/dialogUnreadBubble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/dialogAvatarC"
+                android:layout_alignTop="@+id/dialogAvatarC"
+                android:layout_marginEnd="-5dp"
+                android:layout_marginTop="-5dp"
+                android:background="@drawable/badge_bg"
+                android:textColor="@color/white"
+                android:ellipsize="end"
+                android:fontFamily="@string/font_fontFamily_medium"
+                android:gravity="center"
+                android:lines="1"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:text="Friend Request"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginLeft="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/greystory"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:alpha="0.3"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

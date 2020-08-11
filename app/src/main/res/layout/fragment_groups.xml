@@ -6,6 +6,7 @@
     tools:context="ar.codeslu.plax.fragments.Groups">
     <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="match_parent">
         <com.stfalcon.chatkit.dialogs.DialogsListG
             android:id="@+id/dialogsList"
@@ -17,15 +18,39 @@
             app:dialogUnreadItemBackground="#fdfdfd"
             app:dialogUnreadTitleTextStyle="bold"
             android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/sora"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:src="@drawable/group_ly"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/groups"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        app:backgroundTint="@color/white"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="70dp"
+        app:backgroundTint="@color/white"
         app:srcCompat="@drawable/ic_group_add" />
 </FrameLayout>

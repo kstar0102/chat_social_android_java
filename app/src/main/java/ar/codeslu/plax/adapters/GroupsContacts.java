@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -29,7 +32,7 @@ import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.UserData;
 
 /**
- * Created by mostafa on 04/11/18.
+ * Created by CodeSlu on 04/11/18.
  */
 
 public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserListViewHolder> implements SectionIndexer {
@@ -78,12 +81,14 @@ public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserList
         if (String.valueOf(userList.get(position).getAvatar()).equals("no")) {
             Picasso.get()
                     .load(R.drawable.profile)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(holder.ava);
         } else {
             Picasso.get()
                     .load(userList.get(position).getAvatar())
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(holder.ava);
         }
         //check int for online
@@ -146,6 +151,44 @@ public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserList
         holder.callA.setFocusable(false);
         holder.callA.setVisibility(View.GONE);
 
+
+        if(Global.ADMOB_ENABLE) {
+            holder.adView.loadAd(new AdRequest.Builder().build());
+            holder.adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    if( position %5 == 0)
+                        holder.adView.setVisibility(View.VISIBLE);
+                    else
+                        holder.adView.setVisibility(View.GONE);
+                }
+
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    super.onAdLeftApplication();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+                    holder.adView.setVisibility(View.GONE);
+
+                }
+
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    holder.adView.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override
@@ -198,6 +241,7 @@ public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserList
         RoundedImageView ava, on_wire, overlay;
         ImageView callA, callV,done;
         RelativeLayout ly;
+        NativeExpressAdView adView;
 
         UserListViewHolder(View view) {
             super(view);
@@ -210,6 +254,7 @@ public class GroupsContacts extends RecyclerView.Adapter<GroupsContacts.UserList
             callA = view.findViewById(R.id.callA);
             callV = view.findViewById(R.id.callV);
             ly = view.findViewById(R.id.lyContact);
+            adView =  view.findViewById(R.id.adView);
 
         }
     }

@@ -1,4 +1,566 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Plax</string>
+    <string name="app_name">پلاکس</string>
+
+
+
+    <string name="navigation_drawer_open">کشو ناوبری را باز کنید</string>
+    <string name="navigation_drawer_close">بستن کشو ناوبری</string>
+
+
+    <string name="action_settings">تنظیمات</string>
+
+    <string name="title_activity_login">ورود</string>
+    <string name="dummy_button">دکمه ساختگی</string>
+    <string name="dummy_content">DUMMY \ n CONTENT</string>
+    <string name="phone_hint">شماره تلفن</string>
+    <string name="invalid_phone">شماره تلفن نامعتبر است</string>
+    <string name="login">ورود</string>
+    <string name="phone">تلفن</string>
+    <string name="next">بعد</string>
+    <string name="verify">تأیید کنید</string>
+    <string name="code">کد</string>
+    <string name="check_conn">اتصال را بررسی کنید</string>
+    <string name="cannt_verify">نمی توانید شماره خود را تأیید کنید</string>
+    <string name="invalid_code">کد نامعتبر وارد شد ...</string>
+    <string name="fix_it">مشکلی نیست ، ما به زودی آن را برطرف خواهیم کرد ...</string>
+    <string name="resend">بعد از 1 دقیقه می توانید کد دیگری دریافت کنید</string>
+    <string name="enter_code">کد را وارد کن</string>
+    <string name="friends">دوستان</string>
+    <string name="you_added">شما اضافه کردید</string>
+
+    <string name="calls">تماس می گیرد</string>
+    <string name="chats">گربه</string>
+    <string name="groups">گروه ها</string>
+    <string name="edit">ویرایش نمایه</string>
+    <string name="check_int">لطفا ارتباط خود را بررسی کنید</string>
+    <string name="cannot_user">نمی توانید به این کاربر دسترسی پیدا کنید</string>
+    <string name="image_update">تصویر به روز شد</string>
+    <string name="image_fail">آپلود تصویر انجام نشد</string>
+    <string name="statue">مجسمه</string>
+    <string name="name">نام</string>
+    <string name="plz_name">لطفا نام خود را بنویسید</string>
+    <string name="error">خطا رخ داده است</string>
+    <string name="signup_succ">خوش آمدی :)</string>
+    <string name="signin_succ">مجددا خوش آمدید :)</string>
+    <string name="loading">بارگذاری…</string>
+    <string name="now">همین الان</string>
+    <string name="minute">دقایقی پیش</string>
+    <string name="min_ago"> دقیقه قبل</string>
+    <string name="hour">یک ساعت پیش</string>
+    <string name="hours"> ساعت قبل</string>
+    <string name="yesterday">دیروز</string>
+    <string name="days"> چند روز قبل</string>
+    <string name="m_e_s_s_a_g_e">M E S S A G E</string>
+    <string name="voice_call">تماس صوتی</string>
+    <string name="online_nw">اکنون آنلاین</string>
+    <string name="view_pro">مشاهده نمایه</string>
+    <string name="prfl_updt">پروفایل به روز شد</string>
+    <string name="photo_dlete">عکس حذف شد</string>
+    <string name="contacts">مخاطب</string>
+    <string name="online">آنلاین</string>
+    <string name="search_on_name_and_phone">جستجو در نام و تلفن</string>
+    <string name="pleasW">لطفا صبر کنید…</string>
+    <string name="ending">پایان دادن به تماس ...</string>
+
+    <string name="hint_enter_a_message" />
+    <string name="date_header_yesterday">دیروز</string>
+    <string name="Failed">ارسال پیام انجام نشد</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_copy">کپی کنید</string>
+    <string name="copied_message">پیام کپی شد</string>
+    <string name="date_header_today">امروز</string>
+    <string name="empty_mess">شما نمی توانید پیام خالی ارسال کنید</string>
+    <string name="menu_gallery">تصویر</string>
+    <string name="menu_audio">سمعی</string>
+    <string name="menu_location">محل</string>
+    <string name="SLC">اسلاید برای لغو</string>
+    <string name="file">فایل</string>
+    <string name="video">فیلم</string>
+    <string name="cannot_play">نمی توانید نت صوتی را پخش کنید</string>
+    <string name="cannot_open">نمی توانید پرونده را باز کنید</string>
+    <string name="title_activity_map">نقشه</string>
+    <string name="friendlocation">مکان دوست</string>
+    <string name="map_location">موقعیت مکانی نقشه</string>
+    <string name="typing">تایپ کردن…</string>
+    <string name="recording"> ضبط صدا ...</string>
+    <string name="downloadcomplete">بارگیری کامل شد</string>
+    <string name="downloadstart">در حال بارگیری ...</string>
+    <string name="copy">کپی کنید</string>
+    <string name="delete_for_me">حذف برای من</string>
+    <string name="delete_for_all">حذف برای همه</string>
+    <string name="mssg_cpd">پیام کپی شد</string>
+    <string name="mss_dlt">پیغام پاک شد</string>
+    <string name="notcontact">به نظر می رسد این شماره در مخاطبین شما نیست</string>
+    <string name="add_contact">مخاطب را اضافه کنید</string>
+    <string name="block">مسدود کردن</string>
+    <string name="unblock">رفع انسداد</string>
+    <string name="deletechat">گپ را حذف کنید</string>
+    <string name="mute">بی صدا</string>
+    <string name="unmute">نادیده گرفتن</string>
+    <string name="chat_dee">گپ حذف شد</string>
+    <string name="call_dee">گزارش تماس حذف شد</string>
+    <string name="contacts_alert">لطفا برای عملکرد بهتر سیم را اضافه کنید</string>
+    <string name="contact">تماس</string>
+    <string name="stories">اضافه کردن یک داستان</string>
+    <string name="favorite_messages">پیام های ستاره دار</string>
+    <string name="muted">خاموش شد</string>
+    <string name="blocked">مسدود</string>
+    <string name="setting">تنظیمات</string>
+    <string name="others">دیگران</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="pleasew8">لطفاً منتظر بمانید تا بارگذاری نت صوتی بارگیری شود</string>
+
+    <string name="sign_out">خروج</string>
+    <string name="title_activity_setting">تنظیمات</string>
+    <string name="about">در باره</string>
+    <string name="description">یک برنامه چت پیشرفته است که در سیستم Google Firebase ساخته شده است و از چند زبان پشتیبانی می کند</string>
+    <string name="ok">خوب</string>
+    <string name="privacy">حریم خصوصی و خط مشی</string>
+    <string name="per_delete_acc">حذف دائمی حساب</string>
+    <string name="acc_delete_hint">آیا مطمئن هستید که می خواهید حساب خود را به طور دائم حذف کنید؟ \ n هشدار: همه داده ها از بین خواهند رفت.</string>
+    <string name="cancel">لغو</string>
+    <string name="yes">بله</string>
+    <string name="choose_lang">زبان را انتخاب کنید</string>
+    <string name="choose_not">اعلان را انتخاب کنید</string>
+
+    <string name="restart">لطفا برنامه را مجدداً راه اندازی کنید</string>
+    <string name="restart_hint">لطفاً برنامه را مجدداً برای تغییر کامل زبان فعال کنید</string>
+    <string name="wait">لطفاً منتظر بمانید تا داده ها به طور کامل ارسال شوند</string>
+    <string name="timeerror">نمی توان زمان سرور را گرفت</string>
+
+    <string name="likeR">به پیام شما واکنش نشان داد</string>
+    <string name="funnyR">به پیام شما خنده دار واکنش نشان داد</string>
+    <string name="loveR">عشق به پیام شما واکنش نشان داد</string>
+    <string name="sadR">نسبت به پیام شما ناراحت شد</string>
+    <string name="angryR">نسبت به پیام شما عصبانی شد</string>
+
+    <!--Arrays-->
+    <string-array name="lang">
+        <item>Default</item>
+        <item>العربية</item>
+        <item>Deutch</item>
+        <item>English</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Portuguese</item>
+        <item>فارسی</item>
+        <item>हिंदी</item>
+        <item>한국어</item>
+        <item>русский язык</item>
+
+    </string-array>
+    <string-array name="langCodes">
+        <item>def</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>fa</item>
+        <item>hi</item>
+        <item>ko</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="font">
+        <item>Chapinero Blackletter</item>
+        <item>Wake The Warrior</item>
+        <item>Historea</item>
+        <item>FunSized</item>
+        <item>Thundergood</item>
+        <item>Elmira</item>
+        <item>Squizers Marker</item>
+        <item>Default</item>
+    </string-array>
+    <string-array name="fontCodes">
+        <item>ch</item>
+        <item>wa</item>
+        <item>hi</item>
+        <item>fun</item>
+        <item>th</item>
+        <item>el</item>
+        <item>squ</item>
+        <item>def</item>
+    </string-array>
+
+    <string-array name="settingmain">
+        <item>تنظیمات گفتگو</item>
+        <item>تنظیمات تماس</item>
+        <item>تنظیمات امنیتی</item>
+        <item>تنظیمات اعلان ها</item>
+        <item>تغییر زبان</item>
+        <item>حذف حساب کاربری</item>
+        <item>حریم خصوصی و خط مشی</item>
+        <item>در باره</item>
+    </string-array>
+
+    <string-array name="ringN">
+        <item>Default</item>
+        <item>Notification 1</item>
+        <item>Notification 2</item>
+        <item>Notification 3</item>
+        <item>Notification 4</item>
+    </string-array>
+
+
+    <!--Country codes-->
+
+    <string-array name="CountryCodes">
+        <item>93,AF</item>
+        <item>355,AL</item>
+        <item>213,DZ</item>
+        <item>376,AD</item>
+        <item>244,AO</item>
+        <item>672,AQ</item>
+        <item>54,AR</item>
+        <item>374,AM</item>
+        <item>297,AW</item>
+        <item>61,AU</item>
+        <item>43,AT</item>
+        <item>994,AZ</item>
+        <item>973,BH</item>
+        <item>880,BD</item>
+        <item>375,BY</item>
+        <item>32,BE</item>
+        <item>501,BZ</item>
+        <item>229,BJ</item>
+        <item>975,BT</item>
+        <item>591,BO</item>
+        <item>387,BA</item>
+        <item>267,BW</item>
+        <item>55,BR</item>
+        <item>673,BN</item>
+        <item>359,BG</item>
+        <item>226,BF</item>
+        <item>95,MM</item>
+        <item>257,BI</item>
+        <item>855,KH</item>
+        <item>237,CM</item>
+        <item>1,CA</item>
+        <item>238,CV</item>
+        <item>236,CF</item>
+        <item>235,TD</item>
+        <item>56,CL</item>
+        <item>86,CN</item>
+        <item>61,CX</item>
+        <item>61,CC</item>
+        <item>57,CO</item>
+        <item>269,KM</item>
+        <item>242,CG</item>
+        <item>243,CD</item>
+        <item>682,CK</item>
+        <item>506,CR</item>
+        <item>385,HR</item>
+        <item>53,CU</item>
+        <item>357,CY</item>
+        <item>420,CZ</item>
+        <item>45,DK</item>
+        <item>253,DJ</item>
+        <item>670,TL</item>
+        <item>593,EC</item>
+        <item>20,EG</item>
+        <item>503,SV</item>
+        <item>240,GQ</item>
+        <item>291,ER</item>
+        <item>372,EE</item>
+        <item>251,ET</item>
+        <item>500,FK</item>
+        <item>298,FO</item>
+        <item>679,FJ</item>
+        <item>358,FI</item>
+        <item>33,FR</item>
+        <item>689,PF</item>
+        <item>241,GA</item>
+        <item>220,GM</item>
+        <item>995,GE</item>
+        <item>49,DE</item>
+        <item>233,GH</item>
+        <item>350,GI</item>
+        <item>30,GR</item>
+        <item>299,GL</item>
+        <item>502,GT</item>
+        <item>224,GN</item>
+        <item>245,GW</item>
+        <item>592,GY</item>
+        <item>509,HT</item>
+        <item>504,HN</item>
+        <item>852,HK</item>
+        <item>36,HU</item>
+        <item>91,IN</item>
+        <item>62,ID</item>
+        <item>98,IR</item>
+        <item>964,IQ</item>
+        <item>353,IE</item>
+        <item>44,IM</item>
+        <item>972,IL</item>
+        <item>39,IT</item>
+        <item>225,CI</item>
+        <item>81,JP</item>
+        <item>962,JO</item>
+        <item>7,KZ</item>
+        <item>254,KE</item>
+        <item>686,KI</item>
+        <item>965,KW</item>
+        <item>996,KG</item>
+        <item>856,LA</item>
+        <item>371,LV</item>
+        <item>961,LB</item>
+        <item>266,LS</item>
+        <item>231,LR</item>
+        <item>218,LY</item>
+        <item>423,LI</item>
+        <item>370,LT</item>
+        <item>352,LU</item>
+        <item>853,MO</item>
+        <item>389,MK</item>
+        <item>261,MG</item>
+        <item>265,MW</item>
+        <item>60,MY</item>
+        <item>960,MV</item>
+        <item>223,ML</item>
+        <item>356,MT</item>
+        <item>692,MH</item>
+        <item>222,MR</item>
+        <item>230,MU</item>
+        <item>262,YT</item>
+        <item>52,MX</item>
+        <item>691,FM</item>
+        <item>373,MD</item>
+        <item>377,MC</item>
+        <item>976,MN</item>
+        <item>382,ME</item>
+        <item>212,MA</item>
+        <item>258,MZ</item>
+        <item>264,NA</item>
+        <item>674,NR</item>
+        <item>977,NP</item>
+        <item>31,NL</item>
+        <item>599,AN</item>
+        <item>687,NC</item>
+        <item>64,NZ</item>
+        <item>505,NI</item>
+        <item>227,NE</item>
+        <item>234,NG</item>
+        <item>683,NU</item>
+        <item>850,KP</item>
+        <item>47,NO</item>
+        <item>968,OM</item>
+        <item>92,PK</item>
+        <item>680,PW</item>
+        <item>507,PA</item>
+        <item>675,PG</item>
+        <item>595,PY</item>
+        <item>51,PE</item>
+        <item>63,PH</item>
+        <item>870,PN</item>
+        <item>48,PL</item>
+        <item>351,PT</item>
+        <item>1,PR</item>
+        <item>974,QA</item>
+        <item>40,RO</item>
+        <item>7,RU</item>
+        <item>250,RW</item>
+        <item>590,BL</item>
+        <item>685,WS</item>
+        <item>378,SM</item>
+        <item>239,ST</item>
+        <item>966,SA</item>
+        <item>221,SN</item>
+        <item>381,RS</item>
+        <item>248,SC</item>
+        <item>232,SL</item>
+        <item>65,SG</item>
+        <item>421,SK</item>
+        <item>386,SI</item>
+        <item>677,SB</item>
+        <item>252,SO</item>
+        <item>27,ZA</item>
+        <item>82,KR</item>
+        <item>34,ES</item>
+        <item>94,LK</item>
+        <item>290,SH</item>
+        <item>508,PM</item>
+        <item>249,SD</item>
+        <item>597,SR</item>
+        <item>268,SZ</item>
+        <item>46,SE</item>
+        <item>41,CH</item>
+        <item>963,SY</item>
+        <item>886,TW</item>
+        <item>992,TJ</item>
+        <item>255,TZ</item>
+        <item>66,TH</item>
+        <item>228,TG</item>
+        <item>690,TK</item>
+        <item>676,TO</item>
+        <item>216,TN</item>
+        <item>90,TR</item>
+        <item>993,TM</item>
+        <item>688,TV</item>
+        <item>971,AE</item>
+        <item>256,UG</item>
+        <item>44,GB</item>
+        <item>380,UA</item>
+        <item>598,UY</item>
+        <item>1,US</item>
+        <item>998,UZ</item>
+        <item>678,VU</item>
+        <item>39,VA</item>
+        <item>58,VE</item>
+        <item>84,VN</item>
+        <item>681,WF</item>
+        <item>967,YE</item>
+        <item>260,ZM</item>
+        <item>263,ZW</item>
+    </string-array>
+    <string name="download">لطفا ابتدا فایل را بارگیری کنید</string>
+    <string name="shareimage">اشتراک گذاری تصویر</string>
+    <string name="title_activity_chat_settings">تنظیمات چت</string>
+    <string name="change_app_font">قلم برنامه را تغییر دهید</string>
+    <string name="change_chat_wallpaper">تصویر زمینه چت را تغییر دهید</string>
+    <string name="plz">لطفاً یک قلم انتخاب کنید</string>
+    <string name="set_wallpaper">تنظیم پس زمینه</string>
+    <string name="hi">سلام</string>
+    <string name="username1">نام کاربری</string>
+    <string name="wallsucc">تصویر زمینه با موفقیت تغییر کرد</string>
+    <string name="walldsucc">تصویر زمینه با موفقیت حذف شد</string>
+    <string name="click_enter_to_send">برای ارسال کلیک کنید را وارد کنید</string>
+    <string name="new_message_sound">پیام پیام جدید</string>
+    <string name="title_activity_secu_setting">تنظیمات امنیتی</string>
+    <string name="prevent_chat_screen_shot">جلوگیری از شات صفحه نمایش گپ (β)</string>
+    <string name="screen_lock">قفل صفحه</string>
+    <string name="change_passcode">گذرواژه را تغییر دهید</string>
+    <string name="patt_set">مجموعه الگوی</string>
+    <string name="chnge_pattern">الگوی شما تغییر کرده است</string>
+    <string name="welcome">خوش آمدی</string>
+    <string name="clear_pattern">الگوی پاک</string>
+    <string name="this_feature_only">شما نمی توانید چت های دیگر را به تصویر بکشید</string>
+
+
+    <string name="hello_blank_fragment">سلام قطعه خالی</string>
+    <string name="title_activity_stories">داستانها</string>
+    <string name="forgot_password">رمز عبور را فراموش کرده اید؟</string>
+    <string name="logout_forgot">اگر الگوی خود را فراموش کرده اید ، می توانید OK را کلیک کنید ، حساب از سیستم خارج می شود و قفل غیرفعال می شود.</string>
+    <string name="approve_upload">مجوزهای بارگذاری عکس را تأیید کنید</string>
+
+
+    <string name="label_brush">قلم مو</string>
+    <string name="label_emoji">ایموجی</string>
+    <string name="label_sticker">استیکر</string>
+    <string name="label_eraser">پاک کن</string>
+    <string name="label_text">متن</string>
+    <string name="label_filter">فیلتر</string>
+    <string name="label_adjust">تنظیم کنید</string>
+    <string name="add_to_my_story">به داستان من اضافه کنید</string>
+    <string name="my_statue">مجسمه من</string>
+    <string name="saving">صرفه جویی در...</string>
+    <string name="save_succ">تصویر با موفقیت ذخیره شد</string>
+    <string name="save_fail">ذخیره تصویر انجام نشد</string>
+    <string name="story_add">داستان اضافه شد</string>
+    <string name="select">تصویر را انتخاب کنید</string>
+    <string name="exitq">آیا می خواهید بدون ذخیره تصویر ، از آن خارج شوید؟</string>
+    <string name="save">صرفه جویی</string>
+    <string name="disc">دور انداختن</string>
+    <string name="ups">بارگذاری</string>
+    <string name="me">من</string>
+    <string name="acc_per">لطفا اجازه را بپذیرید</string>
+    <string name="patt_err_mess">لطفاً 4 امتیاز یا بیشتر به هم بپیوندید تا اطلاعات خود را ایمن تر کنید :)</string>
+    <string name="weak_pp">الگوی ضعیف</string>
+    <string name="title_activity_notif_setting">تنظیمات اعلان</string>
+    <string name="defaultt">پیش فرض</string>
+    <string name="blue">آبی</string>
+    <string name="notification_sound">صدا اعلان</string>
+    <string name="led_color">رنگ LED</string>
+    <string name="slec">اعلان را انتخاب کنید</string>
+    <string name="set">اعلان را تنظیم کنید</string>
+    <string name="retry">دوباره امتحان کنید</string>
+    <string name="we_will_soon">به زودی این ویژگی را اضافه خواهیم کرد</string>
+    <string name="snap">ضربه محکم و ناگهانی</string>
+    <string name="chatss">تنظیمات گفتگو</string>
+    <string name="chos_noti">زنگ اعلان خود را انتخاب کنید</string>
+    <string name="title_activity_add_group">AddGroup</string>
+    <string name="group_name">اسم گروه</string>
+    <string name="plz_chs_per">لطفا حداقل یک نفر را انتخاب کنید</string>
+    <string name="cannot_l_g">نمی توان نام گروه را خالی گذاشت</string>
+    <string name="reach_max">به حداکثر تعداد رسیدید</string>
+    <string name="add_you">شما را به</string>
+    <string name="name_empty">لطفاً نام گروه را بنویسید</string>
+    <string name="admins">مدیر</string>
+    <string name="Leav_grp">گروه خروج</string>
+    <string name="add_to_admins">به مدیرها اضافه کنید</string>
+    <string name="remove_admin">مدیر را حذف کنید</string>
+    <string name="remove_user">حذف کاربر</string>
+    <string name="can_mng">شما نمی توانید خودتان را مدیریت کنید</string>
+    <string name="this_usr_adm">این کاربر قبلاً سرپرست است</string>
+    <string name="maxadmin">به حداکثر شماره سرپرست رسیده اید</string>
+    <string name="exit_group_sure">آیا مطمئن هستید که می خواهید از گروه خارج شوید؟</string>
+    <string name="title_activity_add_user_group">AddUserGroup</string>
+    <string name="kicked">شما از گروه حذف شده اید</string>
+    <string name="can_t_fetch_last_messages">نمیتوانید آخرین پیامها را دریافت کنید</string>
+    <string name="title_activity_edit_story">ویرایش داستان ها</string>
+    <string name="delet_sto">حذف داستان</string>
+    <string name="delete_story_mess">آیا مطمئن هستید که می خواهید این داستان را حذف کنید؟</string>
+    <string name="fail_st">داستان حذف نشد</string>
+    <string name="video_call">تماس تصویری</string>
+    <string name="calls_rev">هنگام بازیابی تماس ها خطایی روی داد</string>
+    <string name="est">ایجاد</string>
+    <string name="clear_c">همه چت ها را پاک کنید</string>
+    <string name="title_activity_calls_setting">تنظیمات تماس</string>
+    <string name="call_ringtone">با زنگ تماس بگیرید</string>
+    <string name="clear_call_logs">گزارش تماس را پاک کنید</string>
+    <string name="choose_ring">زنگ تماس را انتخاب کنید</string>
+    <string name="add_blok">به لیست بلوک اضافه شد</string>
+    <string name="re_blok">از لیست بلوک حذف شد</string>
+    <string name="add_mute">به لیست بی صدا اضافه شد</string>
+    <string name="re_mute">از لیست بیصدا حذف شد</string>
+    <string name="you_can_t_reply_this_conversation">شما نمی توانید به این گفتگو پاسخ دهید</string>
+    <string name="title_activity_block">مسدود کردن</string>
+    <string name="title_activity_mute">بی صدا</string>
+    <string name="calling_ser">تماس با سرویس چک</string>
+    <string name="favourite">ستاره</string>
+    <string name="notfavourite">Unstar</string>
+    <string name="title_activity_favourite">پیام های ستاره دار</string>
+    <string name="account_deleted">این حساب حذف شده است</string>
+    <string name="wrong_code">کد اشتباه ، دوباره امتحان کنید!</string>
+    <string name="verify_to_delete">حذف</string>
+    <string name="you">شما</string>
+    <string name="connecting">برقراری ارتباط...</string>
+    <string name="userbusy">کاربر مشغول است</string>
+    <string name="today">امروز</string>
+
+    <string name="title_signout">شما از دستگاه دیگری وارد سیستم شده اید</string>
+    <string name="mess_signout">در هر حساب فقط می توانید از یک دستگاه استفاده کنید</string>
+    <string name="easy_chat">چت آسان</string>
+    <string name="high_perform">عملکرد بالا</string>
+    <string name="feel_secure">احساس امنیت کنید</string>
+    <string name="modern_design">طراحی مدرن</string>
+    <string name="light_weii">سبک وزن</string>
+    <string name="you_can_hint">از همین جا می توانید با دوستان خود گپ بزنید</string>
+    <string name="restarttheapp">براہ کرم ایپ کو دوبارہ شروع کریں اور دوبارہ کوشش کریں۔</string>
+    <string name="title_activity_invite">مدعو کریں۔</string>
+    <string name="inviteuser">کو مدعو کریں۔</string>
+    <string name="hello">ہیلو ، میں استعمال کر رہا ہوں۔</string>
+    <string name="downloadnw">اسے اب گوگل پلے اسٹور سے ڈاؤن لوڈ کریں:</string>
+    <string name="title_activity_archieve">کہانیاں محفوظ شدہ دستاویزات۔</string>
+    <string name="you_can_manage">آپ کہانیوں کا انتظام 24 گھنٹے تک کرسکتے ہیں۔</string>
+    <string name="title_activity_qr">Qr</string>
+    <string name="your_qr">آپ کا صدر</string>
+    <string name="scan_friends_qr">دوستوں کو اسکین کریں</string>
+    <string name="invaled">Qr غلط ہے۔</string>
+    <string name="chat">چیٹ شروع کریں۔</string>
+
+    <string name = "forward"> رو به جلو </string>
+         <string name = "cant_forw">این پیام قابل ارسال نیست</string>
+         <string name = "cant_reply">نمی توانید به این پیام پاسخ دهید
+</string>
+         <string name = "voice"> صدا </string>
+         <string name = "image"> تصویر
+ </string>
+    <string name="shake_mobile">برای خنثی کردن حذف لرزش کنید</string>
+
+
 </resources>

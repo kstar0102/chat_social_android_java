@@ -40,6 +40,7 @@ public class StoryPlayerProgressView extends View {
     private long singleStoryDisplayTime;
     private ValueAnimator progressAnimator;
     private boolean isCancelled;
+    public int index =0;
 
     public StoryPlayerProgressView(Context context) {
         super(context);
@@ -96,7 +97,8 @@ public class StoryPlayerProgressView extends View {
         progressBarRightEdge = new int[progressBarsCount];
         calculateWidthOfEachProgressBar(progressBarsCount);
         invalidate();
-        startAnimating(0);
+        index =0;
+        startAnimating(false);
     }
 
     public void setProgressBarHeight(int dpValue) {
@@ -174,7 +176,8 @@ public class StoryPlayerProgressView extends View {
         setMeasuredDimension(w, h);
     }
 
-    private void startAnimating(final int index) {
+    public void startAnimating(final boolean out) {
+
         if (index >= progressBarsCount) {
             if (storyPlayerListener != null) {
                 storyPlayerListener.onFinishedPlaying();
@@ -187,7 +190,15 @@ public class StoryPlayerProgressView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int value = (int) valueAnimator.getAnimatedValue();
-                progressBarRightEdge[index] = (index + 1) * mGapBetweenProgressBars + index * singleProgressBarWidth + value;
+                if (index < progressBarRightEdge.length)
+                {
+
+                    if(out && index > 0)
+                        progressBarRightEdge[index-1] = (index) * mGapBetweenProgressBars + (index) * singleProgressBarWidth ;
+
+                    progressBarRightEdge[index] = (index + 1) * mGapBetweenProgressBars + index * singleProgressBarWidth + value;
+
+                }
                 invalidate();
             }
         });
@@ -199,7 +210,8 @@ public class StoryPlayerProgressView extends View {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                if (!isCancelled) startAnimating(index + 1);
+                index = index + 1;
+                if (!isCancelled) startAnimating(false);
             }
 
             @Override
@@ -216,6 +228,7 @@ public class StoryPlayerProgressView extends View {
             storyPlayerListener.onStartedPlaying(index);
         }
     }
+
 
     private int getPxFromDp(int dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, resources.getDisplayMetrics());

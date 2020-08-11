@@ -1,17 +1,23 @@
 <resources>
     <color name="white">#ffffff</color>
+    <color name="badge_back">#DB5B5F</color>
     <color name="white60">#a0ffffff</color>
     <color name="white_two">#efefef</color>
     <color name="white_three">#ebebeb</color>
     <color name="white_four">#e0e0e0</color>
     <color name="white_five">#dadada</color>
     <color name="blue">#031cd7</color>
+    <color name="voice_line">#5A7BEF</color>
+    <color name="online_color">#00FF80</color>
+    <color name="unread_blue">#2178DC</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="transparent_unread">#11000000</color>
     <color name="gray">#333333</color>
+    <color name="grays">#1F1F1F</color>
     <color name="dark_gray">#282a2b</color>
     <color name="dark_gray_unread">#222425</color>
+    <color name="red">#DD5044</color>
     <color name="dark_gray_t">#e9282a2b</color>
     <color name="dark_grey_two">#191a1b</color>
     <color name="warm_grey">#7f7f7f</color>

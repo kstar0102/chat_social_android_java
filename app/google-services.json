@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "517739949054",
-    "firebase_url": "https://plax-chat.firebaseio.com",
-    "project_id": "plax-chat",
-    "storage_bucket": "plax-chat.appspot.com"
+    "project_number": "63493876806",
+    "firebase_url": "https://plax-e87d6.firebaseio.com",
+    "project_id": "plax-e87d6",
+    "storage_bucket": "plax-e87d6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:517739949054:android:fddf5ec14678d7f4",
+        "mobilesdk_app_id": "1:63493876806:android:5099bee0e15073f9fc2e47",
         "android_client_info": {
           "package_name": "ar.codeslu.plax"
         }
       },
       "oauth_client": [
         {
-          "client_id": "517739949054-k6bpn1jh2pkk8a85gj4k5c2d36obi2ao.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ar.codeslu.plax",
-            "certificate_hash": "0792c6db3270b82322d458be487541ed9cdd4f33"
-          }
-        },
-        {
-          "client_id": "517739949054-pf9fshfmgf2nbuh8rijpdm6sqfcqmghe.apps.googleusercontent.com",
+          "client_id": "63493876806-lu1hrj9jnmi8s2fnuejksqsjpci3cppr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBY8IJL6WcCaHRKUVV0r8PCPqheA7ghWe8"
+          "current_key": "AIzaSyCgKrEFtNUjs5_yv6NcHrRvd84Nm5U6Zdw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "517739949054-pf9fshfmgf2nbuh8rijpdm6sqfcqmghe.apps.googleusercontent.com",
+              "client_id": "63493876806-lu1hrj9jnmi8s2fnuejksqsjpci3cppr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

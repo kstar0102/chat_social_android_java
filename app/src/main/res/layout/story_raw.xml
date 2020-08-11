@@ -1,51 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/allS"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp"
-    android:id="@+id/allS"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <xute.storyview.StoryView
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    >
+
+    <ar.codeslu.plax.story.StoryView
         android:id="@+id/storyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
         app:pendingIndicatorColor="@color/colorPrimary"
-        app:visitedIndicatorColor="@color/greystory"
         app:spaceBetweenImageAndIndicator="1dp"
-        app:storyImageRadius="8dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        app:storyItemIndicatorWidth="1dp" />
-    <LinearLayout
+        app:storyImageRadius="11dp"
+        app:storyItemIndicatorWidth="1dp"
+        app:visitedIndicatorColor="@color/greystory" />
+
+    <TextView
+        android:id="@+id/username"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="User Name "
-            android:textStyle="bold"
-            android:gravity="center|start"
-            android:layout_marginStart="5dp"
-            android:id="@+id/username"
-            android:textColor="@color/black"
-            android:textSize="18sp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="23 minute ago"
-            android:gravity="center|start"
-            android:id="@+id/timeS"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/mid_grey"
-            android:textSize="14sp"/>
-    </LinearLayout>
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 </LinearLayout>

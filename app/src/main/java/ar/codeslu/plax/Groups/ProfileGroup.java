@@ -3,6 +3,7 @@ package ar.codeslu.plax.Groups;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,8 @@ import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.me.GroupIn;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import net.glxn.qrgen.android.QRCode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,9 +52,11 @@ import ar.codeslu.plax.custom.EditProfile;
 import ar.codeslu.plax.custom.ReactCustom;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.lists.UserData;
 import dmax.dialog.SpotsDialog;
-import se.simbio.encryption.Encryption;
+import it.auron.library.mecard.MeCard;
+
 
 public class ProfileGroup extends AppCompatActivity {
 
@@ -64,7 +69,7 @@ public class ProfileGroup extends AppCompatActivity {
     EditProfile cdd;
     FirebaseAuth mAuth;
     DatabaseReference mData, mUser;
-    private Encryption encryption;
+
     RecyclerView admins, user;
     int before = 0;
     AlertDialog dialog;
@@ -82,6 +87,7 @@ public class ProfileGroup extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
         mUser = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        Global.currentactivity = this;
 
         //loader
         if (Global.DARKSTATE) {
@@ -99,10 +105,16 @@ public class ProfileGroup extends AppCompatActivity {
                     .build();
         }
         dialog.show();
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+
 //toolbar
+        //dark mode init
+        if (mAuth.getCurrentUser() != null) {
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         //Actionbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile = findViewById(R.id.profileI);
@@ -140,29 +152,37 @@ public class ProfileGroup extends AppCompatActivity {
         mData.child(friendid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GroupIn groupIn = dataSnapshot.getValue(GroupIn.class);
-                String ava = encryption.decryptOrNull(groupIn.getAvatar());
-                String name = groupIn.getName();
+                if (mAuth.getCurrentUser() != null) {
 
-                Global.currAva = ava;
-                Global.currname = name;
+                    try {
+                        GroupIn groupIn = dataSnapshot.getValue(GroupIn.class);
+                        String ava = encryption.decryptOrNull(groupIn.getAvatar());
+                        String name = groupIn.getName();
 
-                Global.currGAdmins.clear();
-                Global.currGUsers.clear();
-                Global.currGUsersU.clear();
-                Global.adminList.clear();
+                        Global.currAva = ava;
+                        Global.currname = name;
 
-                Global.currGAdmins = groupIn.getAdmins();
-                Global.currGUsers = groupIn.getUsers();
+                        Global.currGAdmins.clear();
+                        Global.currGUsers.clear();
+                        Global.currGUsersU.clear();
+                        Global.adminList.clear();
 
-                if (Global.currGAdmins.contains(mAuth.getCurrentUser().getUid()))
-                    addContact.setVisibility(View.VISIBLE);
-                else
-                    addContact.setVisibility(View.GONE);
+                        Global.currGAdmins = groupIn.getAdmins();
+                        Global.currGUsers = groupIn.getUsers();
+
+                        if (Global.currGAdmins.contains(mAuth.getCurrentUser().getUid()))
+                            addContact.setVisibility(View.VISIBLE);
+                        else
+                            addContact.setVisibility(View.GONE);
 
 
-                updateLive();
-               threadUpdate();
+                        updateLive();
+                        threadUpdate();
+                    } catch (NullPointerException e) {
+
+                    }
+
+                }
             }
 
             @Override
@@ -195,7 +215,7 @@ public class ProfileGroup extends AppCompatActivity {
         admins.setLayoutManager(new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false));
         admins.setAdapter(adminsA);
 
-        user.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns(this), LinearLayoutManager.VERTICAL, false));
+        user.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns(this), RecyclerView.VERTICAL, false));
         user.setAdapter(userA);
 
         exit.setOnClickListener(new View.OnClickListener() {
@@ -292,12 +312,14 @@ public class ProfileGroup extends AppCompatActivity {
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
                     .load(R.drawable.group)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(profile);
         } else {
             Picasso.get()
                     .load(Global.currAva)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
                     .into(profile);
         }
     }
@@ -310,8 +332,8 @@ public class ProfileGroup extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     UserData userData = dataSnapshot.getValue(UserData.class);
-                    if(!Global.currGUsersU.contains(userData))
-                    Global.currGUsersU.add(userData);
+                    if (!Global.currGUsersU.contains(userData))
+                        Global.currGUsersU.add(userData);
 
                     if (before < Global.currGUsers.size() - 1) {
                         before += 1;
@@ -336,15 +358,20 @@ public class ProfileGroup extends AppCompatActivity {
 
     public void getAdmins() {
         dialog.dismiss();
-        for (int i = 0; i < Global.currGUsersU.size(); i++) {
-            if (Global.currGAdmins.indexOf(Global.currGUsersU.get(i).getId()) != -1) {
-                if(!Global.adminList.contains(Global.currGUsersU.get(i)))
-                    Global.adminList.add(Global.currGUsersU.get(i));
-                adminsA.notifyDataSetChanged();
-            }
+        try {
+            for (int i = 0; i < Global.currGUsersU.size(); i++) {
+                if (Global.currGAdmins.indexOf(Global.currGUsersU.get(i).getId()) != -1) {
+                    if (!Global.adminList.contains(Global.currGUsersU.get(i)))
+                        Global.adminList.add(Global.currGUsersU.get(i));
+                    adminsA.notifyDataSetChanged();
+                }
 
+
+            }
+        } catch (NullPointerException e) {
 
         }
+
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -369,11 +396,31 @@ public class ProfileGroup extends AppCompatActivity {
             }
         });
     }
-//    public static int calcspace(Context context) {
-//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-//        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-//        int space = (int) (dpWidth - (80 * 3)) / 3;
-//        return (space);
-//    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Global.currentactivity = this;
+        AppBack myApp = (AppBack) this.getApplication();
+        if (myApp.wasInBackground) {
+            //init data
+            Map<String, Object> map = new HashMap<>();
+            map.put(Global.Online, true);
+            if (mAuth.getCurrentUser() != null)
+                mUser.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            Global.local_on = true;
+            //lock screen
+            ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
+        }
+
+        myApp.stopActivityTransitionTimer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
+    }
 }

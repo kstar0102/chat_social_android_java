@@ -3,13 +3,11 @@ package ar.codeslu.plax.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,20 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
-import com.stfalcon.chatkit.me.GroupIn;
-import com.stfalcon.chatkit.me.UserIn;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
 
-import ar.codeslu.plax.Groups.Group;
 import ar.codeslu.plax.R;
-import ar.codeslu.plax.custom.ChatCelect;
 import ar.codeslu.plax.custom.profileSelect;
 import ar.codeslu.plax.global.Global;
-import ar.codeslu.plax.lists.StoryListRetr;
 import ar.codeslu.plax.lists.UserData;
-import xute.storyview.StoryView;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.Holder> {
     Context context;
@@ -66,12 +58,14 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.Holder> {
         if (String.valueOf(array.get(i).getAvatar()).equals("no")) {
             Picasso.get()
                     .load(R.drawable.profile)
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(holder.ava);
         } else {
             Picasso.get()
                     .load(array.get(i).getAvatar())
-                    .error(R.drawable.errorimg)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(holder.ava);
         }
 

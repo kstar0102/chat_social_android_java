@@ -1,4 +1,564 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Plax</string>
+
+
+
+
+    <string name="navigation_drawer_open">नेविगेशन दराज खोलें</string>
+    <string name="navigation_drawer_close">नेविगेशन ड्रावर बंद करें</string>
+
+
+    <string name="action_settings">सेटिंग्स</string>
+
+    <string name="title_activity_login">लॉग इन करें</string>
+    <string name="dummy_button">डमी बटन</string>
+    <string name="dummy_content">डमी \ nCONTENT</string>
+    <string name="phone_hint">फ़ोन नंबर</string>
+    <string name="invalid_phone">अमान्य फ़ोन नंबर</string>
+    <string name="login">लॉग इन करें</string>
+    <string name="phone">फ़ोन</string>
+    <string name="next">आगामी</string>
+    <string name="verify">सत्यापित करें</string>
+    <string name="code">कोड</string>
+    <string name="check_conn">कनेक्शन की जाँच करें</string>
+    <string name="cannt_verify">अपना नंबर सत्यापित नहीं कर सकता</string>
+    <string name="invalid_code">अमान्य कोड दर्ज किया गया ...</string>
+    <string name="fix_it">कुछ गलत है, हम इसे जल्द ही ठीक कर देंगे ...</string>
+    <string name="resend">आप 1 मिनट के बाद एक और कोड प्राप्त कर सकते हैं</string>
+    <string name="enter_code">कोड दर्ज करें</string>
+    <string name="friends">दोस्त</string>
+    <string name="you_added">आपने जोड़ा</string>
+
+    <string name="calls">कॉल</string>
+    <string name="chats">बिल्लियों</string>
+    <string name="groups">समूह</string>
+    <string name="edit">प्रोफाइल एडिट करें</string>
+    <string name="check_int">कृपया अपना कनेक्शन जांचें</string>
+    <string name="cannot_user">इस उपयोगकर्ता तक नहीं पहुंच सकता</string>
+    <string name="image_update">छवि अपडेट की गई</string>
+    <string name="image_fail">छवि अपलोड करने में विफल</string>
+    <string name="statue">प्रतिमा</string>
+    <string name="name">नाम</string>
+    <string name="plz_name">कृपया अपना नाम लिखें</string>
+    <string name="error">त्रुटि हुई</string>
+    <string name="signup_succ">स्वागत हे :)</string>
+    <string name="signin_succ">पुन: स्वागत है :)</string>
+    <string name="loading">लोड हो रहा है…</string>
+    <string name="now">अभी</string>
+    <string name="minute">एक मिनट पहले</string>
+    <string name="min_ago"> कुछ देर पहले</string>
+    <string name="hour">एक घंटा पहले</string>
+    <string name="hours"> घंटो पहले</string>
+    <string name="yesterday">बिता कल</string>
+    <string name="days"> दिन पहले</string>
+    <string name="m_e_s_s_a_g_e">संदेश</string>
+    <string name="voice_call">आवाज कॉल</string>
+    <string name="online_nw">अब ऑनलाइन</string>
+    <string name="view_pro">प्रोफाइल देखिये</string>
+    <string name="prfl_updt">प्रोफ़ाइल अपडेट</string>
+    <string name="photo_dlete">फ़ोटो हटाई गई</string>
+    <string name="contacts">संपर्क</string>
+    <string name="online">ऑनलाइन</string>
+    <string name="search_on_name_and_phone">नाम और फोन पर खोजें</string>
+    <string name="pleasW">कृपया प्रतीक्षा करें…</string>
+    <string name="ending">कॉल समाप्त हो रही है ...</string>
+
+    <string name="hint_enter_a_message" />
+    <string name="date_header_yesterday">बिता कल</string>
+    <string name="Failed">संदेश भेजने में विफल</string>
+    <string name="action_delete">हटाना</string>
+    <string name="action_copy">प्रतिलिपि</string>
+    <string name="copied_message">संदेश की प्रतिलिपि बनाई गई</string>
+    <string name="date_header_today">आज</string>
+    <string name="empty_mess">आप खाली संदेश नहीं भेज सकते</string>
+    <string name="menu_gallery">छवि</string>
+    <string name="menu_audio">ऑडियो</string>
+    <string name="menu_location">स्थान</string>
+    <string name="SLC">रद्द करने के लिए स्लाइड</string>
+    <string name="file">फ़ाइल</string>
+    <string name="video">वीडियो</string>
+    <string name="cannot_play">वॉइस नोट नहीं चला सकता</string>
+    <string name="cannot_open">फ़ाइल को खोला नहीं जा सकता</string>
+    <string name="title_activity_map">नक्शा</string>
+    <string name="friendlocation">मित्र का स्थान</string>
+    <string name="map_location">मानचित्र का स्थान</string>
+    <string name="typing">Typing…</string>
+    <string name="recording"> ऑडियो रिकॉर्ड कर रहा है ...</string>
+    <string name="downloadcomplete">डाउनलोड सम्पन्न हुआ</string>
+    <string name="downloadstart">डाउनलोड कर रहा है ...</string>
+    <string name="copy">प्रतिलिपि</string>
+    <string name="delete_for_me">मेरे लिए डिलीट करो</string>
+    <string name="delete_for_all">सभी के लिए हटाएँ</string>
+    <string name="mssg_cpd">संदेश की प्रतिलिपि बनाई गई</string>
+    <string name="mss_dlt">संदेश हटाये</string>
+    <string name="notcontact">ऐसा लगता है कि यह संख्या आपके संपर्कों में नहीं है</string>
+    <string name="add_contact">संपर्क जोड़ें</string>
+    <string name="block">खंड</string>
+    <string name="unblock">अनब्लॉक</string>
+    <string name="deletechat">चैट हटाएं</string>
+    <string name="mute">मूक</string>
+    <string name="unmute">अनम्यूट</string>
+    <string name="chat_dee">डिलीट कर दिया</string>
+    <string name="call_dee">कॉल लॉग हटाया गया</string>
+    <string name="contacts_alert">कृपया बेहतर प्रदर्शन के लिए सिम जोड़ें</string>
+    <string name="contact">संपर्क करें</string>
+    <string name="stories">एक कहानी जोड़ें</string>
+    <string name="favorite_messages">तारांकित संदेश</string>
+    <string name="muted">म्यूट किए गए</string>
+    <string name="blocked">अवरोधित</string>
+    <string name="setting">सेटिंग</string>
+    <string name="others">अन्य लोग</string>
+    <string name="share">शेयर</string>
+    <string name="pleasew8">कृपया वॉयस नोट अपलोड होने तक प्रतीक्षा करें</string>
+
+    <string name="sign_out">साइन आउट</string>
+    <string name="title_activity_setting">सेटिंग</string>
+    <string name="about">के बारे में</string>
+    <string name="description">Google Firebase सिस्टम पर एक उन्नत चैट ऐप बिल्ड है और यह बहु भाषाओं का समर्थन करता है</string>
+    <string name="ok">ठीक</string>
+    <string name="privacy">गोपनीयता और नीति</string>
+    <string name="per_delete_acc">स्थायी रूप से खाता हटाएं</string>
+    <string name="acc_delete_hint">क्या आप वाकई अपने खाते को स्थायी रूप से हटाना चाहते हैं? \ n अलर्ट: सभी डेटा खो जाएगा।</string>
+    <string name="cancel">रद्द करना</string>
+    <string name="yes">हाँ</string>
+    <string name="choose_lang">भाषा चुनें</string>
+    <string name="choose_not">अधिसूचना चुनें</string>
+
+    <string name="restart">कृपया एप्लिकेशन पुनः आरंभ करें</string>
+    <string name="restart_hint">भाषा को पूरी तरह से सक्रिय करने के लिए कृपया एप्लिकेशन को पुनरारंभ करें</string>
+    <string name="wait">कृपया प्रतीक्षा करें जब तक कि डेटा पूरी तरह से न भेजें</string>
+    <string name="timeerror">सर्वर समय नहीं मिल सकता है</string>
+
+    <string name="likeR">आपके संदेश की तरह प्रतिक्रिया व्यक्त की गई</string>
+    <string name="funnyR">आपके संदेश पर अजीब प्रतिक्रिया व्यक्त की</string>
+    <string name="loveR">आपके संदेश के प्रति प्रतिक्रिया व्यक्त की</string>
+    <string name="sadR">आपके संदेश पर दुःखी हुआ</string>
+    <string name="angryR">आपके संदेश पर क्रोधित हुआ</string>
+
+    <!--Arrays-->
+    <string-array name="lang">
+        <item>Default</item>
+        <item>العربية</item>
+        <item>Deutch</item>
+        <item>English</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Portuguese</item>
+        <item>فارسی</item>
+        <item>हिंदी</item>
+        <item>한국어</item>
+        <item>русский язык</item>
+
+    </string-array>
+    <string-array name="langCodes">
+        <item>def</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>fa</item>
+        <item>hi</item>
+        <item>ko</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="font">
+        <item>Chapinero Blackletter</item>
+        <item>Wake The Warrior</item>
+        <item>Historea</item>
+        <item>FunSized</item>
+        <item>Thundergood</item>
+        <item>Elmira</item>
+        <item>Squizers Marker</item>
+        <item>Default</item>
+    </string-array>
+    <string-array name="fontCodes">
+        <item>ch</item>
+        <item>wa</item>
+        <item>hi</item>
+        <item>fun</item>
+        <item>th</item>
+        <item>el</item>
+        <item>squ</item>
+        <item>def</item>
+    </string-array>
+
+
+    <string-array name="settingmain">
+        <item>चैट सेटिंग्स</item>
+        <item>कॉल सेटिंग</item>
+        <item>सुरक्षा सेटिंग</item>
+        <item>सूचनाएं सेटिंग</item>
+        <item>भाषा बदलो</item>
+        <item>खाता हटा दो</item>
+        <item>गोपनीयता और नीति</item>
+        <item>के बारे में</item>
+    </string-array>
+
+    <string-array name="ringN">
+        <item>Default</item>
+        <item>Notification 1</item>
+        <item>Notification 2</item>
+        <item>Notification 3</item>
+        <item>Notification 4</item>
+    </string-array>
+
+
+    <!--Country codes-->
+
+    <string-array name="CountryCodes">
+        <item>93,AF</item>
+        <item>355,AL</item>
+        <item>213,DZ</item>
+        <item>376,AD</item>
+        <item>244,AO</item>
+        <item>672,AQ</item>
+        <item>54,AR</item>
+        <item>374,AM</item>
+        <item>297,AW</item>
+        <item>61,AU</item>
+        <item>43,AT</item>
+        <item>994,AZ</item>
+        <item>973,BH</item>
+        <item>880,BD</item>
+        <item>375,BY</item>
+        <item>32,BE</item>
+        <item>501,BZ</item>
+        <item>229,BJ</item>
+        <item>975,BT</item>
+        <item>591,BO</item>
+        <item>387,BA</item>
+        <item>267,BW</item>
+        <item>55,BR</item>
+        <item>673,BN</item>
+        <item>359,BG</item>
+        <item>226,BF</item>
+        <item>95,MM</item>
+        <item>257,BI</item>
+        <item>855,KH</item>
+        <item>237,CM</item>
+        <item>1,CA</item>
+        <item>238,CV</item>
+        <item>236,CF</item>
+        <item>235,TD</item>
+        <item>56,CL</item>
+        <item>86,CN</item>
+        <item>61,CX</item>
+        <item>61,CC</item>
+        <item>57,CO</item>
+        <item>269,KM</item>
+        <item>242,CG</item>
+        <item>243,CD</item>
+        <item>682,CK</item>
+        <item>506,CR</item>
+        <item>385,HR</item>
+        <item>53,CU</item>
+        <item>357,CY</item>
+        <item>420,CZ</item>
+        <item>45,DK</item>
+        <item>253,DJ</item>
+        <item>670,TL</item>
+        <item>593,EC</item>
+        <item>20,EG</item>
+        <item>503,SV</item>
+        <item>240,GQ</item>
+        <item>291,ER</item>
+        <item>372,EE</item>
+        <item>251,ET</item>
+        <item>500,FK</item>
+        <item>298,FO</item>
+        <item>679,FJ</item>
+        <item>358,FI</item>
+        <item>33,FR</item>
+        <item>689,PF</item>
+        <item>241,GA</item>
+        <item>220,GM</item>
+        <item>995,GE</item>
+        <item>49,DE</item>
+        <item>233,GH</item>
+        <item>350,GI</item>
+        <item>30,GR</item>
+        <item>299,GL</item>
+        <item>502,GT</item>
+        <item>224,GN</item>
+        <item>245,GW</item>
+        <item>592,GY</item>
+        <item>509,HT</item>
+        <item>504,HN</item>
+        <item>852,HK</item>
+        <item>36,HU</item>
+        <item>91,IN</item>
+        <item>62,ID</item>
+        <item>98,IR</item>
+        <item>964,IQ</item>
+        <item>353,IE</item>
+        <item>44,IM</item>
+        <item>972,IL</item>
+        <item>39,IT</item>
+        <item>225,CI</item>
+        <item>81,JP</item>
+        <item>962,JO</item>
+        <item>7,KZ</item>
+        <item>254,KE</item>
+        <item>686,KI</item>
+        <item>965,KW</item>
+        <item>996,KG</item>
+        <item>856,LA</item>
+        <item>371,LV</item>
+        <item>961,LB</item>
+        <item>266,LS</item>
+        <item>231,LR</item>
+        <item>218,LY</item>
+        <item>423,LI</item>
+        <item>370,LT</item>
+        <item>352,LU</item>
+        <item>853,MO</item>
+        <item>389,MK</item>
+        <item>261,MG</item>
+        <item>265,MW</item>
+        <item>60,MY</item>
+        <item>960,MV</item>
+        <item>223,ML</item>
+        <item>356,MT</item>
+        <item>692,MH</item>
+        <item>222,MR</item>
+        <item>230,MU</item>
+        <item>262,YT</item>
+        <item>52,MX</item>
+        <item>691,FM</item>
+        <item>373,MD</item>
+        <item>377,MC</item>
+        <item>976,MN</item>
+        <item>382,ME</item>
+        <item>212,MA</item>
+        <item>258,MZ</item>
+        <item>264,NA</item>
+        <item>674,NR</item>
+        <item>977,NP</item>
+        <item>31,NL</item>
+        <item>599,AN</item>
+        <item>687,NC</item>
+        <item>64,NZ</item>
+        <item>505,NI</item>
+        <item>227,NE</item>
+        <item>234,NG</item>
+        <item>683,NU</item>
+        <item>850,KP</item>
+        <item>47,NO</item>
+        <item>968,OM</item>
+        <item>92,PK</item>
+        <item>680,PW</item>
+        <item>507,PA</item>
+        <item>675,PG</item>
+        <item>595,PY</item>
+        <item>51,PE</item>
+        <item>63,PH</item>
+        <item>870,PN</item>
+        <item>48,PL</item>
+        <item>351,PT</item>
+        <item>1,PR</item>
+        <item>974,QA</item>
+        <item>40,RO</item>
+        <item>7,RU</item>
+        <item>250,RW</item>
+        <item>590,BL</item>
+        <item>685,WS</item>
+        <item>378,SM</item>
+        <item>239,ST</item>
+        <item>966,SA</item>
+        <item>221,SN</item>
+        <item>381,RS</item>
+        <item>248,SC</item>
+        <item>232,SL</item>
+        <item>65,SG</item>
+        <item>421,SK</item>
+        <item>386,SI</item>
+        <item>677,SB</item>
+        <item>252,SO</item>
+        <item>27,ZA</item>
+        <item>82,KR</item>
+        <item>34,ES</item>
+        <item>94,LK</item>
+        <item>290,SH</item>
+        <item>508,PM</item>
+        <item>249,SD</item>
+        <item>597,SR</item>
+        <item>268,SZ</item>
+        <item>46,SE</item>
+        <item>41,CH</item>
+        <item>963,SY</item>
+        <item>886,TW</item>
+        <item>992,TJ</item>
+        <item>255,TZ</item>
+        <item>66,TH</item>
+        <item>228,TG</item>
+        <item>690,TK</item>
+        <item>676,TO</item>
+        <item>216,TN</item>
+        <item>90,TR</item>
+        <item>993,TM</item>
+        <item>688,TV</item>
+        <item>971,AE</item>
+        <item>256,UG</item>
+        <item>44,GB</item>
+        <item>380,UA</item>
+        <item>598,UY</item>
+        <item>1,US</item>
+        <item>998,UZ</item>
+        <item>678,VU</item>
+        <item>39,VA</item>
+        <item>58,VE</item>
+        <item>84,VN</item>
+        <item>681,WF</item>
+        <item>967,YE</item>
+        <item>260,ZM</item>
+        <item>263,ZW</item>
+    </string-array>
+    <string name="download">कृपया पहले फ़ाइल डाउनलोड करें</string>
+    <string name="shareimage">चित्र साझा करें</string>
+    <string name="title_activity_chat_settings">ChatSettings</string>
+    <string name="change_app_font">ऐप फ़ॉन्ट बदलें</string>
+    <string name="change_chat_wallpaper">चैट वॉलपेपर बदलें</string>
+    <string name="plz">कृपया एक फ़ॉन्ट चुनें</string>
+    <string name="set_wallpaper">वालपेपर सेट करें</string>
+    <string name="hi">Hi</string>
+    <string name="username1">उपयोगकर्ता नाम</string>
+    <string name="wallsucc">वॉलपेपर सफलतापूर्वक बदल गया</string>
+    <string name="walldsucc">वॉलपेपर सफलतापूर्वक हटा दिया गया</string>
+    <string name="click_enter_to_send">भेजने के लिए एंटर पर क्लिक करें</string>
+    <string name="new_message_sound">नया संदेश ध्वनि</string>
+    <string name="title_activity_secu_setting">सुरक्षा सेटिंग</string>
+    <string name="prevent_chat_screen_shot">चैट स्क्रीन शॉट रोकें (()</string>
+    <string name="screen_lock">स्क्रीन लॉक</string>
+    <string name="change_passcode">पासकोड बदलें</string>
+    <string name="patt_set">पैटर्न सेट</string>
+    <string name="chnge_pattern">आपका पैटर्न बदल दिया गया है</string>
+    <string name="welcome">स्वागत हे</string>
+    <string name="clear_pattern">स्पष्ट पैटर्न</string>
+    <string name="this_feature_only">आप अन्य चैट को स्क्रीनशॉट करने में सक्षम होंगे</string>
+
+
+    <string name="hello_blank_fragment">हैलो खाली टुकड़ा</string>
+    <string name="title_activity_stories">कहानियों</string>
+    <string name="forgot_password">पासवर्ड भूल गए ?</string>
+    <string name="logout_forgot">यदि आप उस पैटर्न को भूल गए हैं जिसे आप OK पर क्लिक कर सकते हैं, तो खाता लॉगआउट हो जाएगा और लॉक अक्षम हो जाएगा।</string>
+    <string name="approve_upload">फ़ोटो अपलोड करने की अनुमति दें</string>
+
+
+    <string name="label_brush">ब्रश</string>
+    <string name="label_emoji">इमोजी</string>
+    <string name="label_sticker">कँटिया</string>
+    <string name="label_eraser">रबड़</string>
+    <string name="label_text">टेक्स्ट</string>
+    <string name="label_filter">फ़िल्टर</string>
+    <string name="label_adjust">समायोजित करें</string>
+    <string name="add_to_my_story">मेरी कहानी में जोड़ें</string>
+    <string name="my_statue">मेरी प्रतिमा</string>
+    <string name="saving">सहेजा जा रहा है ...</string>
+    <string name="save_succ">छवि सफलतापूर्वक बच गई</string>
+    <string name="save_fail">छवि सहेजने में विफल</string>
+    <string name="story_add">कहानी गयी</string>
+    <string name="select">चित्र का चयन करें</string>
+    <string name="exitq">क्या आप छवि को बचाने के बिना बाहर निकलना चाहते हैं?</string>
+    <string name="save">बचाना</string>
+    <string name="disc">छोड़ना</string>
+    <string name="ups">अपलोड हो रहा है</string>
+    <string name="me">Me</string>
+    <string name="acc_per">कृपया अनुमति स्वीकार करें</string>
+    <string name="patt_err_mess">कृपया अपने डेटा को और अधिक सुरक्षित बनाने के लिए 4 बिंदुओं या एक साथ शामिल हों :)</string>
+    <string name="weak_pp">कमजोर पैटर्न</string>
+    <string name="title_activity_notif_setting">अधिसूचना सेटिंग</string>
+    <string name="defaultt">चूक</string>
+    <string name="blue">नीला</string>
+    <string name="notification_sound">सूचना ध्वनि</string>
+    <string name="led_color">एलईडी रंग</string>
+    <string name="slec">अधिसूचना का चयन करें</string>
+    <string name="set">अधिसूचना सेट करें</string>
+    <string name="retry">पुन: प्रयास करें</string>
+    <string name="we_will_soon">हम जल्द ही इस सुविधा को जोड़ देंगे</string>
+    <string name="snap">स्नैप</string>
+    <string name="chatss">चैट सेटिंग्स</string>
+    <string name="chos_noti">अपनी अधिसूचना टोन चुनें</string>
+    <string name="title_activity_add_group">समूह जोड़ें</string>
+    <string name="group_name">समूह का नाम</string>
+    <string name="plz_chs_per">कृपया कम से कम एक व्यक्ति चुनें</string>
+    <string name="cannot_l_g">समूह का नाम खाली नहीं छोड़ सकते</string>
+    <string name="reach_max">आप अधिकतम संख्या तक पहुँच गए</string>
+    <string name="add_you">आप को जोड़ा</string>
+    <string name="name_empty">कृपया समूह का नाम लिखें</string>
+    <string name="admins">व्यवस्थापक</string>
+    <string name="Leav_grp">समूह से बाहर निकलें</string>
+    <string name="add_to_admins">व्यवस्थापक में जोड़ें</string>
+    <string name="remove_admin">व्यवस्थापक को निकालें</string>
+    <string name="remove_user">उपयोगकर्ता निकालें</string>
+    <string name="can_mng">आप अपने आप को प्रबंधित नहीं कर सकते</string>
+    <string name="this_usr_adm">यह उपयोगकर्ता पहले से ही व्यवस्थापक है</string>
+    <string name="maxadmin">आप अधिकतम व्यवस्थापक संख्या तक पहुँच चुके हैं</string>
+    <string name="exit_group_sure">क्या आप वाकई समूह से बाहर निकलना चाहते हैं?</string>
+    <string name="title_activity_add_user_group">AddUserGroup</string>
+    <string name="kicked">आपको समूह से निकाल दिया गया है</string>
+    <string name="can_t_fetch_last_messages">अंतिम संदेश नहीं ला सकता है</string>
+    <string name="title_activity_edit_story">कहानियां संपादित करें</string>
+    <string name="delet_sto">डिलीट स्टोरी</string>
+    <string name="delete_story_mess">तुम पक्का हो कि तुम इस कहानी को मिटाना चाहते हो?</string>
+    <string name="fail_st">कहानी हटाने में विफल</string>
+    <string name="video_call">वीडियो कॉल</string>
+    <string name="calls_rev">कॉल पुनर्प्राप्त करने में त्रुटि</string>
+    <string name="est">कायम करना</string>
+    <string name="clear_c">सभी चैट साफ़ करें</string>
+    <string name="title_activity_calls_setting">कॉल सेटिंग</string>
+    <string name="call_ringtone">रिंगटोन को बुलाओ</string>
+    <string name="clear_call_logs">कॉल लॉग साफ़ करें</string>
+    <string name="choose_ring">कॉल रिंगटोन चुनें</string>
+    <string name="add_blok">ब्लॉक सूची में जोड़ा गया</string>
+    <string name="re_blok">ब्लॉक सूची से हटाया गया</string>
+    <string name="add_mute">सूची म्यूट करने के लिए जोड़ा गया</string>
+    <string name="re_mute">म्यूट सूची से हटा दिया गया</string>
+    <string name="you_can_t_reply_this_conversation">आप इस वार्तालाप का उत्तर नहीं दे सकते</string>
+    <string name="title_activity_block">खंड</string>
+    <string name="title_activity_mute">मूक</string>
+    <string name="calling_ser">कॉलिंग चेकर सर्विस</string>
+    <string name="favourite">तारा</string>
+    <string name="notfavourite">अतारांकित</string>
+    <string name="title_activity_favourite">तारांकित संदेश</string>
+    <string name="account_deleted">यह खाता हटा दिया गया है</string>
+    <string name="wrong_code">गलत कोड, फिर से प्रयास करें!</string>
+    <string name="verify_to_delete">हटाना</string>
+    <string name="you">आप</string>
+    <string name="connecting">कनेक्ट ...</string>
+    <string name="userbusy">उपयोगकर्ता व्यस्त है</string>
+    <string name="today">आज</string>
+
+    <string name="title_signout">आपने किसी अन्य डिवाइस से साइन इन किया है</string>
+    <string name="mess_signout">आप प्रति खाते में केवल एक उपकरण का उपयोग कर सकते हैं</string>
+    <string name="easy_chat">चैट करने में आसान है</string>
+    <string name="high_perform">उच्च प्रदर्शन</string>
+    <string name="feel_secure">सुरक्षित महसूस</string>
+    <string name="modern_design">आधुनिक डिज़ाइन</string>
+    <string name="light_weii">हल्के वजन</string>
+    <string name="you_can_hint">आप यहां से अपने दोस्तों के साथ बातचीत शुरू कर सकते हैं</string>
+    <string name="restarttheapp">कृपया एप्लिकेशन पुनः आरंभ करें और पुनः प्रयास करें</string>
+    <string name="title_activity_invite">आमंत्रण</string>
+    <string name="inviteuser">के लिए आमंत्रण</string>
+    <string name="hello">हैलो, मैं का उपयोग कर रहा हूँ</string>
+    <string name="downloadnw">इसे अब Google play store से डाउनलोड करें:</string>
+    <string name="title_activity_archieve">कहानियां पुरालेख</string>
+    <string name="you_can_manage">आप 24 घंटे तक पहुंचने तक कहानियों का प्रबंधन कर सकते हैं</string>
+    <string name="title_activity_qr">qr</string>
+    <string name="your_qr">आपका Qr</string>
+    <string name="scan_friends_qr">स्कैन दोस्तों Qr</string>
+    <string name="invaled">Qr अमान्य है</string>
+    <string name="chat">चैट शुरू करें</string>
+    <string name="forward">आगे</string>
+    <string name="cant_forw">इस संदेश को अग्रेषित नहीं किया जा सकता</string>
+    <string name="cant_reply">इस संदेश का जवाब नहीं दे सकते</string>
+    <string name="voice">आवाज़</string>
+    <string name="image">छवि</string>
+    <string name="shake_mobile">हटाने के लिए पूर्ववत करें</string>
+
 </resources>

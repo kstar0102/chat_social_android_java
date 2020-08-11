@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -73,7 +73,7 @@
     </style>
 
     <style name="SeekBarColorOut" parent="Widget.AppCompat.SeekBar">
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/voice_line</item>
     </style>
 
     <style name="SeekBarColorIn" parent="Widget.AppCompat.SeekBar">
@@ -81,11 +81,31 @@
     </style>
 
     <style name="progressOut" parent="Widget.AppCompat.ProgressBar">
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/black</item>
     </style>
 
     <style name="progressIn" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="FullScreenVideoTheme" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_border</item>
+    </style>
+
+    <style name="MyTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyTabTextAppearance</item>
+    </style>
+
+    <style name="MyTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">11sp</item>
+        <item name="textAllCaps">true</item>
     </style>
 
 </resources>

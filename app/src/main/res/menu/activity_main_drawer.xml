@@ -6,11 +6,15 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_stories"
-            android:icon="@drawable/camera_menu"
+            android:icon="@drawable/stories"
             android:title="@string/stories" />
         <item
+            android:id="@+id/archS"
+            android:icon="@drawable/ic_arch"
+            android:title="@string/title_activity_archieve" />
+        <item
             android:id="@+id/nav_favM"
-            android:icon="@drawable/fav_menu"
+            android:icon="@drawable/ic_star"
             android:title="@string/favorite_messages" />
         <item
             android:id="@+id/nav_muted"
@@ -30,9 +34,9 @@
     <item android:title="@string/others">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/share_menu"
-                android:title="@string/share" />
+                android:id="@+id/qr"
+                android:icon="@drawable/qr"
+                android:title="@string/qr" />
             <item
                 android:id="@+id/nav_signout"
                 android:icon="@drawable/signout_menu"

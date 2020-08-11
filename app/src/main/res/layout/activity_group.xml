@@ -25,7 +25,7 @@
                     android:layout_marginTop="55dp"
                     android:scaleType="centerCrop"
                     android:id="@+id/bg"
-                    android:src="@drawable/bg2" />
+                    android:src="@color/white" />
 
             </FrameLayout>
         </RelativeLayout>
@@ -49,9 +49,9 @@
         app:incomingTextColor="@color/black"
         app:incomingTextLinkColor="@color/pf_grey"
         app:incomingTextSize="18sp"
-        app:outcomingDefaultBubbleColor="@color/colorPrimaryDark"
-        app:outcomingDefaultBubblePressedColor="@color/colorPrimaryDark2awy"
-        app:outcomingDefaultBubbleSelectedColor="@color/colorPrimaryDark2awy"
+        app:outcomingDefaultBubbleColor="@color/reach_mesg_color"
+        app:outcomingDefaultBubblePressedColor="@color/reach_mesg_color"
+        app:outcomingDefaultBubbleSelectedColor="@color/reach_mesg_color"
         app:outcomingTextColor="@color/white"
         app:outcomingTextLinkColor="@color/pf_grey"
         app:outcomingTextSize="18sp"/>
@@ -67,6 +67,50 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="20dp"
         android:layout_alignParentEnd="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/reply"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/reply_bg_w"
+        android:padding="8dp"
+        android:orientation="vertical"
+        android:layout_height="130dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="match_parent"
+                android:id="@+id/replyU"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:gravity="start|center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/closeR"
+                android:tint="@color/colorPrimary"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="end|center_vertical"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="match_parent"
+            android:id="@+id/replyT"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:maxLines="1"
+            android:layout_marginTop="2dp"
+            android:gravity="start"
+            android:textColor="@color/mid_grey"
+            />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -98,14 +142,21 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:id="@+id/sticker"
+                android:src="@drawable/sticker"
+                android:layout_margin="4dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"/>
             <com.vanniktech.emoji.EmojiEditText
                 android:id="@+id/messageInput"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:textColor="@color/black"
                 android:maxHeight="220dp"
                 android:paddingTop="5dp"
@@ -135,7 +186,7 @@
             />
         <com.devlomi.record_view.RecordButton
             android:id="@+id/voice"
-            android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
             android:layout_width="34dp"
             android:layout_gravity="bottom"
             android:layout_height="34dp"
@@ -149,7 +200,7 @@
             android:layout_margin="5dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:background="@drawable/circle_b"
             android:layout_width="34dp"
             android:layout_height="34dp"
@@ -163,6 +214,22 @@
             android:padding="3dp"
             android:layout_height="34dp"
             android:layout_gravity="bottom"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/connectE"
+        android:layout_below="@+id/barr"
+        android:background="@color/redd"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/can_t_fetch_last_messages"
+            android:textColor="#fff"
+            android:textStyle="bold" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

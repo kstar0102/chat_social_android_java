@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Favourite"
+    tools:showIn="@layout/activity_add_user_fav">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:id="@+id/groups"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:text="@string/groups"
+            android:layout_height="wrap_content"
+            />
+
+        <in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView
+            android:id="@+id/grouplist"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:id="@+id/contacts"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:text="@string/contacts"
+            android:layout_height="wrap_content"
+            />
+
+        <in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView
+            android:id="@+id/userlist"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:id="@+id/sora"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:src="@drawable/list_bg4"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/mid_grey"
+            android:id="@+id/contactNum"
+            android:layout_gravity="center_horizontal"
+            android:gravity="start"
+            android:layout_marginBottom="3dp"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:text="@string/contacts"
+            android:layout_height="wrap_content"
+            />
+        <com.vanniktech.emoji.EmojiTextView
+            android:id="@+id/hintC"
+            android:layout_width="wrap_content"
+            android:textColor="@color/mid_grey"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:textSize="12sp"
+            android:text="@string/contacts_alert"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+</LinearLayout>

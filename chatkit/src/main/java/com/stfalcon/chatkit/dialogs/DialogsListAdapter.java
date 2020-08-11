@@ -552,6 +552,7 @@ public class DialogsListAdapter<DIALOG extends IDialog>
         protected ViewGroup dividerContainer;
         protected View divider;
 
+
         public DialogViewHolder(View itemView) {
             super(itemView);
             root = (ViewGroup) itemView.findViewById(R.id.dialogRootLayout);

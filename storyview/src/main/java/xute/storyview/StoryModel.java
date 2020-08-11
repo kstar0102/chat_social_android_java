@@ -7,13 +7,23 @@ public class StoryModel implements Parcelable {
     public String imageUri;
     public String name;
     public String time;
+    public String id;
     public long timeL;
 
-    public StoryModel(String imageUri, String name, String time,long timeL) {
+    public StoryModel(String imageUri, String name, String time, long timeL,String id) {
         this.imageUri = imageUri;
         this.name = name;
         this.time = time;
         this.timeL = timeL;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImageUri() {
@@ -56,6 +66,7 @@ public class StoryModel implements Parcelable {
         imageUri = in.readString();
         name = in.readString();
         time = in.readString();
+        id = in.readString();
     }
 
     @Override
@@ -68,6 +79,7 @@ public class StoryModel implements Parcelable {
         dest.writeString(imageUri);
         dest.writeString(name);
         dest.writeString(time);
+        dest.writeString(id);
     }
 
     @SuppressWarnings("unused")

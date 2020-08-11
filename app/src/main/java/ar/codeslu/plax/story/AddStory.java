@@ -3,21 +3,27 @@ package ar.codeslu.plax.story;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -33,23 +39,46 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.iceteck.silicompressorr.SiliCompressor;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import ar.codeslu.plax.Contacts;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
+import ar.codeslu.plax.lists.CountryToPhonePrefix;
+import ar.codeslu.plax.lists.StoryList;
+import ar.codeslu.plax.lists.UserData;
+import ar.codeslu.plax.lists.UserDetailsStory;
+import ar.codeslu.plax.settingsitems.ChatSettings;
+import ar.codeslu.plax.settingsitems.TestWall;
 import ar.codeslu.plax.story.base.BaseActivity;
 import ar.codeslu.plax.story.filters.FilterListener;
 import ar.codeslu.plax.story.filters.FilterViewAdapter;
@@ -63,7 +92,7 @@ import ja.burhanrashid52.photoeditor.PhotoFilter;
 import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.TextStyleBuilder;
 import ja.burhanrashid52.photoeditor.ViewType;
-import se.simbio.encryption.Encryption;
+
 
 public class AddStory extends BaseActivity implements OnPhotoEditorListener,
         View.OnClickListener,
@@ -92,30 +121,70 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
 
     //firebase
     FirebaseAuth mAuth;
-    DatabaseReference mData;
+    DatabaseReference mData, mUserDB, mPhone;
 
     //encrypt
-    Encryption encryption;
-    //compress
-    Compressor compressedImageFile;
 
+    //compress
+    ArrayList<String> localContacts, ContactsId;
+    String idStory = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeFullScreen();
         setContentView(R.layout.activity_add_story);
+        Global.currentactivity = this;
 
         initViews();
+
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+        mUserDB = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        mPhone = FirebaseDatabase.getInstance().getReference(Global.Phones);
 
-        addS.setOnClickListener(v ->
-                addToStory()
-        );
+        ((AppBack) getApplication()).getBlock();
+        ((AppBack) getApplication()).getMute();
+
+        Global.stickerIcon = true;
+
+        //encryption
+
+        //arrays init
+        localContacts = new ArrayList<>();
+        ContactsId = new ArrayList<>();
+        addS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Global.check_int(AddStory.this)) {
+                    Dexter.withActivity(AddStory.this)
+                            .withPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                    if (report.areAllPermissionsGranted()) {
+                                        addToStory();
+
+                                    } else
+                                        Toast.makeText(AddStory.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                                }
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                    token.continuePermissionRequest();
+
+                                }
+                            }).check();
+                } else
+                    Toast.makeText(AddStory.this, R.string.check_int, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
         mWonderFont = Typeface.createFromAsset(getAssets(), "beyond_wonderland.ttf");
 
@@ -177,6 +246,8 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
         imgClose = findViewById(R.id.imgClose);
         imgClose.setOnClickListener(this);
 
+        imgCamera.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -197,22 +268,18 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
 
     @Override
     public void onAddViewListener(ViewType viewType, int numberOfAddedViews) {
-        Log.d(TAG, "onAddViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
     }
 
     @Override
     public void onRemoveViewListener(ViewType viewType, int numberOfAddedViews) {
-        Log.d(TAG, "onRemoveViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
     }
 
     @Override
     public void onStartViewChangeListener(ViewType viewType) {
-        Log.d(TAG, "onStartViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
     @Override
     public void onStopViewChangeListener(ViewType viewType) {
-        Log.d(TAG, "onStopViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
     @Override
@@ -236,165 +303,237 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
                 break;
 
             case R.id.imgCamera:
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                Dexter.withActivity(AddStory.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if (report.areAllPermissionsGranted()) {
+                                    CropImage.activity()
+                                            .setGuidelines(CropImageView.Guidelines.ON)
+                                            .start(AddStory.this);
+                                } else
+                                    Toast.makeText(AddStory.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
                 break;
 
             case R.id.imgGallery:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select)), PICK_REQUEST);
+                Dexter.withActivity(AddStory.this)
+                        .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                if (report.areAllPermissionsGranted()) {
+                                    CropImage.activity()
+                                            .setGuidelines(CropImageView.Guidelines.ON)
+                                            .start(AddStory.this);
+                                } else
+                                    Toast.makeText(AddStory.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                token.continuePermissionRequest();
+
+                            }
+                        }).check();
                 break;
         }
     }
 
     @SuppressLint("MissingPermission")
     private void saveImage() {
-        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            showLoading(getString(R.string.saving));
-            File file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + ""
-                    + System.currentTimeMillis() + ".png");
-            try {
-                file.createNewFile();
-
-                SaveSettings saveSettings = new SaveSettings.Builder()
-                        .setClearViewsEnabled(true)
-                        .setTransparencyEnabled(true)
-                        .build();
-
-                mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+        Dexter.withActivity(AddStory.this)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
                     @Override
-                    public void onSuccess(@NonNull String imagePath) {
-                        hideLoading();
-                        showSnackbar(getResources().getString(R.string.save_succ));
-                        mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(imagePath)));
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if (report.areAllPermissionsGranted()) {
+                            showLoading(getString(R.string.saving));
+                            File file = new File(Environment.getExternalStorageDirectory()
+                                    + File.separator + ""
+                                    + System.currentTimeMillis() + ".png");
+                            try {
+                                file.createNewFile();
+
+                                SaveSettings saveSettings = new SaveSettings.Builder()
+                                        .setClearViewsEnabled(true)
+                                        .setTransparencyEnabled(true)
+                                        .build();
+
+                                mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+                                    @Override
+                                    public void onSuccess(@NonNull String imagePath) {
+                                        hideLoading();
+                                        showSnackbar(getResources().getString(R.string.save_succ));
+                                        mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(imagePath)));
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        hideLoading();
+                                        showSnackbar(getResources().getString(R.string.save_fail));
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                hideLoading();
+                                showSnackbar(e.getMessage());
+                            }
+
+                        } else
+                            Toast.makeText(AddStory.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
                     }
 
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        hideLoading();
-                        showSnackbar(getResources().getString(R.string.save_fail));
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
                     }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                hideLoading();
-                showSnackbar(e.getMessage());
-            }
-        }
+                }).check();
     }
 
     @SuppressLint("MissingPermission")
     private void addToStory() {
-        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            showLoading(getResources().getString(R.string.ups));
-            File file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + ""
-                    + System.currentTimeMillis() + ".png");
-            try {
-                file.createNewFile();
-
-                SaveSettings saveSettings = new SaveSettings.Builder()
-                        .setClearViewsEnabled(true)
-                        .setTransparencyEnabled(true)
-                        .build();
-
-                mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+        Dexter.withActivity(AddStory.this)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
                     @Override
-                    public void onSuccess(@NonNull String imagePath) {
-                        try {
-                            Bitmap imageBitmap = SiliCompressor.with(AddStory.this).getCompressBitmap(imagePath, true);
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            byte[] byteArray = stream.toByteArray();
-                            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-                            StorageReference riversRef = mStorageRef.child(Global.StoryS + "/" + mAuth.getCurrentUser().getUid() + "/story_" + mAuth.getCurrentUser().getUid() + "_" + System.currentTimeMillis() + ".png");
-                            UploadTask uploadTask = riversRef.putBytes(byteArray);
-                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                @Override
-                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                    if (!task.isSuccessful()) {
-                                        throw task.getException();
-                                    }
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                                    // Continue with the task to get the download URL
-                                    return riversRef.getDownloadUrl();
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        Uri downloadUrl = task.getResult();
-                                        Log.wtf("kkk", downloadUrl.toString() + "ddd");
-                                        final Map<String, Object> map = new HashMap<>();
-                                        map.put("time", ServerValue.TIMESTAMP);
-                                        map.put("link", encryption.encryptOrNull(String.valueOf(downloadUrl)));
-                                        map.put("id",mAuth.getCurrentUser().getUid()+"_"+System.currentTimeMillis());
+                        if (report.areAllPermissionsGranted()) {
+                            showLoading(getResources().getString(R.string.ups));
+                            File file = new File(Environment.getExternalStorageDirectory()
+                                    + File.separator + ""
+                                    + System.currentTimeMillis() + ".png");
+                            try {
+                                file.createNewFile();
 
-                                        mData.child(mAuth.getCurrentUser().getUid()).child(Global.StoryS).push().updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                hideLoading();
-                                                showSnackbar(getResources().getString(R.string.story_add));
-                                                mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(imagePath)));
-                                                finish();
-                                            }
-                                        })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
+                                SaveSettings saveSettings = new SaveSettings.Builder()
+                                        .setClearViewsEnabled(true)
+                                        .setTransparencyEnabled(true)
+                                        .build();
+
+                                mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+                                    @Override
+                                    public void onSuccess(@NonNull String imagePath) {
+                                        try {
+                                            Bitmap imageBitmap = SiliCompressor.with(AddStory.this).getCompressBitmap(imagePath, true);
+                                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                            byte[] byteArray = stream.toByteArray();
+                                            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+                                            StorageReference riversRef = mStorageRef.child(Global.StoryS + "/" + mAuth.getCurrentUser().getUid() + "/story_" + mAuth.getCurrentUser().getUid() + "_" + System.currentTimeMillis() + ".png");
+                                            UploadTask uploadTask = riversRef.putBytes(byteArray);
+                                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                                @Override
+                                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                                    if (!task.isSuccessful()) {
+                                                        throw task.getException();
+                                                    }
+
+                                                    // Continue with the task to get the download URL
+                                                    return riversRef.getDownloadUrl();
+                                                }
+                                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Uri downloadUrl = task.getResult();
+                                                        idStory = mAuth.getCurrentUser().getUid() + "_" + System.currentTimeMillis();
+                                                        final Map<String, Object> map = new HashMap<>();
+                                                        map.put("time", ServerValue.TIMESTAMP);
+                                                        map.put("link", encryption.encryptOrNull(String.valueOf(downloadUrl)));
+                                                        map.put("id", idStory);
+                                                        map.put("name", Global.nameLocal);
+                                                        map.put("ava", Global.avaLocal);
+                                                        mData.child(mAuth.getCurrentUser().getUid()).child(Global.myStoryS).child(idStory).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                getContactList(map);
+                                                                finish();
+                                                            }
+                                                        })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        hideLoading();
+                                                                        showSnackbar(getResources().getString(R.string.error));
+                                                                    }
+                                                                });
+
+                                                    } else {
                                                         hideLoading();
                                                         showSnackbar(getResources().getString(R.string.error));
                                                     }
-                                                });
+                                                }
+                                            });
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                    } else {
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
                                         hideLoading();
                                         showSnackbar(getResources().getString(R.string.error));
                                     }
-                                }
-                            });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                hideLoading();
+                                showSnackbar(e.getMessage());
+                            }
+                        } else
+                            Toast.makeText(AddStory.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
 
                     }
 
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        hideLoading();
-                        showSnackbar(getResources().getString(R.string.error));
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
                     }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                hideLoading();
-                showSnackbar(e.getMessage());
-            }
-        }
+                }).check();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case CAMERA_REQUEST:
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                try {
                     mPhotoEditor.clearAllViews();
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    mPhotoEditorView.getSource().setImageBitmap(photo);
-                    break;
-                case PICK_REQUEST:
-                    try {
-                        mPhotoEditor.clearAllViews();
-                        Uri uri = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        mPhotoEditorView.getSource().setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+                    Uri uri = result.getUri();
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    mPhotoEditorView.getSource().setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         }
     }
@@ -425,18 +564,11 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
     }
 
     @Override
-    public void onStickerClick(Bitmap bitmap) {
+    public void onStickerClick(Bitmap bitmap, int p) {
         mPhotoEditor.addImage(bitmap);
         mTxtCurrentTool.setText(R.string.label_sticker);
     }
 
-    @Override
-    public void isPermissionGranted(boolean isGranted, String permission) {
-        if (isGranted) {
-            saveImage();
-            addToStory();
-        }
-    }
 
     private void showSaveDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -502,7 +634,10 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
                 mEmojiBSFragment.show(getSupportFragmentManager(), mEmojiBSFragment.getTag());
                 break;
             case STICKER:
-                mStickerBSFragment.show(getSupportFragmentManager(), mStickerBSFragment.getTag());
+                if(Global.stickerIcon) {
+                    Global.stickerIcon = false;
+                    mStickerBSFragment.show(getSupportFragmentManager(), mStickerBSFragment.getTag());
+                }
                 break;
         }
     }
@@ -543,16 +678,19 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
             super.onBackPressed();
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
         Global.currentactivity = this;
+        Global.stickerIcon = true;
         AppBack myApp = (AppBack) this.getApplication();
         if (myApp.wasInBackground) {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -565,7 +703,180 @@ public class AddStory extends BaseActivity implements OnPhotoEditorListener,
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
     }
+
+
+    private void getContactList(Map<String, Object> map) {
+        String ISOPrefix = getCountryISO();
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        while (phones.moveToNext()) {
+            String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+            phone = phone.replace(" ", "");
+            phone = phone.replace("-", "");
+            phone = phone.replace("(", "");
+            phone = phone.replace(")", "");
+            if (phone.length() > 0) {
+
+                if (String.valueOf(phone.charAt(0)).equals("0"))
+                    phone = String.valueOf(phone).replaceFirst("0", "");
+
+                if (phone.length() > 0) {
+                    if (!String.valueOf(phone.charAt(0)).equals("+"))
+                        phone = ISOPrefix + phone;
+
+                    if(phone.length()>0) {
+                    if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone) && !phone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
+                        if (!phone.contains(".") && !phone.contains("#") && !phone.contains("$") && !phone.contains("[") && !phone.contains("]"))
+                            localContacts.add(phone);
+                    }
+                }
+            }
+            }
+        }
+        getUserDetails(map);
+
+    }
+
+    private String getCountryISO() {
+        String countryCode = null;
+
+        // try to get country code from TelephonyManager service
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm != null) {
+            // query first getSimCountryIso()
+            countryCode = tm.getSimCountryIso();
+
+            if (countryCode != null && countryCode.length() == 2)
+                return CountryToPhonePrefix.getPhone(countryCode.toUpperCase());
+
+            if (tm.getPhoneType() == TelephonyManager.PHONE_TYPE_CDMA) {
+                // special case for CDMA Devices
+                countryCode = getCDMACountryIso();
+            } else {
+                // for 3G devices (with SIM) query getNetworkCountryIso()
+                countryCode = tm.getNetworkCountryIso();
+            }
+
+            if (countryCode != null && countryCode.length() == 2)
+                return CountryToPhonePrefix.getPhone(countryCode.toUpperCase());
+        }
+
+        try {
+            countryCode = CountryToPhonePrefix.getPhone(countryCode.toUpperCase());
+        } catch (NullPointerException e) {
+            countryCode = CountryToPhonePrefix.getPhone("US");
+        }
+
+        return countryCode;
+    }
+
+    private static String getCDMACountryIso() {
+        try {
+            // try to get country code from SystemProperties private class
+            Class<?> systemProperties = Class.forName("android.os.SystemProperties");
+            Method get = systemProperties.getMethod("get", String.class);
+
+            // get homeOperator that contain MCC + MNC
+            String homeOperator = ((String) get.invoke(systemProperties,
+                    "ro.cdma.home.operator.numeric"));
+
+            // first 3 chars (MCC) from homeOperator represents the country code
+            int mcc = Integer.parseInt(homeOperator.substring(0, 3));
+
+            // mapping just countries that actually use CDMA networks
+            switch (mcc) {
+                case 330:
+                    return "PR";
+                case 310:
+                    return "US";
+                case 311:
+                    return "US";
+                case 312:
+                    return "US";
+                case 316:
+                    return "US";
+                case 283:
+                    return "AM";
+                case 460:
+                    return "CN";
+                case 455:
+                    return "MO";
+                case 414:
+                    return "MM";
+                case 619:
+                    return "SL";
+                case 450:
+                    return "KR";
+                case 634:
+                    return "SD";
+                case 434:
+                    return "UZ";
+                case 232:
+                    return "AT";
+                case 204:
+                    return "NL";
+                case 262:
+                    return "DE";
+                case 247:
+                    return "LV";
+                case 255:
+                    return "UA";
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (NoSuchMethodException ignored) {
+        } catch (IllegalAccessException ignored) {
+        } catch (InvocationTargetException ignored) {
+        } catch (NullPointerException ignored) {
+        }
+
+        return null;
+    }
+
+
+    private void getUserDetails(Map<String, Object> map) {
+
+        for (int i = 0; i < localContacts.size(); i++) {
+
+            int finalI = i;
+            mPhone.child(localContacts.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        StoryList user = dataSnapshot.getValue(StoryList.class);
+                        ContactsId.add(user.getId());
+                        if (finalI == localContacts.size() - 1)
+                            setStorytoOthers(map);
+
+
+                    } else {
+                        if (finalI == localContacts.size() - 1)
+                            setStorytoOthers(map);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void setStorytoOthers(Map<String, Object> map) {
+        for (int i = 0; i < ContactsId.size(); i++) {
+            if (!Global.blockList.contains(ContactsId.get(i)) && !Global.mutelist.contains(ContactsId.get(i))) {
+                mUserDB.child(ContactsId.get(i)).child(Global.StoryS).child(mAuth.getCurrentUser().getUid()).child(idStory).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                });
+            }
+        }
+    }
+
 
 }
 

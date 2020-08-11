@@ -12,9 +12,9 @@
             android:id="@+id/play_pause_layout"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:paddingBottom="5dp"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:paddingTop="5dp">
 
             <ImageButton
@@ -45,9 +45,9 @@
             android:id="@+id/seekbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/play_pause_layout"
+            android:layout_toEndOf="@id/play_pause_layout"
             android:paddingBottom="5dp"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:paddingTop="5dp">
 
             <SeekBar
@@ -59,9 +59,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
+                android:layout_gravity="end|top"
                 android:orientation="horizontal"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:layout_marginBottom="20dp"
                 >
 

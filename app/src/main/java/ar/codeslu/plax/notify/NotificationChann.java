@@ -17,7 +17,7 @@ import ar.codeslu.plax.global.AppBack;
 
 
 /**
- * Created by Cryp2Code on 9/10/2018.
+ * Created by CodeSlu on 9/10/2018.
  */
 
 public class NotificationChann extends ContextWrapper {

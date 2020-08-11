@@ -33,6 +33,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.chatkit.me.Message;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vanniktech.emoji.EmojiEditText;
@@ -45,10 +46,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,6 +71,7 @@ import ar.codeslu.plax.R;
 import ar.codeslu.plax.adapters.GroupsContacts;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.lists.CountryToPhonePrefix;
 import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.lists.UserData;
@@ -81,7 +85,7 @@ import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import se.simbio.encryption.Encryption;
+
 
 public class AddGroup extends AppCompatActivity {
     //view
@@ -105,10 +109,12 @@ public class AddGroup extends AppCompatActivity {
     byte[] thumbData;
     //compress
     private Bitmap compressedImageFile;
-    Encryption encryption;
+
     //fcm
     FCM fcm;
     int before = 0;
+    String groupId="";
+    String avaG,nameG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,10 +124,9 @@ public class AddGroup extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        Global.currentactivity = this;
         FloatingActionButton fab = findViewById(R.id.fab);
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
+
         //loader
         //fcm notify
         fcm = Global.getFCMservies();
@@ -161,7 +166,8 @@ public class AddGroup extends AppCompatActivity {
         mUserDB.keepSynced(true);
         mAuth = FirebaseAuth.getInstance();
         mUserList.setHasFixedSize(true);
-        mUserList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mUserList.setNestedScrollingEnabled(true);
+        mUserList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mUserListAdapter = new GroupsContacts(Global.contactsG);
         mUserList.setAdapter(mUserListAdapter);
         //custom recyclerview
@@ -250,33 +256,43 @@ public class AddGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Global.check_int(AddGroup.this)) {
-                    if (Global.groupids.size() == 0)
-                        Snackbar.make(view, getString(R.string.plz_chs_per), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    else {
-                        if (!groupName.getText().toString().trim().isEmpty()) {
-                            Global.groupids.add(mAuth.getCurrentUser().getUid());
-                            ArrayList<String> admin = new ArrayList<>();
-                            admin.add(mAuth.getCurrentUser().getUid());
-                            String groupId = "groups_" + mAuth.getCurrentUser().getUid() + System.currentTimeMillis();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("name", groupName.getText().toString().trim());
-                            map.put("id", groupId);
-                            map.put("created", ServerValue.TIMESTAMP);
-                            map.put("messDate", ServerValue.TIMESTAMP);
-                            map.put("users", Global.groupids);
-                            map.put("lastmessage", encryption.encryptOrNull(String.valueOf("777default099////ar.codeslu.plax//")));
-                            map.put("admins", admin);
-                            map.put("lastsenderava", Global.avaLocal);
-                            map.put("lastsender", mAuth.getCurrentUser().getUid());
-                            map.put("noOfUnread", 0);
-                            uploadprofile(Uri.parse(imgLocalpath), groupId, map, map);
 
-
-                        } else
-                            Snackbar.make(view, getString(R.string.cannot_l_g), Snackbar.LENGTH_LONG)
+                    try {
+                        if (Global.groupids.size() == 0)
+                            Snackbar.make(view, getString(R.string.plz_chs_per), Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
+                        else {
+                            if (!groupName.getText().toString().trim().isEmpty()) {
+                                Global.groupids.add(mAuth.getCurrentUser().getUid());
+                                ArrayList<String> admin = new ArrayList<>();
+                                admin.add(mAuth.getCurrentUser().getUid());
+                                groupId = "groups-" + mAuth.getCurrentUser().getUid() + System.currentTimeMillis();
+                                nameG = groupName.getText().toString().trim();
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("name", groupName.getText().toString().trim());
+                                map.put("id", groupId);
+                                map.put("created", ServerValue.TIMESTAMP);
+                                map.put("messDate", ServerValue.TIMESTAMP);
+                                map.put("users", Global.groupids);
+                                map.put("lastmessage", encryption.encryptOrNull(String.valueOf("777default099////ar.codeslu.plax//")));
+                                map.put("admins", admin);
+                                map.put("lastsenderava", Global.avaLocal);
+                                map.put("lastsender", mAuth.getCurrentUser().getUid());
+                                map.put("noOfUnread", 0);
+                                uploadprofile(Uri.parse(imgLocalpath), map, map);
+
+
+                            } else
+                                Snackbar.make(view, getString(R.string.cannot_l_g), Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                        }
+                    }catch (NullPointerException e)
+                    {
+                        Snackbar.make(view, getString(R.string.error), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
+
+
                 } else
                     Snackbar.make(view, getString(R.string.check_int), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -297,15 +313,21 @@ public class AddGroup extends AppCompatActivity {
             phone = phone.replace("-", "");
             phone = phone.replace("(", "");
             phone = phone.replace(")", "");
-
+            if(phone.length()>0) {
             if (String.valueOf(phone.charAt(0)).equals("0"))
                 phone = String.valueOf(phone).replaceFirst("0", "");
+                if(phone.length()>0) {
+                    if (!String.valueOf(phone.charAt(0)).equals("+"))
+                        phone = ISOPrefix + phone;
 
-            if (!String.valueOf(phone.charAt(0)).equals("+"))
-                phone = ISOPrefix + phone;
-            if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone)) {
-                localContacts.add(phone);
-            }
+                    if(phone.length()>0) {
+                        if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone) && !phone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
+                            if (!phone.contains(".") && !phone.contains("#") && !phone.contains("$") && !phone.contains("[") && !phone.contains("]"))
+                                localContacts.add(phone);
+                        }
+                    }
+                }
+        }
         }
 
         runOnUiThread(new Runnable() {
@@ -358,6 +380,8 @@ public class AddGroup extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(mAuth.getCurrentUser() != null)
+                {
                 if (dataSnapshot.exists()) {
                     String phone = "",
                             name = "",
@@ -387,30 +411,31 @@ public class AddGroup extends AppCompatActivity {
                             online = (boolean) childSnapshot.child(Global.Online).getValue();
                         if (childSnapshot.child("screen").getValue() != null)
                             screen = (boolean) childSnapshot.child("screen").getValue();
-                        UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online, screen, nameP);
-                        if (name.equals(phone))
-                            for (UserData mContactIterator : contactList) {
-                                if (mContactIterator.getPhone().equals(mUser.getPhone())) {
-                                    mUser.setNameL(getContactName(mUser.getPhone(), AddGroup.this));
-                                    mUser.setName(mContactIterator.getName());
-                                    mUser.setAvatar(mContactIterator.getAvatar());
-                                    mUser.setStatue(mContactIterator.getStatue());
-                                    mUser.setScreen(mContactIterator.isScreen());
+                        if (!childSnapshot.getKey().equals(mAuth.getCurrentUser().getUid()) && !phone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
+                            UserData mUser = new UserData(childSnapshot.getKey(), ava, name, statue, phone, online, screen, nameP);
+                            if (name.equals(phone))
+                                for (UserData mContactIterator : contactList) {
+                                    if (mContactIterator.getPhone().equals(mUser.getPhone())) {
+                                        mUser.setNameL(getContactName(mUser.getPhone(), AddGroup.this));
+                                        mUser.setName(mContactIterator.getName());
+                                        mUser.setAvatar(mContactIterator.getAvatar());
+                                        mUser.setStatue(mContactIterator.getStatue());
+                                        mUser.setScreen(mContactIterator.isScreen());
 
+                                    }
                                 }
-                            }
-                        if (!Global.contactsG.contains(mUser))
-                            Global.contactsG.add(mUser);
-                        ((AppBack) getApplication()).setContacts();
-                        mUserListAdapter.notifyDataSetChanged();
-                        if (Global.contactsG.size() == 1)
-                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
-                        else
-                            contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
-                        sora.setVisibility(View.GONE);
-                        contactNum.setVisibility(View.VISIBLE);
-                        mUserList.setVisibility(View.VISIBLE);
-
+                            if (!Global.contactsG.contains(mUser))
+                                Global.contactsG.add(mUser);
+                            ((AppBack) getApplication()).setContacts();
+                            mUserListAdapter.notifyDataSetChanged();
+                            if (Global.contactsG.size() == 1)
+                                contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
+                            else
+                                contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
+                            sora.setVisibility(View.GONE);
+                            contactNum.setVisibility(View.VISIBLE);
+                            mUserList.setVisibility(View.VISIBLE);
+                        }
 
                     }
                     if (secN == Global.contactsG.size()) {
@@ -426,7 +451,7 @@ public class AddGroup extends AppCompatActivity {
                     }
 
                 }
-
+            }
             }
 
             @Override
@@ -503,7 +528,8 @@ public class AddGroup extends AppCompatActivity {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mUserDB.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mUserDB.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -517,6 +543,8 @@ public class AddGroup extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
     }
 
     private static String getCDMACountryIso() {
@@ -582,11 +610,11 @@ public class AddGroup extends AppCompatActivity {
     }
 
 
-    public void uploadprofile(Uri imgLocalpath, String groupid, Map<String, Object> map, Map<String, Object> map2) {
+    public void uploadprofile(Uri imgLocalpath, Map<String, Object> map, Map<String, Object> map2) {
         dialog.show();
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference riversRef = mStorageRef.child(Global.GroupAva + "/Ava_" + groupid + ".jpg");
+        StorageReference riversRef = mStorageRef.child(Global.GroupAva + "/Ava_" + groupId + ".jpg");
 
         if (thumbData != null) {
             UploadTask uploadTask = riversRef.putBytes(thumbData);
@@ -606,9 +634,10 @@ public class AddGroup extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri downloadUrl = task.getResult();
                         map.put("avatar", encryption.encryptOrNull(String.valueOf(downloadUrl)));
-                        group.child(groupid).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        group.child(groupId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                avaG = String.valueOf(downloadUrl);
                                 map2.put("avatar", encryption.encryptOrNull(String.valueOf(downloadUrl)));
                                 map2.remove("users");
                                 map2.remove("admins");
@@ -630,9 +659,10 @@ public class AddGroup extends AppCompatActivity {
             });
         } else {
             map.put("avatar", encryption.encryptOrNull("no"));
-            group.child(groupid).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            group.child(groupId).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    avaG = "no";
                     map2.put("avatar", encryption.encryptOrNull("no"));
                     map2.remove("users");
                     map2.remove("admins");
@@ -680,7 +710,8 @@ public class AddGroup extends AppCompatActivity {
                 imgLocalpath = String.valueOf(result.getUri());
                 Picasso.get()
                         .load(imgLocalpath)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(groupAva);
                 compress(Uri.parse(imgLocalpath));
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -700,7 +731,13 @@ public class AddGroup extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Tokens tokens = dataSnapshot.getValue(Tokens.class);
                 Map<String, String> map = new HashMap<>();
-                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + messidL + "#" + "group990");
+                map.put("nType","addG");
+                map.put("tokens",tokens.toString());
+                map.put("senderId",groupId);
+                map.put("senderName",nameG);
+                map.put("senderAva",avaG);
+                map.put("Mid",messidL);
+                map.put("to",friendId);
                 map.put("message", Message);
                 Sender sender = new Sender(tokens.getTokens(), map);
                 fcm.send(sender)

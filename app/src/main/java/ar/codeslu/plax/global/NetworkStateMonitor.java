@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by mostafa on 02/03/19.
+ * Created by CodeSlu on 02/03/19.
  */
 
 public class NetworkStateMonitor extends BroadcastReceiver {

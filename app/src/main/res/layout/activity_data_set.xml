@@ -58,9 +58,9 @@
                 android:layout_marginEnd="50dp"
                 android:maxLength="20"
                 android:fontFamily="sans-serif-light"
-                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
                 android:textColorHint="@color/white"
-                android:paddingRight="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
             <com.vanniktech.emoji.EmojiTextView
@@ -81,9 +81,9 @@
                 android:id="@+id/statueE"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="sans-serif-light"
-                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
                 android:textColorHint="@color/white"
-                android:paddingRight="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
             <Button
@@ -95,8 +95,8 @@
                 android:layout_gravity="center"
                 android:background="@drawable/btn_bg"
                 android:fontFamily="sans-serif-medium"
-                android:paddingLeft="70dp"
-                android:paddingRight="70dp"
+                android:paddingStart="70dp"
+                android:paddingEnd="70dp"
                 android:text="@string/next"
                 android:id="@+id/nextS"
                 android:textAllCaps="false"

@@ -1,7 +1,7 @@
 package ar.codeslu.plax.lists;
 
 /**
- * Created by mostafa on 28/10/18.
+ * Created by CodeSlu on 28/10/18.
  */
 
 public class senderD  {

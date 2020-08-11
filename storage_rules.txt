@@ -1,0 +1,24 @@
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if request.auth != null;
+    }
+     match /Avatar/{avatar}{
+    allow write : if avatar.matches('Ava_'+request.auth.uid+'.jpg');
+    }
+    
+     match /Message/{message}/{allPaths=**}{
+    allow write : if message.matches(request.auth.uid);
+    }
+      match /Stories/{story}/{allPaths=**}{
+    allow write : if story.matches(request.auth.uid);
+    }
+      match /GroupsAva/{allPaths=**}{
+    allow write,read : if request.auth != null;
+    }
+     
+       match /Groups/{groupid}/{myid}/{allPaths=**}{
+    allow write : if myid.matches(request.auth.uid);
+    }
+  }
+}

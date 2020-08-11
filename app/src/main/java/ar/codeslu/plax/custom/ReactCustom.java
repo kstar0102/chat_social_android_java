@@ -27,6 +27,7 @@ import java.util.Map;
 import ar.codeslu.plax.R;
 
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
 import ar.codeslu.plax.lists.Tokens;
 import ar.codeslu.plax.notify.FCM;
 import ar.codeslu.plax.notify.FCMresp;
@@ -34,10 +35,10 @@ import ar.codeslu.plax.notify.Sender;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import se.simbio.encryption.Encryption;
+
 
 /**
- * Created by mostafa on 01/11/18.
+ * Created by CodeSlu on 01/11/18.
  */
 
 
@@ -50,7 +51,7 @@ public class ReactCustom extends Dialog {
     private ImageView like, funny, love, sad, angry, noR;
     private String reactMessage, messageReact;
     private FCM fcm;
-    private Encryption encryption;
+
     private LinearLayout reactMenu;
 
     public ReactCustom(Activity a, String friendid, String Mid, String messageReact) {
@@ -88,9 +89,6 @@ public class ReactCustom extends Dialog {
         fcm = Global.getFCMservies();
 
         //encrypt
-        //encryption
-        byte[] iv = new byte[16];
-        encryption = Encryption.getDefault(Global.keyE, Global.salt, iv);
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +196,14 @@ public class ReactCustom extends Dialog {
                 messageReact = encryption.encryptOrNull(messageReact);
 
                 Map<String, String> map = new HashMap<>();
-                map.put("title", tokens + "#" + mAuth.getCurrentUser().getUid() + "#" + Global.nameLocal + "#" + Global.avaLocal + "#" + Mid + "#" + "react" + "#" + messageReact);
+                map.put("nType","message");
+                map.put("tokens",tokens.toString());
+                map.put("senderId",mAuth.getCurrentUser().getUid());
+                map.put("senderName",Global.nameLocal);
+                map.put("senderAva",Global.avaLocal);
+                map.put("Mid",Mid);
+                map.put("to", friendid);
+                map.put("react",messageReact);
                 map.put("message", reactMessage);
                 Sender sender = new Sender(tokens.getTokens(), map);
                 fcm.send(sender)

@@ -59,6 +59,7 @@ import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.UserData;
 import ar.codeslu.plax.mediachat.Photoa;
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 import id.zelory.compressor.Compressor;
 
 public class DataSet extends AppCompatActivity {
@@ -75,6 +76,7 @@ public class DataSet extends AppCompatActivity {
     DatabaseReference mData;
     //compress
     private Bitmap compressedImageFile;
+    android.app.AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +98,25 @@ public class DataSet extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
         }
-        Query query = mData.child(mAuth.getCurrentUser().getUid());
-        query.keepSynced(true);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        //loader
+        if (Global.DARKSTATE) {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setTheme(R.style.darkDialog)
+                    .setCancelable(false)
+                    .setCancelable(true)
+                    .build();
+        } else {
+            dialog = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setCancelable(true)
+                    .setCancelable(false)
+                    .build();
+        }
+        dialog.show();
+        mData.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserData userData = dataSnapshot.getValue(UserData.class);
@@ -110,15 +128,23 @@ public class DataSet extends AppCompatActivity {
                     if (avaS.equals("no")) {
                         Picasso.get()
                                 .load(R.drawable.profile)
-                                .error(R.drawable.errorimg)
+                                .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                                 .into(avatar);
                     } else {
                         Picasso.get()
                                 .load(avaS)
-                                .error(R.drawable.errorimg)
+                                .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                                 .into(avatar);
                     }
+                    startActivity(new Intent(DataSet.this, MainActivity.class));
+                    finish();
+                    Toast.makeText(DataSet.this, R.string.signin_succ, Toast.LENGTH_SHORT).show();
                 }
+                dialog.dismiss();
+
+
             }
 
             @Override
@@ -130,6 +156,7 @@ public class DataSet extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 next.setEnabled(false);
+                dialog.show();
                 if (!TextUtils.isEmpty(name.getText().toString().trim())) {
                     nameS = name.getText().toString().trim();
                     statueS = statue.getText().toString();
@@ -270,7 +297,8 @@ public class DataSet extends AppCompatActivity {
                 avaS = String.valueOf(result.getUri());
                 Picasso.get()
                         .load(avaS)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(avatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

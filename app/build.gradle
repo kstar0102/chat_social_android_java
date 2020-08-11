@@ -1,24 +1,18 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'io.fabric'
 
 android {
-    signingConfigs {
-        config {
-            storeFile file('/Users/mostafa/Downloads/Github/plax/CodeSlu')
-            storePassword 'cs123456'
-            keyAlias = 'plax'
-            keyPassword 'cs123456'
-        }
-    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "ar.codeslu.plax"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-
+        ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
     }
     buildTypes {
         release {
@@ -46,15 +40,31 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'it.auron:mecard-parser:1.1.3'
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-core:5.3.0'
+    implementation 'com.android.support:support-dynamic-animation:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
+
+    implementation 'com.budiyev.android:code-scanner:2.1.0'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
+    implementation 'com.duolingo.open:rtl-viewpager:2.0.0'
+    implementation 'com.github.jaiselrahman:FilePicker:1.2.2'
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.0.0'
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'eu.long1:spacetablayout:1.0.4'
     implementation "com.github.DeweyReed:UltimateMusicPicker:2.0.6"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.4ert:audioview:1.4.5'
-    implementation 'com.github.farhanahmed95:pico:0.0.1@aar'
+    implementation 'com.github.neestell:mediapicker:1.2.2'
     implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
     implementation 'com.vanniktech:emoji-ios:0.6.0'
-    implementation 'com.github.simbiose:Encryption:2.0.1'
+    implementation 'me.riddhimanadib.bottom-nav-bar:bottom-nav-bar:1.0.1'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation 'com.sandrios.android:sandriosCamera:1.2.6'
@@ -75,9 +85,11 @@ dependencies {
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-analytics:17.0.0'
     implementation 'com.google.firebase:firebase-database:18.0.0'
-    implementation 'com.tapadoo.android:alerter:3.0.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-functions:18.0.0'
@@ -110,8 +122,10 @@ dependencies {
     implementation 'com.andrognito.patternlockview:patternlockview:1.0.0'
     implementation 'android.arch.lifecycle:livedata:1.1.1'
     implementation 'com.fxn769:pix:1.4.4'
+    implementation 'io.agora.rtc:full-sdk:2.9.1'
     implementation 'ja.burhanrashid52:photoeditor:0.4.0'
-    implementation(name:'sinch-android-rtc', version:'+', ext:'aar')
+    implementation 'com.github.safetysystemtechnology:android-shake-detector:v1.2'
+    implementation 'com.github.richimf:Alphabetik:1.0.3'
 
     implementation('com.github.ozodrukh:CircularReveal:1.1.1@aar') {
         transitive = true;
@@ -124,6 +138,7 @@ dependencies {
     }
     implementation project(':chatkitlib')
     implementation project(path: ':storyview')
+    implementation project(path: ':alerter')
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {

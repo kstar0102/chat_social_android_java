@@ -30,14 +30,14 @@
                 app:civ_border_color="@color/white"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_toRightOf="@+id/avaC"
+                android:layout_toEndOf="@+id/avaC"
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical"
                 android:layout_marginStart="10dp"
                 android:layout_height="43dp">
                 <com.vanniktech.emoji.EmojiTextView
                     android:id="@+id/nameC"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/username1"
@@ -47,20 +47,22 @@
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_height="0dp"
-                    android:textAlignment="textStart"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
+                    android:textAlignment="viewStart"
+                    android:gravity="center_vertical|start"
+                    android:layout_gravity="center_vertical|start"
 
                     />
                 <com.vanniktech.emoji.EmojiTextView
                     android:id="@+id/stateC"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:textColor="@color/white"
                     android:textSize="13sp"
                     android:text="@string/online"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
+                    android:textAlignment="viewStart"
+                    android:gravity="center_vertical|start"
+                    android:layout_gravity="center_vertical|start"
+
 
                     />
             </LinearLayout>
@@ -115,7 +117,7 @@
            android:layout_marginTop="3dp"
            android:layout_marginBottom="3dp"
            android:textStyle="bold"
-           android:text="ddddd"
+           android:text="@string/today"
            android:textColor="@color/black"
            />
        <com.google.android.flexbox.FlexboxLayout
@@ -128,7 +130,7 @@
            app:alignContent="stretch"
            app:alignItems="stretch"
            android:paddingEnd="20dp"
-           android:paddingRight="20dp"
+           android:paddingStart="20dp"
            android:paddingTop="10dp"
            android:paddingBottom="10dp"
            android:layout_margin="5dp"
@@ -191,7 +193,7 @@
                android:background="@drawable/shape_incoming_message"
                app:alignItems="stretch"
                android:paddingEnd="20dp"
-               android:paddingRight="20dp"
+               android:paddingStart="20dp"
                android:paddingTop="10dp"
                android:paddingBottom="10dp"
                android:layout_margin="5dp"

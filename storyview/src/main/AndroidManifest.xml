@@ -3,7 +3,6 @@
     package="xute.storyview">
 
     <application>
-        <activity android:name=".StoryPlayer"></activity>
     </application>
 
 </manifest>

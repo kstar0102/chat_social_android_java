@@ -12,6 +12,10 @@
         android:gravity="center_horizontal"
         android:background="@drawable/dialog_w"
         android:orientation="vertical" >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/selecticon"/>
         <Button
             android:id="@+id/mkadmin"
             android:layout_width="150dp"

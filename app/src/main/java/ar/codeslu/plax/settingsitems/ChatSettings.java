@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -21,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,28 +35,35 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
+import com.stfalcon.chatkit.me.UserIn;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.codeslu.plax.Chat;
+import ar.codeslu.plax.Contacts;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.auth.DataSet;
+import ar.codeslu.plax.fragments.Chats;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import dmax.dialog.SpotsDialog;
 
 public class ChatSettings extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    TextView fontT, wallT;
-    JellyToggleButton soundT, enterT;
-    LinearLayout fontL, wallL;
+    TextView fontT, wallT, clearT,main1,main2,main3;
+    JellyToggleButton soundT, enterT,shakeT;
+    LinearLayout fontL, wallL, clearL;
     AlertDialog.Builder dialog;
     String choosenFont;
     ImageView delete;
-    DatabaseReference mData;
+    DatabaseReference mData, deleteC;
+    android.app.AlertDialog dialogg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +73,52 @@ public class ChatSettings extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        Global.currentactivity = this;
+
         soundT = findViewById(R.id.soundT);
         enterT = findViewById(R.id.enterT);
+        shakeT = findViewById(R.id.shakeT);
         fontT = findViewById(R.id.fontT);
         wallT = findViewById(R.id.wallT);
         fontL = findViewById(R.id.fontL);
         wallL = findViewById(R.id.wallL);
         delete = findViewById(R.id.delete);
+        clearL = findViewById(R.id.clear);
+        clearT = findViewById(R.id.clearT);
+        main1 = findViewById(R.id.main1);
+        main2 = findViewById(R.id.main2);
+        main3 = findViewById(R.id.main3);
         mAuth = FirebaseAuth.getInstance();
+
+
+        //loader
+        if (Global.DARKSTATE) {
+            dialogg = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setTheme(R.style.darkDialog)
+                    .setCancelable(true)
+                    .build();
+        } else {
+            dialogg = new SpotsDialog.Builder()
+                    .setContext(this)
+                    .setMessage(R.string.pleasW)
+                    .setCancelable(true)
+                    .build();
+        }
+
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                main1.setTextColor(Color.BLACK);
+                main2.setTextColor(Color.BLACK);
+                main3.setTextColor(Color.BLACK);
             } else {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                main1.setTextColor(Color.WHITE);
+                main2.setTextColor(Color.WHITE);
+                main3.setTextColor(Color.WHITE);
             }
         }
 
@@ -95,14 +139,15 @@ public class ChatSettings extends AppCompatActivity {
         });
 
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
+        deleteC = FirebaseDatabase.getInstance().getReference(Global.CHATS);
         if (mAuth.getCurrentUser() != null) {
-            if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
-                wallT.setTextColor(Global.conMain.getResources().getColor(R.color.black));
-                fontT.setTextColor(Global.conMain.getResources().getColor(R.color.black));
+            if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
+                wallT.setTextColor( getResources().getColor(R.color.black));
+                fontT.setTextColor( getResources().getColor(R.color.black));
 
             } else {
-                wallT.setTextColor(Global.conMain.getResources().getColor(R.color.white));
-                fontT.setTextColor(Global.conMain.getResources().getColor(R.color.white));
+                wallT.setTextColor( getResources().getColor(R.color.white));
+                fontT.setTextColor( getResources().getColor(R.color.white));
 
             }
 
@@ -164,6 +209,7 @@ public class ChatSettings extends AppCompatActivity {
         //toggles
         soundT.setChecked(((AppBack) getApplication()).shared().getBoolean("sound", false));
         enterT.setChecked(((AppBack) getApplication()).shared().getBoolean("enter", false));
+        shakeT.setChecked(((AppBack) getApplication()).shared().getBoolean("shake", true));
 
         soundT.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -187,8 +233,59 @@ public class ChatSettings extends AppCompatActivity {
                 }
             }
         });
+        shakeT.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ((AppBack) getApplication()).editSharePrefs().putBoolean("shake", true);
+                    ((AppBack) getApplication()).editSharePrefs().apply();
+                } else {
+                    ((AppBack) getApplication()).editSharePrefs().putBoolean("shake", false);
+                    ((AppBack) getApplication()).editSharePrefs().apply();
+                }
+            }
+        });
+//clear chats
+        clearL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Global.check_int(ChatSettings.this)){
+                ((AppBack) getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
+
+                Global.messG = new ArrayList<>();
+                dialogg.show();
+
+                if (Global.diaG.size() == 0)
+                    dialogg.dismiss();
+
+                for (int i = 0; i < Global.diaG.size(); i++) {
+                    Global.messG.clear();
+                    ((AppBack) getApplication()).setchatsdb(Global.diaG.get(i).getId());
+
+                    if (i == Global.diaG.size() - 1) {
+                        deleteC.child(mAuth.getCurrentUser().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dialogg.dismiss();
+                                if (task.isSuccessful()) {
+                                    Global.diaG.clear();
+                                    ((AppBack) getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
+                                    Toast.makeText(ChatSettings.this, R.string.chat_dee, Toast.LENGTH_SHORT).show();
+
+                                } else
+                                    Toast.makeText(ChatSettings.this, R.string.error, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
 
+                }
+            }
+            else
+                    Toast.makeText(ChatSettings.this, R.string.check_int, Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
     }
 
     @Override
@@ -220,7 +317,8 @@ public class ChatSettings extends AppCompatActivity {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -233,5 +331,7 @@ public class ChatSettings extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
     }
 }

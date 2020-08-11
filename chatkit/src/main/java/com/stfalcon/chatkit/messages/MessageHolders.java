@@ -882,7 +882,6 @@ public class MessageHolders {
         @Override
         public void onBind(MESSAGE message) {
             super.onBind(message);
-            Log.wtf("keyyy",message.getImageUrl());
             if (image != null && imageLoader != null) {
                 imageLoader.loadImage(image, message.getImageUrl(), getPayloadForImageLoader(message));
             }

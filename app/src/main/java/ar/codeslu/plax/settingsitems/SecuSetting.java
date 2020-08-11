@@ -3,6 +3,7 @@ package ar.codeslu.plax.settingsitems;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,6 +49,7 @@ public class SecuSetting extends AppCompatActivity {
     FirebaseAuth mAuth;
     LinearLayout ly;
     Handler mHandler;
+    TextView main1,main2;
     boolean isRunning = true;
     boolean prevstate = true;
     @Override
@@ -57,10 +60,15 @@ public class SecuSetting extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Global.currentactivity = this;
+
         lockT = findViewById(R.id.lockT);
         ly = findViewById(R.id.ly);
         screenT = findViewById(R.id.screenST);
         lockB = findViewById(R.id.lockB);
+        main1 = findViewById(R.id.main1);
+        main2 = findViewById(R.id.main2);
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mchat = FirebaseDatabase.getInstance().getReference(Global.CHATS);
@@ -68,8 +76,12 @@ public class SecuSetting extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                main1.setTextColor(Color.BLACK);
+                main2.setTextColor(Color.BLACK);
             } else {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                main1.setTextColor(Color.WHITE);
+                main2.setTextColor(Color.WHITE);
             }
         }
         lockB.setVisibility(View.GONE);
@@ -268,7 +280,8 @@ public class SecuSetting extends AppCompatActivity {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -295,5 +308,7 @@ public class SecuSetting extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
     }
+
 }

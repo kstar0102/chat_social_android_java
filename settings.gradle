@@ -1,2 +1,2 @@
-include ':app', ':chatkitlib', ':storyview'
+include ':app', ':chatkitlib', ':storyview', ':alerter'
 project(':chatkitlib').projectDir = new File('chatkit')

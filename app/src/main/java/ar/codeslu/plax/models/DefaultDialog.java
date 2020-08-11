@@ -7,7 +7,7 @@ import com.stfalcon.chatkit.me.UserIn;
 import java.util.ArrayList;
 
 /**
- * Created by mostafa on 24/01/19.
+ * Created by CodeSlu on 24/01/19.
  */
 public class DefaultDialog implements IDialog<Message> {
 

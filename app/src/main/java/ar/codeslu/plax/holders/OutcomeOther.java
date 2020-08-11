@@ -10,7 +10,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -19,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +53,9 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.chatkit.link.AutoLinkMode;
+import com.stfalcon.chatkit.link.AutoLinkOnClickListener;
+import com.stfalcon.chatkit.link.AutoLinkTextView;
 import com.stfalcon.chatkit.messages.MessageHolders;
 
 import java.io.BufferedInputStream;
@@ -71,13 +81,15 @@ import nl.changer.audiowife.AudioWife;
 
 import com.stfalcon.chatkit.me.Message;
 
+import static android.content.Context.POWER_SERVICE;
+
 
 /**
- * Created by mostafa on 03/02/19.
+ * Created by CodeSlu on 03/02/19.
  */
 
 public class OutcomeOther
-        extends MessageHolders.BaseOutcomingMessageViewHolder<Message> {
+        extends MessageHolders.BaseOutcomingMessageViewHolder<Message> implements SensorEventListener {
 
     public OutcomeOther(View itemView, Object payload) {
         super(itemView, payload);
@@ -107,11 +119,147 @@ public class OutcomeOther
     private ImageView retry;
     private ProgressBar sending;
     private String btnid;
-
+    private SensorManager mSensorManager;
+    private Sensor mProximity;
+    private static final int SENSOR_SENSITIVITY = 4;
+    ImageView forward, call;
+    LinearLayout replyb;
+    private AutoLinkTextView replyText;
+    private AudioManager m_amAudioManager;
 
     @Override
     public void onBind(final Message message) {
         super.onBind(message);
+
+
+        ////reply
+
+        replyb = itemView.findViewById(R.id.replyb);
+        replyText = itemView.findViewById(R.id.replytext);
+
+        replyb.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
+                cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                cdd.show();
+                return true;
+            }
+        });
+
+        try {
+            if(!message.getReply().isEmpty() && !message.isDeleted())
+            {
+                replyb.setVisibility(View.VISIBLE);
+                replyText.addAutoLinkMode(
+                        AutoLinkMode.MODE_PHONE,
+                        AutoLinkMode.MODE_URL, AutoLinkMode.MODE_EMAIL);
+                replyText.enableUnderLine();
+                replyText.setPhoneModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setUrlModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
+                if (message.getReply() != null) {
+                    replyText.setAutoLinkText(message.getReply());
+                    replyText.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
+                        @Override
+                        public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {
+                            switch (autoLinkMode) {
+                                case MODE_URL:
+                                    if (matchedText.toLowerCase().startsWith("w"))
+                                        matchedText = "http://" + matchedText;
+
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(matchedText));
+                                    String title = matchedText;
+                                    Intent chooser = Intent.createChooser(intent, title);
+                                    Global.conA.startActivity(chooser);
+                                    break;
+                                case MODE_PHONE:
+
+                                    String finalMatchedText = matchedText;
+                                    Dexter.withActivity(Global.chatactivity)
+                                            .withPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE)
+                                            .withListener(new MultiplePermissionsListener() {
+                                                @Override
+                                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                                    if (report.areAllPermissionsGranted()) {
+                                                        Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                                                        intent2.setData(Uri.parse("tel:" + finalMatchedText));
+                                                        Global.conA.startActivity(intent2);
+                                                    } else
+                                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                                                }
+
+                                                @Override
+                                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                                    token.continuePermissionRequest();
+
+                                                }
+                                            }).check();
+
+                                    break;
+                                case MODE_EMAIL:
+                                    final Intent emailIntent = new Intent(Intent.ACTION_VIEW);
+                                    emailIntent.setData(Uri.parse("mailto:"));
+                                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{matchedText});
+                                    try {
+                                        Global.conA.startActivity(emailIntent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                            }
+
+
+                        }
+                    });
+                }
+            }
+            else
+            {
+                replyb.setVisibility(View.GONE);
+
+            }
+        }
+        catch (NullPointerException e)
+        {
+            replyb.setVisibility(View.GONE);
+        }
+
+        ////
+
+        forward = itemView.findViewById(R.id.forward);
+        call = itemView.findViewById(R.id.call);
+
+        if (!message.isDeleted()) {
+            if (message.isCall())
+                call.setVisibility(View.VISIBLE);
+            else
+                call.setVisibility(View.GONE);
+
+            if (message.isForw())
+                forward.setVisibility(View.VISIBLE);
+            else
+                forward.setVisibility(View.GONE);
+
+        } else {
+            forward.setVisibility(View.GONE);
+            call.setVisibility(View.GONE);
+
+        }
+
+        mSensorManager = (SensorManager) Global.conA.getSystemService(Context.SENSOR_SERVICE);
+        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
+        mSensorManager
+                .registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+
         //react
         ImageView react = itemView.findViewById(R.id.react);
         if (message.isDeleted()) {
@@ -149,7 +297,7 @@ public class OutcomeOther
         Date date = message.getCreatedAt();
         DateFormat format = new SimpleDateFormat("hh:mm aa");
         String timee = format.format(date);
-        if(!message.isChat())
+        if (!message.isChat())
             time.setText("  " + timee);
         else
             time.setText(" " + timee + " (" + message.getStatus() + ")");
@@ -247,8 +395,7 @@ public class OutcomeOther
                                 @Override
                                 public void onPermissionsChecked(MultiplePermissionsReport report) {
                                     if (report.areAllPermissionsGranted()) {
-                                        if(!message.getStatus().equals(".."))
-                                        {
+                                        if (!message.getStatus().equals("..")) {
                                             mPauseMedia.setVisibility(View.GONE);
                                             mPlayMedia.setVisibility(View.GONE);
                                             wait.setVisibility(View.VISIBLE);
@@ -260,9 +407,8 @@ public class OutcomeOther
                                                     String url = message.getVoice().getUrl();
                                                     pathL = Environment.getExternalStorageDirectory().getAbsolutePath().toString()
                                                             + "/" + Global.conA.getResources().getString(R.string.app_name) + "/VoiceNotes/";
-                                                    fileName = System.currentTimeMillis()+"VN" + ".m4a";
+                                                    fileName = System.currentTimeMillis() + "VN" + ".m4a";
                                                     final String finalPathL = pathL;
-                                                    Log.wtf("key","dd");
                                                     int downloadId = PRDownloader.download(url, pathL, fileName)
                                                             .build()
                                                             .setOnStartOrResumeListener(new OnStartOrResumeListener() {
@@ -319,8 +465,7 @@ public class OutcomeOther
                                                     play(pathL);
                                                 }
                                             }
-                                        }
-                                        else
+                                        } else
                                             Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.pleasew8), Toast.LENGTH_SHORT).show();
 
 
@@ -351,9 +496,12 @@ public class OutcomeOther
 
             String filename = message.getFile().getFilename();
 
-            if (filename.length() > Global.FileName_LENTH)
-                fileName = fileName.substring(0, Global.STATUE_LENTH) + "...";
+            try {
+                if (filename.length() > Global.FileName_LENTH)
+                    fileName = fileName.substring(0, Global.STATUE_LENTH) + "...";
+            } catch (NullPointerException e) {
 
+            }
             duration.setVisibility(View.VISIBLE);
             duration.setText(filename);
             duration.setTextSize(13);
@@ -479,8 +627,8 @@ public class OutcomeOther
             duration.setVisibility(View.GONE);
             Picasso.get()
                     .load(message.getVideo().getThumb())
-                    .error(R.drawable.errorimg)
-                    .placeholder(R.drawable.loading)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                     .into(image);
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -536,31 +684,44 @@ public class OutcomeOther
             lyFullV.setVisibility(View.GONE);
             map.setVisibility(View.VISIBLE);
             location = message.getMap().getLocation().split(",");
-            if(location.length ==2)
-            {
+
+            if (location.length == 2) {
                 lat = location[0];
                 lng = location[1];
-                url = "https://maps.googleapis.com/maps/api/staticmap?center=" + Double.parseDouble(lat) + "," + Double.parseDouble(lng) + "&zoom=15&size=300x300&maptype=roadmap&format=png&visual_refresh=true&key=" + Global.conA.getResources().getString(R.string.google_maps_key) + "&signature=BASE64_SIGNATURE";
             }
 
 
+
+
+      url = "https://api.mapbox.com/styles/v1/" + Global.conA.getResources().getString(R.string.map_username) +
+              "/" + Global.conA.getResources().getString(R.string.map_style)+
+              "/static/" + Double.parseDouble(lat) +
+              "," + Double.parseDouble(lng)+
+              "," +
+              "12.0/200x200@2x?access_token=" + Global.conA.getResources().getString(R.string.mapbox_access_token);
+
+Log.wtf("Mapp",url);
             Picasso.get()
                     .load(url)
-                    .error(R.drawable.errorimg)
-                    .placeholder(R.drawable.loading)
+                    .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
                     .into(map);
 
             map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Global.conA, Map.class);
-                    intent.putExtra("lat", lat);
-                    intent.putExtra("lng", lng);
-                    intent.putExtra("from", message.getId());
-                    intent.putExtra("Mid", message.getMessid());
-                    intent.putExtra("ava", Global.avaLocal);
-                    intent.putExtra("name", Global.nameLocal);
-                    Global.conA.startActivity(intent);
+                    location = message.getMap().getLocation().split(",");
+                    if (location.length == 2) {
+                        lat = location[0];
+                        lng = location[1];
+                        Intent intent = new Intent(Global.conA, Map.class);
+                        intent.putExtra("lat", lat);
+                        intent.putExtra("lng", lng);
+                        intent.putExtra("from", message.getId());
+                        intent.putExtra("Mid", message.getMessid());
+                        intent.putExtra("ava", Global.avaLocal);
+                        intent.putExtra("name", Global.nameLocal);
+                        Global.conA.startActivity(intent);
+                    }
 
                 }
             });
@@ -583,18 +744,30 @@ public class OutcomeOther
 
 
         Dexter.withActivity(Global.chatactivity)
-                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
 
-                        if(report.areAllPermissionsGranted())
-                        {
+                        if (report.areAllPermissionsGranted()) {
 
-                         if(Global.audiolist.size() >0)
-                             Global.audiolist.get(Global.audiolist.size()-1).pause();
+                            if (Global.audiolist.size() > 0)
+                                Global.audiolist.get(Global.audiolist.size() - 1).pause();
 
+                            if (checkdevices(Global.conA)){
+
+                                m_amAudioManager = (AudioManager)Global.conA.getSystemService(Context.AUDIO_SERVICE);
+                                m_amAudioManager.setMode(AudioManager.MODE_IN_CALL);
+                                m_amAudioManager.setSpeakerphoneOn(false);
+                            }else
+                            {
+                                m_amAudioManager = (AudioManager)Global.conA.getSystemService(Context.AUDIO_SERVICE);
+                                m_amAudioManager.setMode(AudioManager.MODE_NORMAL);
+                                m_amAudioManager.setSpeakerphoneOn(true);
+                            }
 
                             AudioWife audioWife = new AudioWife();
+                            changeScreenBrightness();
 
 
                             mPauseMedia.setVisibility(View.VISIBLE);
@@ -609,30 +782,58 @@ public class OutcomeOther
                                     .setTotalTimeView(mTotalTime);
                             Global.audiolist.add(audioWife);
                             Global.btnid.add(btnid);
-                            Global.audiolist.get(Global.audiolist.size()-1).play();
+                            Global.audiolist.get(Global.audiolist.size() - 1).play();
 
-                            Global.audiolist.get(Global.audiolist.size()-1).addOnPlayClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            String position = (String) v.getTag();
-
-
-                                            for(int i=0;i<Global.audiolist.size();i++)
-                                               {
-                                                   if(i != Global.btnid.indexOf(position))
-                                                   Global.audiolist.get(i).pause();
-                                               }
+                            Global.audiolist.get(Global.audiolist.size() - 1).addOnPlayClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String position = (String) v.getTag();
+                                    changeScreenBrightness();
 
 
+                                    for (int i = 0; i < Global.audiolist.size(); i++) {
+                                        if (i != Global.btnid.indexOf(position))
+                                            Global.audiolist.get(i).pause();
+                                    }
 
+
+                                }
+                            });
+
+                            Global.audiolist.get(Global.audiolist.size() - 1).addOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    try {
+                                        if (Global.wl != null) {
+                                            if (Global.wl.isHeld()) {
+                                                Global.wl.release();
+                                            }
+                                            Global.wl = null;
                                         }
-                                    });
+                                    } catch (NullPointerException e) {
+
+                                    }
+                                }
+                            });
+
+                            Global.audiolist.get(Global.audiolist.size() - 1).addOnPauseClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        if (Global.wl != null) {
+                                            if (Global.wl.isHeld()) {
+                                                Global.wl.release();
+                                            }
+                                            Global.wl = null;
+                                        }
+                                    } catch (NullPointerException e) {
+
+                                    }
+                                }
+                            });
 
 
-                        }
-
-                        else
-                        {
+                        } else {
                             Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
                             mPauseMedia.setVisibility(View.GONE);
                             mPlayMedia.setVisibility(View.VISIBLE);
@@ -641,13 +842,16 @@ public class OutcomeOther
 
 
                     }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         token.continuePermissionRequest();
 
                     }
                 }).check();
     }
+
 
     private class getMap extends AsyncTask<Void, Void, Void> {
 
@@ -668,9 +872,7 @@ public class OutcomeOther
                 httpURLConnection.disconnect();
 
             } catch (IllegalStateException e) {
-                Log.e("tag", e.toString());
             } catch (IOException e) {
-                Log.e("tag", e.toString());
             }
             return null;
         }
@@ -682,4 +884,52 @@ public class OutcomeOther
         }
     }
 
+    private void changeScreenBrightness() {
+        //Set screen brightness
+        Global.pm = (PowerManager) Global.conA.getSystemService(POWER_SERVICE);
+        Global.wl = Global.pm.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "Dim/Light:");
+        Global.wl.acquire();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.values[0] == 0) {
+            AudioManager audioManager = (AudioManager) Global.conA.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.STREAM_MUSIC);
+            audioManager.setSpeakerphoneOn(false);
+
+        } else {
+            AudioManager audioManager = (AudioManager) Global.conA.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.STREAM_MUSIC);
+            audioManager.setSpeakerphoneOn(true);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    private boolean checkdevices(Context con){
+
+
+        AudioManager audioManager = (AudioManager) con.getSystemService(Context.AUDIO_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            AudioDeviceInfo[] adi = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+            for (AudioDeviceInfo device : adi) {
+                if (device.getType() == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER) {
+                    return true;
+                }
+            }
+            return  false;
+        }else
+        {
+            if (audioManager.isWiredHeadsetOn() ||audioManager.isBluetoothScoOn()){
+
+                return true;
+            }else
+
+                return false;
+        }
+    }
 }

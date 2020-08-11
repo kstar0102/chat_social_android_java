@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.codeslu.plax.Profile;
+import ar.codeslu.plax.profile.Profile;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
@@ -139,12 +139,14 @@ public class Photoa extends AppCompatActivity {
             if (avaS.equals("no")) {
                 Picasso.get()
                         .load(R.drawable.profile)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(ava);
             } else {
                 Picasso.get()
                         .load(avaS)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(ava);
             }
 
@@ -391,7 +393,8 @@ public class Photoa extends AppCompatActivity {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -404,6 +407,8 @@ public class Photoa extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
     }
 
 

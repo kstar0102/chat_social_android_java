@@ -6,65 +6,40 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.fragments.Calls;
 import ar.codeslu.plax.fragments.Chats;
 import ar.codeslu.plax.fragments.Groups;
 
 public class Vpadapter extends FragmentPagerAdapter {
-    Context conn;
-    public Vpadapter(FragmentManager fm,Context context) {
+    private List<String> NamePage = new ArrayList<>(); // Fragment Name List
+    public  ArrayList<androidx.fragment.app.Fragment> Fragment = new ArrayList<>();
+
+
+
+    public Vpadapter(FragmentManager fm) {
         super(fm);
-        this.conn = context;
+
+
     }
 
+    public void add(Fragment Frag, String Title) {
+        Fragment.add(Frag);
+        NamePage.add(Title);
+    }
     @Override
     public Fragment getItem(int position) {
-
-        switch (position){
-            case 0:
-                Calls calls =new Calls();
-                return calls;
-            case  1:
-                Chats chats = new Chats();
-                return chats;
-            case 2:
-                Groups groups = new Groups();
-                return groups;
-            default: return null ;
-
-
-
-        }
-
+        return Fragment.get(position);
     }
-
-    @Override
-    public int getCount() {
-        return 3;
-    }
-
-    @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0 :
-                return conn.getString(R.string.calls);
-            case 1 :
-                return conn.getString(R.string.chats);
-            case 2 :
-
-                return conn.getString(R.string.groups);
-
-            default:return null;
-
-
-
-
-        }
-
-
-
-
+        return NamePage.get(position);
+    }
+    @Override
+    public int getCount() {
+        return Fragment.size();
     }
 }

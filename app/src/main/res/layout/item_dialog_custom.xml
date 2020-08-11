@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@id/dialogRootLayout"
     android:layout_width="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -28,11 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:gravity="start"
+            android:textAlignment="viewStart"
             android:layout_marginTop="19dp"
             android:layout_toEndOf="@+id/dialogAvatarC"
-            android:layout_toLeftOf="@id/dialogDate"
-            android:layout_toRightOf="@+id/dialogAvatarC"
             android:layout_toStartOf="@id/dialogDate"
             android:ellipsize="end"
             android:fontFamily="@string/font_fontFamily_medium"
@@ -44,10 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
+            android:gravity="start"
+            android:textAlignment="viewStart"
             android:ellipsize="end"
             android:maxLines="1"/>
 
@@ -56,51 +55,68 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/dialogName"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/dialogAvatarC"
-            android:layout_toRightOf="@+id/dialogAvatarC">
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/dialogLastMessageUserAvatarC"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="7dp"
-                android:layout_marginRight="7dp"
-                android:scaleType="fitXY"
-                app:riv_corner_radius_bottom_left="15dip"
-                app:riv_corner_radius_bottom_right="15dip"
-                app:riv_corner_radius_top_left="15dip"
-                app:riv_corner_radius_top_right="15dp"
-                app:riv_mutate_background="true"
-                app:riv_oval="false"/>
-
+           >
 
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@id/dialogLastMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/dialogLastMessageUserAvatarC"
-                android:layout_toRightOf="@+id/dialogLastMessageUserAvatarC"
                 android:ellipsize="end"
-                android:gravity="top"
+                android:gravity="top|start"
+                android:textAlignment="viewStart"
+                android:layout_marginEnd="55dp"
                 android:maxLines="1"/>
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@id/dialogUnreadBubble"
+                    android:layout_width="18dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/dialogLastMessage"
+                    android:background="@drawable/bubble_circle"
+                    android:fontFamily="@string/font_fontFamily_medium"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:lines="1"/>
+                <ImageView
+                    android:id="@+id/block"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:visibility="gone"
+                    android:src="@drawable/block_menu" />
+                <ImageView
+                    android:id="@+id/mute"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="5dp"
+                    android:visibility="gone"
+                    android:src="@drawable/mutedpeople" />
+            </LinearLayout>
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@id/dialogUnreadBubble"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/dialogUnreadcheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/dialogAvatarC"
-            android:layout_alignRight="@+id/dialogAvatarC"
-            android:layout_alignTop="@+id/dialogAvatarC"
-            android:layout_marginEnd="-5dp"
-            android:layout_marginRight="-5dp"
-            android:layout_marginTop="-5dp"
-            android:background="@drawable/bubble_circle"
+            android:layout_alignBottom="@+id/dialogAvatarC"
+            android:layout_marginEnd="3dp"
+            android:layout_marginTop="-1dp"
+            android:layout_marginBottom="3dp"
             android:ellipsize="end"
+            android:background="@drawable/online_check_img"
+            android:src="@color/online_color"
             android:fontFamily="@string/font_fontFamily_medium"
             android:gravity="center"
             android:lines="1"/>
@@ -111,7 +127,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="16dp"
-            android:paddingLeft="@dimen/dialog_divider_margin_left"
             android:paddingStart="@dimen/dialog_divider_margin_left">
 
             <View

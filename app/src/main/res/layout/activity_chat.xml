@@ -25,7 +25,7 @@
                     android:layout_marginTop="55dp"
                     android:scaleType="centerCrop"
                     android:id="@+id/bg"
-                    android:src="@drawable/bg2" />
+                    android:src="@color/white" />
 
             </FrameLayout>
         </RelativeLayout>
@@ -37,24 +37,26 @@
         android:id="@+id/overdark"
         android:background="@drawable/image_visivility"
         />
+
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
         android:layout_marginBottom="45dp"
         android:layout_below="@+id/barr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:incomingDefaultBubbleColor="@color/grey"
+        app:incomingDefaultBubbleColor="@color/sent_mesg_color"
         app:incomingDefaultBubblePressedColor="@color/dark_grey2"
         app:incomingDefaultBubbleSelectedColor="@color/dark_grey2"
         app:incomingTextColor="@color/black"
         app:incomingTextLinkColor="@color/pf_grey"
         app:incomingTextSize="18sp"
-        app:outcomingDefaultBubbleColor="@color/colorPrimaryDark"
-        app:outcomingDefaultBubblePressedColor="@color/colorPrimaryDark2awy"
-        app:outcomingDefaultBubbleSelectedColor="@color/colorPrimaryDark2awy"
-        app:outcomingTextColor="@color/white"
+        app:outcomingDefaultBubbleColor="@color/reach_mesg_color"
+        app:outcomingDefaultBubblePressedColor="@color/reach_mesg_color"
+        app:outcomingDefaultBubbleSelectedColor="@color/reach_mesg_color"
+        app:outcomingTextColor="@color/black"
         app:outcomingTextLinkColor="@color/pf_grey"
         app:outcomingTextSize="18sp"/>
+
     <ImageView
         android:id="@+id/downdown"
         android:src="@drawable/ic_down"
@@ -68,11 +70,13 @@
         android:layout_marginBottom="20dp"
         android:layout_alignParentEnd="true"/>
     <LinearLayout
+
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:id="@+id/notcontact"
         android:background="@drawable/over"
-        android:layout_above="@+id/textbar"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="45dp"
         android:layout_height="wrap_content">
         <ImageView
             android:layout_width="30dp"
@@ -88,96 +92,159 @@
             android:gravity="center"
             android:text="@string/notcontact"
             android:textColor="#fff"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textStyle="bold" />
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content">
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/addcontact"
             android:background="@drawable/button_message_background"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/add_contact"
             android:textColor="#fff"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="bold"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
             android:gravity="center"
             android:layout_margin="10dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             />
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/block"
             android:background="@drawable/button_message_background"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/block"
             android:textColor="#fff"
-            android:textSize="18sp"
+            android:paddingEnd="50dp"
+            android:paddingStart="50dp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_weight="1"
             android:layout_margin="10dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             />
     </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/blocked"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/you_can_t_reply_this_conversation"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/reply"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/reply_bg_w"
+        android:padding="8dp"
+        android:orientation="vertical"
+        android:layout_height="130dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.vanniktech.emoji.EmojiTextView
+                android:layout_width="match_parent"
+                android:id="@+id/replyU"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:gravity="start|center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/closeR"
+                android:tint="@color/colorPrimary"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="end|center_vertical"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="match_parent"
+            android:id="@+id/replyT"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:maxLines="1"
+            android:layout_marginTop="2dp"
+            android:gravity="start"
+            android:textColor="@color/mid_grey"
+            />
+    </LinearLayout>
+
    <LinearLayout
        android:layout_width="match_parent"
        android:orientation="horizontal"
        android:id="@+id/textbar"
+       android:background="@color/white"
        android:layout_alignBottom="@+id/messagesList"
        android:layout_alignParentBottom="true"
        android:layout_height="wrap_content">
-       <ImageView
-           android:id="@+id/attachmentButton"
-           android:src="@drawable/add"
-           android:layout_margin="5dp"
-           android:background="@drawable/circle"
+       <com.devlomi.record_view.RecordButton
+           android:id="@+id/voice"
+           android:layout_marginStart="3dp"
            android:layout_width="34dp"
+           android:layout_gravity="bottom"
            android:layout_height="34dp"
-           android:layout_gravity="bottom"/>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_weight="1"
-    android:id="@+id/messagebox"
-    android:orientation="horizontal"
-    android:layout_gravity="bottom"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/round_w"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/emoji"
-        android:src="@drawable/ic_emoji"
-        android:layout_margin="5dp"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center_vertical"/>
-    <com.vanniktech.emoji.EmojiEditText
-        android:id="@+id/messageInput"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textColor="@color/black"
-        android:maxHeight="220dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@drawable/round_w"
-        android:imeOptions="actionSend"
-        android:singleLine="false"
-        android:isScrollContainer="true"
-        android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"/>
-</LinearLayout>
+           android:background="@drawable/circle_b"
+           android:scaleType="centerInside"
+           android:layout_margin="5dp"
+           app:mic_icon="@drawable/recv_ic_mic_white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/messagebox"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/round_w"
+            android:layout_height="wrap_content">
+
+            <com.vanniktech.emoji.EmojiEditText
+                android:id="@+id/messageInput"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/black"
+                android:hint="Type a message"
+                android:maxHeight="220dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/round_w"
+                android:imeOptions="actionSend"
+                android:singleLine="false"
+                android:isScrollContainer="true"
+                android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"/>
+        </LinearLayout>
 
 
        <com.devlomi.record_view.RecordView
@@ -195,43 +262,77 @@
            app:slide_to_cancel_text="@string/SLC"
            app:counter_time_color="#ff0000"
            />
-       <com.devlomi.record_view.RecordButton
-           android:id="@+id/voice"
-           android:layout_marginLeft="3dp"
-           android:layout_width="34dp"
-           android:layout_gravity="bottom"
-           android:layout_height="34dp"
-           android:background="@drawable/circle_b"
-           android:scaleType="centerInside"
-           android:layout_margin="5dp"
-           app:mic_icon="@drawable/recv_ic_mic_white" />
+
+       <ImageView
+           android:id="@+id/emoji"
+           android:src="@drawable/chat_moji_icon"
+           android:layout_marginBottom="1dp"
+           android:layout_marginRight="5dp"
+           android:layout_width="38dp"
+           android:layout_height="38dp"
+           android:layout_gravity="bottom"/>
+
+       <ImageView
+           android:id="@+id/attachmentButton"
+           android:src="@drawable/add_file_image"
+           android:layout_margin="1dp"
+           android:background="@drawable/circle"
+           android:layout_width="38dp"
+           android:layout_height="38dp"
+           android:layout_gravity="bottom"/>
        <ImageView
            android:id="@+id/send"
            android:src="@drawable/send_w"
            android:layout_margin="5dp"
            android:paddingBottom="4dp"
            android:paddingTop="4dp"
-           android:paddingLeft="4dp"
+           android:paddingStart="4dp"
            android:background="@drawable/circle_b"
            android:layout_width="34dp"
            android:layout_height="34dp"
            android:layout_gravity="bottom"/>
-       <ImageView
-           android:id="@+id/imm"
-           android:src="@drawable/ic_image_i"
-           android:layout_margin="5dp"
-           android:background="@drawable/circle"
-           android:layout_width="34dp"
-           android:padding="3dp"
-           android:layout_height="34dp"
-           android:layout_gravity="bottom"/>
+
    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
+        android:id="@+id/connectE"
+        android:layout_below="@+id/barr"
+        android:background="@color/redd"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+        <com.vanniktech.emoji.EmojiTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/can_t_fetch_last_messages"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
         android:id="@+id/barr"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/chatBackBtn"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/chat_back_img"/>
+
         <include
             android:id="@+id/chatbar"
             layout="@layout/tab_bar" />
     </LinearLayout>
+
+    <View  android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_below="@+id/barr"/>
 </RelativeLayout>

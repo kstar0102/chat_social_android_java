@@ -23,6 +23,7 @@ import androidx.annotation.LayoutRes;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ import com.stfalcon.chatkit.R;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.ViewHolder;
 import com.stfalcon.chatkit.commons.models.IMessage;
+import com.stfalcon.chatkit.me.Message;
 import com.stfalcon.chatkit.me.MessageIn;
 import com.stfalcon.chatkit.utils.DateFormatter;
 
@@ -168,6 +170,7 @@ public class MessagesListAdapter<MESSAGE extends IMessage>
      * @param messages messages from history.
      * @param reverse  {@code true} if need to reverse messages before adding.
      */
+
     public void addToEnd(List<MESSAGE> messages, boolean reverse) {
         if (messages.isEmpty()) return;
 
@@ -323,22 +326,20 @@ public class MessagesListAdapter<MESSAGE extends IMessage>
 
     }
 
-    public int halbins2(String id) {
+
+
+    public Message halbins2(String id) {
         int j = 0, i = 0;
         for (i = 0; i < items.size(); i++) {
             Wrapper wrapper = items.get(i);
             if (wrapper.item instanceof IMessage) {
-                MESSAGE message = (MESSAGE) wrapper.item;
-                if (message.getId().contentEquals(id)) {
-                    j =1;
-                   break;
+                Message message = (Message) wrapper.item;
+                if (message.getMessid().contentEquals(id)) {
+                  return message;
                 }
             }
         }
-        if (j == 1)
-            return i;
-        else
-            return -1;
+      return null;
     }
 
     /**

@@ -15,9 +15,9 @@ public class Message implements IMessage,
         MessageContentType.Image, /*this is for default image messages implementation*/
         MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
 
-    private String id,type,react,avatar;
+    private String id,type,react,avatar,reply;
     private String text,statue,messid,thumb;
-    private boolean deleted,chat;
+    private boolean deleted,chat,forw,call;
     private Date createdAt;
     private UserIn user;
     private GroupIn group;
@@ -29,11 +29,11 @@ public class Message implements IMessage,
     private Map map;
 
 
-    public Message(String id, UserIn user, String text,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat) {
-        this(id, user, text, new Date(),statue,type,messid,deleted,react,avatar,chat);
+    public Message(String id, UserIn user, String text,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
+        this(id, user, text, new Date(),statue,type,messid,deleted,react,avatar,chat,forw,call,reply);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat) {
+    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,boolean deleted,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -45,12 +45,16 @@ public class Message implements IMessage,
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
-    public Message(String id, UserIn user, String text,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat) {
-        this(id, user, text, new Date(),statue,type,messid,thumb,deleted,react,avatar,chat);
+    public Message(String id, UserIn user, String text,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
+        this(id, user, text, new Date(),statue,type,messid,thumb,deleted,react,avatar,chat,forw,call,reply);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat) {
+    public Message(String id, UserIn user, String text, Date createdAt,String statue,String type,String messid,String thumb,boolean deleted,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -63,12 +67,16 @@ public class Message implements IMessage,
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
-    public Message(String id, UserIn user, String text,String avatar,boolean chat) {
-        this(id, user, text, new Date(),avatar,chat);
+    public Message(String id, UserIn user, String text,String avatar,boolean chat,boolean forw,boolean call,String reply) {
+        this(id, user, text, new Date(),avatar,chat,forw,call,reply);
     }
 
-    public Message(String id, UserIn user, String text, Date createdAt,String avatar,boolean chat) {
+    public Message(String id, UserIn user, String text, Date createdAt,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -76,9 +84,13 @@ public class Message implements IMessage,
         this.deleted = deleted;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
 
-    public Message(String id, GroupIn group, String text, Date createdAt,String avatar,boolean chat) {
+    public Message(String id, GroupIn group, String text, Date createdAt,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.id = id;
         this.text = text;
         this.group = group;
@@ -86,6 +98,26 @@ public class Message implements IMessage,
         this.deleted = deleted;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
+    }
+
+    public boolean isForw() {
+        return forw;
+    }
+
+    public void setForw(boolean forw) {
+        this.forw = forw;
+    }
+
+    public boolean isCall() {
+        return call;
+    }
+
+    public void setCall(boolean call) {
+        this.call = call;
     }
 
     public boolean isDeleted() {
@@ -149,6 +181,14 @@ public class Message implements IMessage,
     }
 
     public Message() {
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 
     public String getReact() {

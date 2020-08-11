@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -33,10 +34,11 @@ public class TestWall extends AppCompatActivity {
 
     Uri pathW;
     RelativeLayout ly;
-    Button cancel,setw;
+    Button cancel, setw;
     DatabaseReference mData;
     FirebaseAuth mAuth;
-    ImageView bg;
+   ImageView bg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,8 @@ public class TestWall extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         bg = findViewById(R.id.bg);
+        Global.currentactivity = this;
+
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int imagewidth = (int) Math.round(displaymetrics.widthPixels * 0.99);
@@ -57,35 +61,35 @@ public class TestWall extends AppCompatActivity {
             }
         }
         ly = findViewById(R.id.messagesList);
-setw = findViewById(R.id.setw);
-cancel= findViewById(R.id.cancel);
-        if(getIntent() != null)
-        {
-           pathW = Uri.parse(getIntent().getExtras().getString("wall334"));
+        setw = findViewById(R.id.setw);
+        cancel = findViewById(R.id.cancel);
+        if (getIntent() != null) {
+            pathW = Uri.parse(getIntent().getExtras().getString("wall334"));
             File f = new File(getRealPathFromURI(pathW));
-                Picasso.get()
-                        .load(pathW)
-                        .resize(imagewidth,imageheight)
-                        .error(R.drawable.bg2)
-                        .into(bg);
+            Picasso.get()
+                    .load(pathW)
+                    .resize(imagewidth, imageheight)
+                    .error(R.drawable.bg2)
+                    .into(bg);
 
         }
-cancel.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        finish();
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        setw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AppBack) getApplication()).editSharePrefs().putString("wall", String.valueOf(pathW));
+                ((AppBack) getApplication()).editSharePrefs().apply();
+                Toast.makeText(TestWall.this, getResources().getString(R.string.wallsucc), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
-});
-setw.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        ((AppBack) getApplication()).editSharePrefs().putString("wall", String.valueOf(pathW));
-        ((AppBack) getApplication()).editSharePrefs().apply();
-        Toast.makeText(TestWall.this, getResources().getString(R.string.wallsucc), Toast.LENGTH_SHORT).show();
-        finish();
-    }
-});
-    }
+
     private String getRealPathFromURI(Uri contentURI) {
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) {
@@ -96,6 +100,7 @@ setw.setOnClickListener(new View.OnClickListener() {
             return cursor.getString(idx);
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -105,7 +110,8 @@ setw.setOnClickListener(new View.OnClickListener() {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -118,6 +124,7 @@ setw.setOnClickListener(new View.OnClickListener() {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
     }
 }
 

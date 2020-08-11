@@ -1,10 +1,11 @@
 package ar.codeslu.plax.holders;
 
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
@@ -12,74 +13,56 @@ import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.models.DefaultDialog;
-
-/**
- * Created by mostafa on 21/03/19.
- */
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class DialogHolder extends DialogsListAdapter.DialogViewHolder<DefaultDialog> {
 
     FirebaseAuth mAuth;
-    RoundedImageView ava, avaSmall;
+    RoundedImageView ava;
+    CircleImageView checkonline;
+    ImageView mute, block;
 
     public DialogHolder(View itemView) {
         super(itemView);
     }
+
 
     @Override
     public void onBind(DefaultDialog dialog) {
         super.onBind(dialog);
         mAuth = FirebaseAuth.getInstance();
         ava = itemView.findViewById(R.id.dialogAvatarC);
-        avaSmall = itemView.findViewById(R.id.dialogLastMessageUserAvatarC);
+        mute = itemView.findViewById(R.id.mute);
+        block = itemView.findViewById(R.id.block);
+        checkonline = itemView.findViewById(R.id.dialogUnreadcheck);
 
         try {
+            if (Global.mutelist.contains(dialog.getId()))
+                mute.setVisibility(View.VISIBLE);
+            else
+                mute.setVisibility(View.GONE);
 
+            if (Global.blockList.contains(dialog.getId()))
+                block.setVisibility(View.VISIBLE);
+            else
+                block.setVisibility(View.GONE);
+        } catch (NullPointerException e) {
 
+        }
+
+        try {
             if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
                 Picasso.get()
                         .load(R.drawable.profile)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
                         .into(ava);
             } else {
                 Picasso.get()
                         .load(dialog.getDialogPhoto())
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
                         .into(ava);
             }
-
-
-            if (dialog.getLastMessage().getId().equals(mAuth.getCurrentUser().getUid())) {
-                if (Global.avaLocal.equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.profile)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                } else {
-                    Picasso.get()
-                            .load(Global.avaLocal)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                }
-
-            } else {
-
-                if (String.valueOf(dialog.getDialogPhoto()).equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.profile)
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                } else {
-                    Picasso.get()
-                            .load(dialog.getDialogPhoto())
-                            .error(R.drawable.errorimg)
-                            .into(avaSmall);
-                }
-
-            }
-
-
         } catch (NullPointerException e) {
 
         }

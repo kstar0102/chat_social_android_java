@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/profile_secret"
+        android:textSize="16dp"
+        android:paddingLeft="20dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/profile_secret"
+        android:text="   Secret Chat"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/profile_setting"
+        android:textSize="16dp"
+        android:paddingLeft="20dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/profile_setting"
+        android:text="   Setting"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

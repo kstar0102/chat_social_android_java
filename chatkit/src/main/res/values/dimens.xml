@@ -8,7 +8,7 @@
     <dimen name="input_padding_top">8sp</dimen>
     <dimen name="input_padding_bottom">8sp</dimen>
 
-    <dimen name="message_bubble_corners_radius">15dp</dimen>
+    <dimen name="message_bubble_corners_radius">18dp</dimen>
 
     <dimen name="dialog_avatar_width">56dp</dimen>
     <dimen name="dialog_avatar_height">56dp</dimen>

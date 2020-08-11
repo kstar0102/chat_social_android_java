@@ -1,7 +1,7 @@
 package ar.codeslu.plax.settings;
 
 /**
- * Created by mostafa on 22/03/19.
+ * Created by CodeSlu on 22/03/19.
  */
 
 public class SettingList {

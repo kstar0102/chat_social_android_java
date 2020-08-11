@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs size="40dp"
+    space="6dp">
+
+    <tab
+        inactiveColor="@color/gray"
+        activeColor="@color/colorPrimary"
+        drawable="@drawable/ic_call"/>
+
+    <tab
+        inactiveColor="@color/gray"
+        activeColor="@color/colorPrimary"
+        drawable="@drawable/ic_chat"/>
+
+    <tab
+        inactiveColor="@color/mid_grey"
+        activeColor="@color/colorPrimary"
+        drawable="@drawable/ic_group"/>
+
+</tabs>

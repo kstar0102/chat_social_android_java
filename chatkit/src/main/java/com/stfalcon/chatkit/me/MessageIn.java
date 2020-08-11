@@ -5,15 +5,15 @@ package com.stfalcon.chatkit.me;
  */
 
 public class MessageIn {
-    String message,type,statue,from,linkV,linkI,messId,duration,linkF,filename,linkVideo,location,thumb,react,avatar;
+    String message,type,statue,from,linkV,linkI,messId,duration,linkF,filename,linkVideo,location,thumb,react,avatar,reply;
     long time;
-    boolean seen,deleted,chat ;
+    boolean seen,deleted,chat,forw,call ;
 
 
     public MessageIn() {
     }
 
-    public MessageIn(String message, String type, String statue, String from, String linkV, String linkI, long time, boolean seen,String thumb,boolean deleted,String avatar,boolean chat) {
+    public MessageIn(String message, String type, String statue, String from, String linkV, String linkI, long time, boolean seen,String thumb,boolean deleted,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.message = message;
         this.type = type;
         this.statue = statue;
@@ -26,11 +26,14 @@ public class MessageIn {
         this.deleted = deleted;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
     }
 
     //local messages
     //text
-    public MessageIn(String message, String type, String statue, String from, long time, boolean seen,boolean deleted,String messId,String react,String avatar,boolean chat) {
+    public MessageIn(String message, String type, String statue, String from, long time, boolean seen,boolean deleted,String messId,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.message = message;
         this.type = type;
         this.statue = statue;
@@ -42,10 +45,14 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
 
     //map
-    public MessageIn(String location, String statue, String from, long time, boolean seen,String react,boolean deleted,String messId, String type,String avatar,boolean chat) {
+    public MessageIn(String location, String statue, String from, long time, boolean seen,String react,boolean deleted,String messId, String type,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.location = location;
         this.type = type;
         this.statue = statue;
@@ -57,9 +64,13 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
     //voice
-    public MessageIn(String linkV, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String react,String duration,String avatar,boolean chat) {
+    public MessageIn(String linkV, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String react,String duration,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.type = type;
         this.statue = statue;
         this.from = from;
@@ -72,9 +83,13 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
     //video
-    public MessageIn(String linkVideo, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String duration,String thumb,String react,String avatar,boolean chat) {
+    public MessageIn(String linkVideo, String statue, String from, long time, boolean seen,boolean deleted,String messId, String type,String duration,String thumb,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.linkVideo = linkVideo;
         this.type = type;
         this.statue = statue;
@@ -88,9 +103,13 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
     //file
-    public MessageIn(String linkF, String statue, long time, boolean seen,boolean deleted,String messId, String type,String filename,String from,String react,String avatar,boolean chat) {
+    public MessageIn(String linkF, String statue, long time, boolean seen,boolean deleted,String messId, String type,String filename,String from,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.linkF = linkF;
         this.type = type;
         this.statue = statue;
@@ -103,9 +122,13 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
     }
     //image
-    public MessageIn(String linkI, String type,String messId, String statue, String from, long time, boolean seen,boolean deleted,String react,String avatar,boolean chat) {
+    public MessageIn(String linkI, String type,String messId, String statue, String from, long time, boolean seen,boolean deleted,String react,String avatar,boolean chat,boolean forw,boolean call,String reply) {
         this.type = type;
         this.statue = statue;
         this.from = from;
@@ -117,6 +140,18 @@ public class MessageIn {
         this.react = react;
         this.avatar = avatar;
         this.chat = chat;
+        this.call = call;
+        this.forw = forw;
+        this.reply = reply;
+
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 
     public String getAvatar() {
@@ -269,5 +304,21 @@ public class MessageIn {
 
     public void setThumb(String thumb) {
         this.thumb = thumb;
+    }
+
+    public boolean isForw() {
+        return forw;
+    }
+
+    public void setForw(boolean forw) {
+        this.forw = forw;
+    }
+
+    public boolean isCall() {
+        return call;
+    }
+
+    public void setCall(boolean call) {
+        this.call = call;
     }
 }

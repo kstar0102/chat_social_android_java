@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.codeslu.plax.Groups.ProfileGroup;
-import ar.codeslu.plax.Profile;
+import ar.codeslu.plax.profile.Profile;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.global.Global;
 
 /**
- * Created by mostafa on 05/03/19.
+ * Created by CodeSlu on 05/03/19.
  */
 
 
@@ -108,19 +108,25 @@ public class profileSelect extends Dialog {
         addA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Global.currGAdmins.indexOf(friendid) == -1) {
-                    Map<String, Object> map = new HashMap<>();
-                    Global.currGAdmins.add(friendid);
-                    map.put("admins", Global.currGAdmins);
-                    mData.child(groupid).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            dismiss();
-                        }
-                    });
+                dismiss();
+                if(Global.currGAdmins.size() < 25) {
+                    if (Global.currGAdmins.indexOf(friendid) == -1) {
+                        Map<String, Object> map = new HashMap<>();
+                        Global.currGAdmins.add(friendid);
+                        map.put("admins", Global.currGAdmins);
+                        mData.child(groupid).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                            }
+                        });
 
-                } else
-                    Toast.makeText(Global.mainActivity, R.string.this_usr_adm, Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(Global.mainActivity, R.string.this_usr_adm, Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                    Toast.makeText(Global.mainActivity, R.string.maxadmin, Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -128,13 +134,13 @@ public class profileSelect extends Dialog {
         rmvA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismiss();
                 Map<String, Object> map = new HashMap<>();
                 Global.currGAdmins.remove(friendid);
                 map.put("admins", Global.currGAdmins);
                 mData.child(groupid).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        dismiss();
                     }
                 });
 
@@ -144,6 +150,7 @@ public class profileSelect extends Dialog {
         rmvU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismiss();
                 mUser.child(friendid).child(Global.GROUPS).child(groupid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -160,11 +167,9 @@ public class profileSelect extends Dialog {
                                     mData.child(groupid).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            dismiss();
                                         }
                                     });
-                                } else
-                                    dismiss();
+                                }
 
                             }
                         });

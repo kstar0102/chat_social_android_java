@@ -13,7 +13,11 @@ import androidx.core.content.ContextCompat;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -42,7 +46,7 @@ import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.global.Global;
 
 /**
- * Created by mostafa on 01/02/19.
+ * Created by CodeSlu on 01/02/19.
  */
 
 public class OutcomeHolder
@@ -51,6 +55,9 @@ public class OutcomeHolder
     private ProgressBar sending;
     private LinearLayout ly;
     private  AutoLinkTextView autoLinkTextView;
+    ImageView forward, call;
+    LinearLayout replyb;
+    private  AutoLinkTextView replyText;
 
     public OutcomeHolder(View itemView, Object payload) {
         super(itemView);
@@ -60,6 +67,123 @@ public class OutcomeHolder
     @Override
     public void onBind(final Message message) {
         super.onBind(message);
+
+        forward = itemView.findViewById(R.id.forward);
+        call = itemView.findViewById(R.id.call);
+
+
+
+
+        ////reply
+
+        replyb = itemView.findViewById(R.id.replyb);
+        replyText = itemView.findViewById(R.id.replytext);
+
+        try {
+            if(!message.getReply().isEmpty() && !message.isDeleted())
+            {
+                replyb.setVisibility(View.VISIBLE);
+                replyText.addAutoLinkMode(
+                        AutoLinkMode.MODE_PHONE,
+                        AutoLinkMode.MODE_URL, AutoLinkMode.MODE_EMAIL);
+                replyText.enableUnderLine();
+                replyText.setPhoneModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setUrlModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
+                replyText.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
+                if (message.getReply() != null) {
+                    replyText.setAutoLinkText(message.getReply());
+                    replyText.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
+                        @Override
+                        public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {
+                            switch (autoLinkMode) {
+                                case MODE_URL:
+                                    if (matchedText.toLowerCase().startsWith("w"))
+                                        matchedText = "http://" + matchedText;
+
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(matchedText));
+                                    String title = matchedText;
+                                    Intent chooser = Intent.createChooser(intent, title);
+                                    Global.conA.startActivity(chooser);
+                                    break;
+                                case MODE_PHONE:
+
+                                    String finalMatchedText = matchedText;
+                                    Dexter.withActivity(Global.chatactivity)
+                                            .withPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE)
+                                            .withListener(new MultiplePermissionsListener() {
+                                                @Override
+                                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                                    if (report.areAllPermissionsGranted()) {
+                                                        Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                                                        intent2.setData(Uri.parse("tel:" + finalMatchedText));
+                                                        Global.conA.startActivity(intent2);
+                                                    } else
+                                                        Toast.makeText(Global.conA, Global.conA.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+
+
+                                                }
+
+                                                @Override
+                                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                                    token.continuePermissionRequest();
+
+                                                }
+                                            }).check();
+
+                                    break;
+                                case MODE_EMAIL:
+                                    final Intent emailIntent = new Intent(Intent.ACTION_VIEW);
+                                    emailIntent.setData(Uri.parse("mailto:"));
+                                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{matchedText});
+                                    try {
+                                        Global.conA.startActivity(emailIntent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                            }
+
+
+                        }
+                    });
+                }
+            }
+            else
+            {
+                replyb.setVisibility(View.GONE);
+
+            }
+        }
+        catch (NullPointerException e)
+        {
+            replyb.setVisibility(View.GONE);
+
+        }
+
+        ////
+
+
+
+        if (!message.isDeleted()) {
+            if (message.isCall())
+                call.setVisibility(View.VISIBLE);
+            else
+                call.setVisibility(View.GONE);
+
+            if (message.isForw())
+                forward.setVisibility(View.VISIBLE);
+            else
+                forward.setVisibility(View.GONE);
+
+        } else {
+            forward.setVisibility(View.GONE);
+            call.setVisibility(View.GONE);
+
+        }
         //react
         ImageView react = itemView.findViewById(R.id.react);
         ly = itemView.findViewById(R.id.all);
@@ -114,8 +238,7 @@ public class OutcomeHolder
             sending.setVisibility(View.GONE);
         }
 
-
-         autoLinkTextView = (AutoLinkTextView) itemView.findViewById(R.id.messageText);
+        autoLinkTextView = (AutoLinkTextView) itemView.findViewById(R.id.messageText);
         autoLinkTextView.addAutoLinkMode(
                 AutoLinkMode.MODE_PHONE,
                 AutoLinkMode.MODE_URL, AutoLinkMode.MODE_EMAIL);
@@ -209,7 +332,16 @@ public class OutcomeHolder
                     bubble.setBackground(ContextCompat.getDrawable(Global.conA, R.drawable.shape_outcoming_message));
                 }
             }
-
+            replyb.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
+                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                    cdd.show();
+                    return true;
+                }
+            });
             bubble.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -232,6 +364,12 @@ public class OutcomeHolder
                     MessageSelectD cdd = new MessageSelectD(Global.chatactivity, message, Global.currFid, 0, getAdapterPosition());
                     cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                    cdd.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    WindowManager.LayoutParams abc= cdd.getWindow().getAttributes();
+                    abc.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                    abc.x = 20;   //x position
+                    abc.y = itemView.getScrollY() + 200;   //y position
+                    Log.e("y:", String.valueOf(abc.y));
                     cdd.show();
                     return true;
                 }

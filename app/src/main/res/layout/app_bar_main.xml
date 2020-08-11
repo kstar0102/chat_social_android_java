@@ -1,43 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ar.codeslu.plax.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="70dp"
+        android:orientation="horizontal">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_marginLeft="30dp"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="@string/app_name"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
-    <include layout="@layout/content_main" />
+        <LinearLayout
+            android:id="@+id/userInfo"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <eu.long1.spacetablayout.SpaceTabLayout
-        android:id="@+id/spaceTabLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:number_of_tabs="three"
-        app:starting_position="two"
-        app:tab_color="@color/colorPrimaryDark2awy"
-        app:button_color="@color/colorPrimary"
-        app:text_color="@color/white"
-        app:layout_behavior="eu.long1.spacetablayout.SpaceTabLayoutBehavior"
-        app:icon_one="@drawable/ic_call"
-        app:icon_two="@drawable/ic_chat"
-        app:text_one="@string/calls"
-        app:text_two="@string/chats"
-        app:text_three="@string/groups"
-        app:icon_three="@drawable/ic_group" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userImage"
+                android:layout_width="33dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:foregroundGravity="center_horizontal"
+                android:src="@drawable/profile"
+                app:civ_border_color="#fff"
+                app:civ_border_width="2dp" />
+
+            <TextView
+                android:id="@+id/userPhoneNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:text="+123456789012"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/search_icon_main"
+            android:layout_marginLeft="90dp"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:src="@drawable/search_icon"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/notifyLayout"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/followLayout"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Follow"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/content_main" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/main_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:layout_gravity="bottom"
+        app:tabSelectedTextColor="#007EF4"
+        android:minHeight="?attr/actionBarSize"
+        style="@style/MyTabLayout"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

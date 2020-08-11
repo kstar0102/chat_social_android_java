@@ -1,80 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="5"
-    android:background="@color/colorPrimary">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:showOnLockScreen="true"
+    tools:context=".calls.IncCallActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:background="@color/colorPrimary"
-        >
 
-        <TextView
-            android:id="@+id/remoteUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="14dp"
-            android:text="Sample user"
-            android:textSize="28sp"/>
-
-        <TextView
-            android:id="@+id/callState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Incoming call"
-            android:textSize="16sp"
-            android:textAllCaps="true"
-            />
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@android:color/darker_gray"
-        android:padding="0dip"
-        android:layout_weight="3"
-        android:contentDescription="Call background">
-
-    </ImageView>
 
     <RelativeLayout
-        android:id="@+id/bottomPanel"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/colorPrimary"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/answerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Answer"
-            android:layout_marginRight="20dp"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            />
-        <Button
-            android:id="@+id/declineButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:layout_marginLeft="20dp"
-            android:textSize="20sp"
-            android:textColor="@android:color/white"
-            android:background="@color/colorPrimaryDark"
-            android:layout_toRightOf="@+id/answerButton"/>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.jgabrielfreitas.core.BlurImageView
+                android:id="@+id/bg"
+                app:radius="22"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+        </FrameLayout>
     </RelativeLayout>
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="110dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:text="@string/video_call" />
+<de.hdodenhof.circleimageview.CircleImageView
+    android:id="@+id/circleImageView"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="150dp"
+    android:layout_marginBottom="8dp"
+    android:src="@drawable/profile"
+    app:civ_border_color="#FF000000"
+    app:civ_circle_background_color="@color/colorPrimaryDark"
+    app:layout_constraintTop_toBottomOf="@+id/status" />
 
-</LinearLayout>
+
+<TextView
+    android:id="@+id/remoteUser"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/circleImageView"
+    android:layout_centerHorizontal="true"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:textColor="@color/white"
+    android:textStyle="bold"
+    android:textSize="23sp"
+    android:text="@string/loading"
+    />
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="60dp"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/answerButton"
+        android:layout_alignParentStart="true"
+        android:layout_width="70dp"
+        android:layout_marginStart="30dp"
+        android:layout_centerVertical="true"
+        android:layout_height="70dp"
+        android:background="@drawable/btn_startcall"
+        />
+    <ImageButton
+        android:id="@+id/declineButton"
+        android:layout_width="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_height="70dp"
+        android:background="@drawable/btn_endcall"/>
+
+</RelativeLayout>
+
+
+
+</RelativeLayout>

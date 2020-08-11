@@ -1,4 +1,563 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Plax</string>
+
+
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+
+
+    <string name="action_settings">Réglages</string>
+
+    <string name="title_activity_login">S\'identifier</string>
+    <string name="dummy_button">Bouton factice</string>
+    <string name="dummy_content">DUMMY \ nCONTENT</string>
+    <string name="phone_hint">Numéro de téléphone</string>
+    <string name="invalid_phone">Numéro de téléphone invalide</string>
+    <string name="login">S\'identifier</string>
+    <string name="phone">Téléphone</string>
+    <string name="next">Prochain</string>
+    <string name="verify">Vérifier</string>
+    <string name="code">Code</string>
+    <string name="check_conn">Vérifier la connexion</string>
+    <string name="cannt_verify">Impossible de vérifier votre numéro</string>
+    <string name="invalid_code">Code invalide entré…</string>
+    <string name="fix_it">Quelque chose ne va pas, nous allons le réparer bientôt…</string>
+    <string name="resend">Vous pouvez obtenir un autre code après 1 minute</string>
+    <string name="enter_code">Entrer le code</string>
+    <string name="friends">copains</string>
+    <string name="you_added">Vous avez ajouté à</string>
+
+    <string name="calls">Appels</string>
+    <string name="chats">Chats</string>
+    <string name="groups">Groupes</string>
+    <string name="edit">Editer le profil</string>
+    <string name="check_int">S\'il vous plaît vérifier votre connexion</string>
+    <string name="cannot_user">Impossible d\'atteindre cet utilisateur</string>
+    <string name="image_update">Image mise à jour</string>
+    <string name="image_fail">Échec du téléchargement de l\'image</string>
+    <string name="statue">Statue</string>
+    <string name="name">prénom</string>
+    <string name="plz_name">S\'il vous plaît écrivez votre nom</string>
+    <string name="error">Erreur est survenue</string>
+    <string name="signup_succ">Bienvenue :)</string>
+    <string name="signin_succ">Accueillir à nouveau :)</string>
+    <string name="loading">Chargement…</string>
+    <string name="now">juste maintenant</string>
+    <string name="minute">il y a une minute</string>
+    <string name="min_ago"> il y a quelques minutes</string>
+    <string name="hour">il y a une heure</string>
+    <string name="hours"> il y a des heures</string>
+    <string name="yesterday">hier</string>
+    <string name="days"> il y a quelques jours</string>
+    <string name="m_e_s_s_a_g_e">MESSAGE</string>
+    <string name="voice_call">Appel vocal</string>
+    <string name="online_nw">Maintenant en ligne</string>
+    <string name="view_pro">Voir le profil</string>
+    <string name="prfl_updt">Profil mis à jour</string>
+    <string name="photo_dlete">Photo supprimée</string>
+    <string name="contacts">Contacts</string>
+    <string name="online">En ligne</string>
+    <string name="search_on_name_and_phone">Rechercher par nom et par téléphone</string>
+    <string name="pleasW">S\'il vous plaît, attendez…</string>
+    <string name="ending">Mettre fin à l\'appel…</string>
+
+    <string name="hint_enter_a_message" />
+    <string name="date_header_yesterday">Hier</string>
+    <string name="Failed">Échec d\'envoi du message</string>
+    <string name="action_delete">Effacer</string>
+    <string name="action_copy">Copie</string>
+    <string name="copied_message">Message Copied</string>
+    <string name="date_header_today">Aujourd\'hui</string>
+    <string name="empty_mess">Vous ne pouvez pas envoyer de message vide</string>
+    <string name="menu_gallery">Image</string>
+    <string name="menu_audio">Audio</string>
+    <string name="menu_location">Location</string>
+    <string name="SLC">Glisser Pour Annuler</string>
+    <string name="file">Fichier</string>
+    <string name="video">Vidéo</string>
+    <string name="cannot_play">Impossible de jouer la note vocale</string>
+    <string name="cannot_open">Impossible d\'ouvrir le fichier</string>
+    <string name="title_activity_map">Carte</string>
+    <string name="friendlocation">Emplacement de votre ami</string>
+    <string name="map_location">Map Location</string>
+    <string name="typing">Dactylographie…</string>
+    <string name="recording"> enregistre audio…</string>
+    <string name="downloadcomplete">Téléchargement complet</string>
+    <string name="downloadstart">Téléchargement…</string>
+    <string name="copy">Copie</string>
+    <string name="delete_for_me">Supprimer pour moi</string>
+    <string name="delete_for_all">Supprimer pour tous</string>
+    <string name="mssg_cpd">Message Copied</string>
+    <string name="mss_dlt">Message supprimé</string>
+    <string name="notcontact">Il semble que ce numéro ne soit pas dans vos contacts</string>
+    <string name="add_contact">Ajouter le contact</string>
+    <string name="block">Bloc</string>
+    <string name="unblock">Débloquer</string>
+    <string name="deletechat">Delete Chat</string>
+    <string name="mute">Muet</string>
+    <string name="unmute">Activer le muet</string>
+    <string name="chat_dee">Chat supprimé</string>
+    <string name="call_dee">Journaux d\'appels supprimés</string>
+    <string name="contacts_alert">S\'il vous plaît ajouter la sim pour une meilleure performance</string>
+    <string name="contact">Contact</string>
+    <string name="stories">Ajouter une histoire</string>
+    <string name="favorite_messages">Messages marqués</string>
+    <string name="muted">En sourdine</string>
+    <string name="blocked">Bloqué</string>
+    <string name="setting">Réglage</string>
+    <string name="others">Autres</string>
+    <string name="share">Partager</string>
+    <string name="pleasew8">Veuillez patienter jusqu\'au téléchargement de la note vocale</string>
+
+    <string name="sign_out">Déconnexion</string>
+    <string name="title_activity_setting">Réglage</string>
+    <string name="about">À propos</string>
+    <string name="description">est une application de chat avancée construite sur le système Google Firebase et prenant en charge plusieurs langues</string>
+    <string name="ok">D\'accord</string>
+    <string name="privacy">Confidentialité et politique</string>
+    <string name="per_delete_acc">Compte définitivement supprimer</string>
+    <string name="acc_delete_hint">Êtes-vous sûr de vouloir supprimer définitivement votre compte? \ n Alerte: Toutes les données seront perdues.</string>
+    <string name="cancel">Annuler</string>
+    <string name="yes">Oui</string>
+    <string name="choose_lang">Choisissez la langue</string>
+    <string name="choose_not">Choose Notification</string>
+
+    <string name="restart">S\'il vous plaît redémarrer l\'application</string>
+    <string name="restart_hint">Veuillez redémarrer l\'application pour changer de langue pleinement active</string>
+    <string name="wait">Veuillez patienter jusqu\'à l\'envoi complet des données</string>
+    <string name="timeerror">Impossible d\'obtenir l\'heure du serveur</string>
+
+    <string name="likeR">Réagi comme à votre message</string>
+    <string name="funnyR">Drôle réagi à votre message</string>
+    <string name="loveR">Amour réagi à votre message</string>
+    <string name="sadR">Réagi triste à votre message</string>
+    <string name="angryR">Réagi en colère à votre message</string>
+
+    <!--Arrays-->
+    <string-array name="lang">
+        <item>Default</item>
+        <item>العربية</item>
+        <item>Deutch</item>
+        <item>English</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Portuguese</item>
+        <item>فارسی</item>
+        <item>हिंदी</item>
+        <item>한국어</item>
+        <item>русский язык</item>
+
+    </string-array>
+    <string-array name="langCodes">
+        <item>def</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>fa</item>
+        <item>hi</item>
+        <item>ko</item>
+        <item>ru</item>
+    </string-array>
+    <string-array name="font">
+        <item>Chapinero Blackletter</item>
+        <item>Wake The Warrior</item>
+        <item>Historea</item>
+        <item>FunSized</item>
+        <item>Thundergood</item>
+        <item>Elmira</item>
+        <item>Squizers Marker</item>
+        <item>Default</item>
+    </string-array>
+    <string-array name="fontCodes">
+        <item>ch</item>
+        <item>wa</item>
+        <item>hi</item>
+        <item>fun</item>
+        <item>th</item>
+        <item>el</item>
+        <item>squ</item>
+        <item>def</item>
+    </string-array>
+
+    <string-array name="settingmain">
+        <item>Chat Settings</item>
+        <item>Paramètres d\'appel</item>
+        <item>Les paramètres de sécurité</item>
+        <item>Notifications Settings</item>
+        <item>Changer de langue</item>
+        <item>Supprimer le compte</item>
+        <item>Confidentialité et politique</item>
+        <item>À propos</item>
+    </string-array>
+
+    <string-array name="ringN">
+        <item>Default</item>
+        <item>Notification 1</item>
+        <item>Notification 2</item>
+        <item>Notification 3</item>
+        <item>Notification 4</item>
+    </string-array>
+
+
+    <!--Country codes-->
+
+    <string-array name="CountryCodes">
+        <item>93,AF</item>
+        <item>355,AL</item>
+        <item>213,DZ</item>
+        <item>376,AD</item>
+        <item>244,AO</item>
+        <item>672,AQ</item>
+        <item>54,AR</item>
+        <item>374,AM</item>
+        <item>297,AW</item>
+        <item>61,AU</item>
+        <item>43,AT</item>
+        <item>994,AZ</item>
+        <item>973,BH</item>
+        <item>880,BD</item>
+        <item>375,BY</item>
+        <item>32,BE</item>
+        <item>501,BZ</item>
+        <item>229,BJ</item>
+        <item>975,BT</item>
+        <item>591,BO</item>
+        <item>387,BA</item>
+        <item>267,BW</item>
+        <item>55,BR</item>
+        <item>673,BN</item>
+        <item>359,BG</item>
+        <item>226,BF</item>
+        <item>95,MM</item>
+        <item>257,BI</item>
+        <item>855,KH</item>
+        <item>237,CM</item>
+        <item>1,CA</item>
+        <item>238,CV</item>
+        <item>236,CF</item>
+        <item>235,TD</item>
+        <item>56,CL</item>
+        <item>86,CN</item>
+        <item>61,CX</item>
+        <item>61,CC</item>
+        <item>57,CO</item>
+        <item>269,KM</item>
+        <item>242,CG</item>
+        <item>243,CD</item>
+        <item>682,CK</item>
+        <item>506,CR</item>
+        <item>385,HR</item>
+        <item>53,CU</item>
+        <item>357,CY</item>
+        <item>420,CZ</item>
+        <item>45,DK</item>
+        <item>253,DJ</item>
+        <item>670,TL</item>
+        <item>593,EC</item>
+        <item>20,EG</item>
+        <item>503,SV</item>
+        <item>240,GQ</item>
+        <item>291,ER</item>
+        <item>372,EE</item>
+        <item>251,ET</item>
+        <item>500,FK</item>
+        <item>298,FO</item>
+        <item>679,FJ</item>
+        <item>358,FI</item>
+        <item>33,FR</item>
+        <item>689,PF</item>
+        <item>241,GA</item>
+        <item>220,GM</item>
+        <item>995,GE</item>
+        <item>49,DE</item>
+        <item>233,GH</item>
+        <item>350,GI</item>
+        <item>30,GR</item>
+        <item>299,GL</item>
+        <item>502,GT</item>
+        <item>224,GN</item>
+        <item>245,GW</item>
+        <item>592,GY</item>
+        <item>509,HT</item>
+        <item>504,HN</item>
+        <item>852,HK</item>
+        <item>36,HU</item>
+        <item>91,IN</item>
+        <item>62,ID</item>
+        <item>98,IR</item>
+        <item>964,IQ</item>
+        <item>353,IE</item>
+        <item>44,IM</item>
+        <item>972,IL</item>
+        <item>39,IT</item>
+        <item>225,CI</item>
+        <item>81,JP</item>
+        <item>962,JO</item>
+        <item>7,KZ</item>
+        <item>254,KE</item>
+        <item>686,KI</item>
+        <item>965,KW</item>
+        <item>996,KG</item>
+        <item>856,LA</item>
+        <item>371,LV</item>
+        <item>961,LB</item>
+        <item>266,LS</item>
+        <item>231,LR</item>
+        <item>218,LY</item>
+        <item>423,LI</item>
+        <item>370,LT</item>
+        <item>352,LU</item>
+        <item>853,MO</item>
+        <item>389,MK</item>
+        <item>261,MG</item>
+        <item>265,MW</item>
+        <item>60,MY</item>
+        <item>960,MV</item>
+        <item>223,ML</item>
+        <item>356,MT</item>
+        <item>692,MH</item>
+        <item>222,MR</item>
+        <item>230,MU</item>
+        <item>262,YT</item>
+        <item>52,MX</item>
+        <item>691,FM</item>
+        <item>373,MD</item>
+        <item>377,MC</item>
+        <item>976,MN</item>
+        <item>382,ME</item>
+        <item>212,MA</item>
+        <item>258,MZ</item>
+        <item>264,NA</item>
+        <item>674,NR</item>
+        <item>977,NP</item>
+        <item>31,NL</item>
+        <item>599,AN</item>
+        <item>687,NC</item>
+        <item>64,NZ</item>
+        <item>505,NI</item>
+        <item>227,NE</item>
+        <item>234,NG</item>
+        <item>683,NU</item>
+        <item>850,KP</item>
+        <item>47,NO</item>
+        <item>968,OM</item>
+        <item>92,PK</item>
+        <item>680,PW</item>
+        <item>507,PA</item>
+        <item>675,PG</item>
+        <item>595,PY</item>
+        <item>51,PE</item>
+        <item>63,PH</item>
+        <item>870,PN</item>
+        <item>48,PL</item>
+        <item>351,PT</item>
+        <item>1,PR</item>
+        <item>974,QA</item>
+        <item>40,RO</item>
+        <item>7,RU</item>
+        <item>250,RW</item>
+        <item>590,BL</item>
+        <item>685,WS</item>
+        <item>378,SM</item>
+        <item>239,ST</item>
+        <item>966,SA</item>
+        <item>221,SN</item>
+        <item>381,RS</item>
+        <item>248,SC</item>
+        <item>232,SL</item>
+        <item>65,SG</item>
+        <item>421,SK</item>
+        <item>386,SI</item>
+        <item>677,SB</item>
+        <item>252,SO</item>
+        <item>27,ZA</item>
+        <item>82,KR</item>
+        <item>34,ES</item>
+        <item>94,LK</item>
+        <item>290,SH</item>
+        <item>508,PM</item>
+        <item>249,SD</item>
+        <item>597,SR</item>
+        <item>268,SZ</item>
+        <item>46,SE</item>
+        <item>41,CH</item>
+        <item>963,SY</item>
+        <item>886,TW</item>
+        <item>992,TJ</item>
+        <item>255,TZ</item>
+        <item>66,TH</item>
+        <item>228,TG</item>
+        <item>690,TK</item>
+        <item>676,TO</item>
+        <item>216,TN</item>
+        <item>90,TR</item>
+        <item>993,TM</item>
+        <item>688,TV</item>
+        <item>971,AE</item>
+        <item>256,UG</item>
+        <item>44,GB</item>
+        <item>380,UA</item>
+        <item>598,UY</item>
+        <item>1,US</item>
+        <item>998,UZ</item>
+        <item>678,VU</item>
+        <item>39,VA</item>
+        <item>58,VE</item>
+        <item>84,VN</item>
+        <item>681,WF</item>
+        <item>967,YE</item>
+        <item>260,ZM</item>
+        <item>263,ZW</item>
+    </string-array>
+    <string name="download">S\'il vous plaît télécharger le fichier en premier</string>
+    <string name="shareimage">Share Image</string>
+    <string name="title_activity_chat_settings">Chatsettings</string>
+    <string name="change_app_font">Change App Font</string>
+    <string name="change_chat_wallpaper">Change chat wallpaper</string>
+    <string name="plz">Veuillez choisir une police</string>
+    <string name="set_wallpaper">Définir le papier peint</string>
+    <string name="hi">salut</string>
+    <string name="username1">Nom d\'utilisateur</string>
+    <string name="wallsucc">Le fond d\'écran a changé avec succès</string>
+    <string name="walldsucc">Le fond d\'écran supprimé avec succès</string>
+    <string name="click_enter_to_send">Cliquez sur entrer pour envoyer</string>
+    <string name="new_message_sound">Nouveau message sonore</string>
+    <string name="title_activity_secu_setting">Les paramètres de sécurité</string>
+    <string name="prevent_chat_screen_shot">Empêcher le chat Capture d\'écran (β)</string>
+    <string name="screen_lock">Verrouillage d\'écran</string>
+    <string name="change_passcode">Changer le code d\'accès</string>
+    <string name="patt_set">Ensemble de modèle</string>
+    <string name="chnge_pattern">Votre modèle a été changé</string>
+    <string name="welcome">Bienvenue</string>
+    <string name="clear_pattern">Motif clair</string>
+    <string name="this_feature_only">Vous ne pourrez pas capturer d’autres chats</string>
+
+
+    <string name="hello_blank_fragment">Bonjour fragment vierge</string>
+    <string name="title_activity_stories">Histoires</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="logout_forgot">Si vous avez oublié le modèle, vous pouvez cliquer sur OK. Le compte sera déconnecté et le verrouillage sera désactivé.</string>
+    <string name="approve_upload">Approuver les autorisations pour télécharger des photos</string>
+
+
+    <string name="label_brush">Brosse</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Autocollant</string>
+    <string name="label_eraser">La gomme</string>
+    <string name="label_text">Texte</string>
+    <string name="label_filter">Filtre</string>
+    <string name="label_adjust">Régler</string>
+    <string name="add_to_my_story">Ajouter à mon histoire</string>
+    <string name="my_statue">Ma statue</string>
+    <string name="saving">Économie...</string>
+    <string name="save_succ">Image enregistrée avec succès</string>
+    <string name="save_fail">Échec d\'enregistrement de l\'image</string>
+    <string name="story_add">Histoire ajoutée</string>
+    <string name="select">Sélectionnez une image</string>
+    <string name="exitq">Voulez-vous quitter sans enregistrer l\'image?</string>
+    <string name="save">sauvegarder</string>
+    <string name="disc">Jeter</string>
+    <string name="ups">Téléchargement</string>
+    <string name="me">Moi</string>
+    <string name="acc_per">S\'il vous plaît accepter la permission</string>
+    <string name="patt_err_mess">S\'il vous plaît joindre 4 points ou plus ensemble pour rendre vos données plus sûres :)</string>
+    <string name="weak_pp">Motif faible</string>
+    <string name="title_activity_notif_setting">Notification Settings</string>
+    <string name="defaultt">Défaut</string>
+    <string name="blue">Bleu</string>
+    <string name="notification_sound">Son de notification</string>
+    <string name="led_color">Couleur LED</string>
+    <string name="slec">Sélectionnez Notification</string>
+    <string name="set">Set notification</string>
+    <string name="retry">Réessayez</string>
+    <string name="we_will_soon">Nous ajouterons cette fonctionnalité bientôt</string>
+    <string name="snap">Casser</string>
+    <string name="chatss">Chat settings</string>
+    <string name="chos_noti">Choisissez votre ton de notification</string>
+    <string name="title_activity_add_group">Ajouter un groupe</string>
+    <string name="group_name">Nom de groupe</string>
+    <string name="plz_chs_per">Veuillez choisir au moins une personne</string>
+    <string name="cannot_l_g">Impossible de laisser le nom de groupe vide</string>
+    <string name="reach_max">Vous avez atteint le nombre maximum</string>
+    <string name="add_you">Vous a ajouté à</string>
+    <string name="name_empty">S\'il vous plaît écrivez le nom du groupe</string>
+    <string name="admins">Admins</string>
+    <string name="Leav_grp">Groupe de sortie</string>
+    <string name="add_to_admins">Ajouter aux administrateurs</string>
+    <string name="remove_admin">Supprimer l\'administrateur</string>
+    <string name="remove_user">Supprimer l\'utilisateur</string>
+    <string name="can_mng">Vous ne pouvez pas gérer vous-même</string>
+    <string name="this_usr_adm">Cet utilisateur est déjà administrateur</string>
+    <string name="maxadmin">Vous avez atteint le nombre maximum d\'administrateurs</string>
+    <string name="exit_group_sure">Êtes-vous sûr de vouloir quitter le groupe?</string>
+    <string name="title_activity_add_user_group">AddUserGroup</string>
+    <string name="kicked">Vous avez été retiré du groupe</string>
+    <string name="can_t_fetch_last_messages">Impossible de récupérer les derniers messages</string>
+    <string name="title_activity_edit_story">Éditer des histoires</string>
+    <string name="delet_sto">Supprimer l\'histoire</string>
+    <string name="delete_story_mess">Etes vous sûr de vouloir supprimer cette histoire?</string>
+    <string name="fail_st">Impossible de supprimer l\'histoire</string>
+    <string name="video_call">Appel vidéo</string>
+    <string name="calls_rev">Erreur lors de la récupération des appels</string>
+    <string name="est">Établi</string>
+    <string name="clear_c">Effacer tous les chats</string>
+    <string name="title_activity_calls_setting">Paramètres d\'appel</string>
+    <string name="call_ringtone">Sonnerie d\'appel</string>
+    <string name="clear_call_logs">Effacer les journaux d\'appels</string>
+    <string name="choose_ring">Choisir des appels Sonnerie</string>
+    <string name="add_blok">Ajouté à la liste de blocage</string>
+    <string name="re_blok">Retiré de la liste de blocage</string>
+    <string name="add_mute">Ajouté à la liste des mutes</string>
+    <string name="re_mute">Supprimé de la liste muette</string>
+    <string name="you_can_t_reply_this_conversation">Vous ne pouvez pas répondre à cette conversation</string>
+    <string name="title_activity_block">Bloc</string>
+    <string name="title_activity_mute">Muet</string>
+    <string name="calling_ser">Appelant service de checker</string>
+    <string name="favourite">Étoile</string>
+    <string name="notfavourite">Unstar</string>
+    <string name="title_activity_favourite">Messages marqués</string>
+    <string name="account_deleted">Ce compte a été supprimé</string>
+    <string name="wrong_code">Mauvais code, essayez encore!</string>
+    <string name="verify_to_delete">Effacer</string>
+    <string name="you">Vous</string>
+    <string name="connecting">De liaison...</string>
+    <string name="userbusy">Utilisateur occupé</string>
+    <string name="today">Aujourd\'hui</string>
+
+    <string name="title_signout">Vous vous êtes connecté depuis un autre appareil</string>
+    <string name="mess_signout">Vous ne pouvez utiliser qu\'un seul appareil par compte</string>
+    <string name="easy_chat">Facile à discuter</string>
+    <string name="high_perform">Haute performance</string>
+    <string name="feel_secure">Se sentir en sécurité</string>
+    <string name="modern_design">Design moderne</string>
+    <string name="light_weii">Poids léger</string>
+    <string name="you_can_hint">Vous pouvez commencer à discuter avec vos amis d\'ici</string>
+    <string name="restarttheapp">Veuillez redémarrer l\'application et réessayer.</string>
+    <string name="title_activity_invite">Inviter</string>
+    <string name="inviteuser">Inviter à</string>
+    <string name="hello">Bonjour, j\'utilise</string>
+    <string name="downloadnw">Téléchargez-le maintenant sur Google Play Store:</string>
+    <string name="title_activity_archieve">Archives d\'histoires</string>
+    <string name="you_can_manage">Vous pouvez gérer les histoires jusqu\'à 24 heures</string>
+    <string name="title_activity_qr">Qr</string>
+    <string name="your_qr">Votre Qr</string>
+    <string name="scan_friends_qr">Scannez les amis Qr</string>
+    <string name="invaled">Le Qr est invalide</string>
+    <string name="chat">Commencer le chat</string>
+    <string name="forward">Vers l\'avant</string>
+    <string name="cant_forw">Impossible de transférer ce message
+</string>
+    <string name="cant_reply">Je ne peux pas répondre à ce message
+</string>
+    <string name="voice">Voix</string>
+    <string name="image">Image</string>
+    <string name="shake_mobile">Secouez pour annuler la suppression</string>
+
+
 </resources>

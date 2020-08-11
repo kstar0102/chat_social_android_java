@@ -8,13 +8,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,13 +29,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.stfalcon.chatkit.me.GroupIn;
+import com.stfalcon.chatkit.me.MessageIn;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vanniktech.emoji.EmojiEditText;
@@ -45,11 +53,13 @@ import java.util.Map;
 
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.global.encryption;
+import ar.codeslu.plax.lists.calls;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 import id.zelory.compressor.Compressor;
 
-public class EditProfile extends AppCompatActivity {
+public class  EditProfile extends AppCompatActivity {
     //View
     EmojiEditText name, statue;
     CircleImageView avatar;
@@ -60,11 +70,14 @@ public class EditProfile extends AppCompatActivity {
     Uri imgLocalpath;
     //Firebase
     FirebaseAuth mAuth;
-    DatabaseReference mData, mchat;
+    DatabaseReference mData, mchat, mGroup,mCalls;
     //compress
     private Bitmap compressedImageFile;
     //dialog
     AlertDialog dialog;
+//encryption
+    String called="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +90,16 @@ public class EditProfile extends AppCompatActivity {
         lyEdit = findViewById(R.id.lyEdit);
         Global.currentactivity = this;
 
+        //encryption
+
+
+
         //firebase init
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         mchat = FirebaseDatabase.getInstance().getReference(Global.CHATS);
+        mGroup = FirebaseDatabase.getInstance().getReference(Global.GROUPS);
+        mCalls = FirebaseDatabase.getInstance().getReference(Global.CALLS);
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
@@ -100,11 +119,13 @@ public class EditProfile extends AppCompatActivity {
             if (avaS.equals("no")) {
                 Picasso.get()
                         .load(R.drawable.profile)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(avatar);
                 Picasso.get()
                         .load(R.drawable.bg)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -125,11 +146,13 @@ public class EditProfile extends AppCompatActivity {
             } else {
                 Picasso.get()
                         .load(avaS)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(avatar);
                 Picasso.get()
                         .load(avaS)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -164,10 +187,37 @@ public class EditProfile extends AppCompatActivity {
                     mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-
                         }
                     });
                     try {
+                        //change calls
+                        Map<String, Object> map33 = new HashMap<>();
+                        map33.put("name", String.valueOf(nameS));
+                        if (Global.callList != null) {
+                            for (int i = 0; i < Global.callList.size(); i++) {
+                                if(!Global.callList.get(i).getFrom().equals(mAuth.getCurrentUser().getUid()))
+                                    called = Global.callList.get(i).getFrom();
+                                else
+                                    called = Global.callList.get(i).getTo();
+                                mCalls.child(called).child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists())
+                                        {
+                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                data.getRef().updateChildren(map33);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                        }
                         for (int i = 0; i < Global.diaG.size(); i++) {
                             Map<String, Object> map2 = new HashMap<>();
                             map2.put("name", nameS);
@@ -189,13 +239,12 @@ public class EditProfile extends AppCompatActivity {
                                     });
 
                         }
-                    }
-                    catch (NullPointerException e)
-                    {
+                    } catch (NullPointerException e) {
                         finish();
                         Toast.makeText(EditProfile.this, R.string.prfl_updt, Toast.LENGTH_SHORT).show();
 
                     }
+                    finish();
                 } else {
                     next.setEnabled(true);
                     Toast.makeText(EditProfile.this, R.string.plz_name, Toast.LENGTH_SHORT).show();
@@ -242,7 +291,8 @@ public class EditProfile extends AppCompatActivity {
                 imgLocalpath = result.getUri();
                 Picasso.get()
                         .load(imgLocalpath)
-                        .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                         .into(avatar);
                 if (Global.check_int(this))
                     uploadprofile(imgLocalpath);
@@ -274,7 +324,7 @@ public class EditProfile extends AppCompatActivity {
         compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] thumbData = baos.toByteArray();
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
+        StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
         UploadTask uploadTask = riversRef.putBytes(thumbData);
 
 
@@ -302,31 +352,116 @@ public class EditProfile extends AppCompatActivity {
                                 if (String.valueOf(downloadUrl).equals("no")) {
                                     Picasso.get()
                                             .load(R.drawable.profile)
-                                            .error(R.drawable.errorimg)
+                                            .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                                             .into(avatar);
                                 } else {
                                     Picasso.get()
                                             .load(downloadUrl)
-                                            .error(R.drawable.errorimg)
+                                            .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                                             .into(avatar);
                                 }
-                                if(Global.diaG != null) {
-                                    for (int i = 0; i < Global.diaG.size(); i++) {
-                                        mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                            }
-                                        })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        dialog.dismiss();
-                                                        Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
 
+                                try {
+                                    if (Global.diaG != null) {
+                                        for (int i = 0; i < Global.diaG.size(); i++) {
+                                            mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                }
+                                            })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            dialog.dismiss();
+                                                            Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
+                                        }
                                     }
+                                    //change calls
+                                    Map<String, Object> map33 = new HashMap<>();
+                                    map33.put("ava", String.valueOf(downloadUrl));
+                                    if (Global.callList != null) {
+                                        for (int i = 0; i < Global.callList.size(); i++) {
+                                            if(!Global.callList.get(i).getFrom().equals(mAuth.getCurrentUser().getUid()))
+                                                called = Global.callList.get(i).getFrom();
+                                            else
+                                                called = Global.callList.get(i).getTo();
+                                            mCalls.child(called).child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    if(dataSnapshot.exists())
+                                                    {
+                                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                                data.getRef().updateChildren(map33);
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+                                        }
+                                    }
+
+                                    //change all last messages in group
+                                    Map<String, Object> map2 = new HashMap<>();
+                                    map2.put("lastsenderava", String.valueOf(downloadUrl));
+                                    if (Global.diaGGG != null) {
+                                        for (int i = 0; i < Global.diaGGG.size(); i++) {
+                                            if (Global.diaGGG.get(i).getLastsender().equals(mAuth.getCurrentUser().getUid())) {
+                                                mGroup.child(Global.diaGGG.get(i).getId()).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                    }
+                                                })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                dialog.dismiss();
+                                                                Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    }
+
+                                    //update group messages
+
+                                    Map<String, Object> map3 = new HashMap<>();
+                                    map3.put("avatar", encryption.encryptOrNull(String.valueOf(downloadUrl)));
+                                    if (Global.diaGGG != null) {
+                                        for (int i = 0; i < Global.diaGGG.size(); i++) {
+                                            mGroup.child(Global.diaGGG.get(i).getId()).child(Global.Messages).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                        MessageIn message = data.getValue(MessageIn.class);
+                                                        if (message.getFrom().equals(mAuth.getCurrentUser().getUid())) {
+                                                            data.getRef().updateChildren(map3);
+                                                        }
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                }catch (NullPointerException e)
+                                {
+
                                 }
+
                                 Toast.makeText(EditProfile.this, R.string.image_update, Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
 
@@ -346,7 +481,7 @@ public class EditProfile extends AppCompatActivity {
                             });
 
                 }
-                    dialog.dismiss();
+                dialog.dismiss();
 
 
             }
@@ -362,7 +497,8 @@ public class EditProfile extends AppCompatActivity {
             //init data
             Map<String, Object> map = new HashMap<>();
             map.put(Global.Online, true);
-            mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
+            if(mAuth.getCurrentUser() != null)
+                mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map);
             Global.local_on = true;
             //lock screen
             ((AppBack) getApplication()).lockscreen(((AppBack) getApplication()).shared().getBoolean("lock", false));
@@ -375,6 +511,8 @@ public class EditProfile extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ((AppBack) this.getApplication()).startActivityTransitionTimer();
+        Global.currentactivity = null;
+
     }
 
     public void deletephoto(View view) {
@@ -384,30 +522,117 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    for (int i = 0; i < Global.diaG.size(); i++) {
 
-                        mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+try {
+    for (int i = 0; i < Global.diaG.size(); i++) {
 
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+        mchat.child(Global.diaG.get(i).getId()).child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
 
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
+                });
+
+    }
+
+    //change calls
+    Map<String, Object> map33 = new HashMap<>();
+    map33.put("ava", String.valueOf("no"));
+    if (Global.callList != null) {
+        for (int i = 0; i < Global.callList.size(); i++) {
+            if(!Global.callList.get(i).getFrom().equals(mAuth.getCurrentUser().getUid()))
+                called = Global.callList.get(i).getFrom();
+            else
+                called = Global.callList.get(i).getTo();
+            mCalls.child(called).child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists())
+                    {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            data.getRef().updateChildren(map33);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+    }
+
+    //change all last messages in group
+    Map<String, Object> map2 = new HashMap<>();
+    map2.put("lastsenderava", String.valueOf("no"));
+    if (Global.diaGGG != null) {
+        for (int i = 0; i < Global.diaGGG.size(); i++) {
+            if (Global.diaGGG.get(i).getLastsender().equals(mAuth.getCurrentUser().getUid())) {
+                mGroup.child(Global.diaGGG.get(i).getId()).updateChildren(map2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                dialog.dismiss();
+                                Toast.makeText(EditProfile.this, R.string.error, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        }
+    }
+
+    //update group messages
+
+    Map<String, Object> map3 = new HashMap<>();
+    map3.put("avatar", encryption.encryptOrNull(String.valueOf("no")));
+    if (Global.diaGGG != null) {
+        for (int i = 0; i < Global.diaGGG.size(); i++) {
+            mGroup.child(Global.diaGGG.get(i).getId()).child(Global.Messages).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        MessageIn message = data.getValue(MessageIn.class);
+                        if (message.getFrom().equals(mAuth.getCurrentUser().getUid())) {
+                            data.getRef().updateChildren(map3);
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+}
+catch (NullPointerException e)
+{
+
+}
+
                     Global.avaLocal = "no";
                     Picasso.get()
                             .load(R.drawable.profile)
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                             .into(avatar);
                     Picasso.get()
                             .load(R.drawable.bg)
-                            .error(R.drawable.errorimg)
+                            .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
+
                             .into(new Target() {
                                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                 @Override
