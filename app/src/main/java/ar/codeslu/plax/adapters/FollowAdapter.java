@@ -10,10 +10,10 @@ import ar.codeslu.plax.fragments.FriendFragment;
 import ar.codeslu.plax.fragments.Nofragment;
 import ar.codeslu.plax.fragments.VoiceFragment;
 
-public class MainAdapter extends FragmentStatePagerAdapter {
+public class FollowAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
-    public MainAdapter(FragmentManager fm, int NoofTabs) {
+    public FollowAdapter(FragmentManager fm, int NoofTabs) {
         super(fm);
         this.mNumOfTabs = NoofTabs;
     }
@@ -28,11 +28,8 @@ public class MainAdapter extends FragmentStatePagerAdapter {
                 FriendFragment friendFragment = new FriendFragment();
                 return friendFragment;
             case 2:
-                Nofragment nofragment = new Nofragment();
-                return nofragment;
-            case 3:
-                FollowFragment followFragment = new FollowFragment();
-                return followFragment;
+                Chats chat1 = new Chats();
+                return chat1;
             default:
                 return null;
         }

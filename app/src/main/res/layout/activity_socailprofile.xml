@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
+                android:src="@drawable/chat_back_img"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="13dp"
+                android:layout_width="40dp"
+                android:text="Create Social Group"
+                android:textSize="18dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_height="25dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:alpha="0.3"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/black"/>
+
+
+        <RelativeLayout
+            android:layout_marginTop="-50dp"
+            android:layout_gravity="center"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userPic"
+                android:src="@drawable/socal2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="@color/white"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:hint="User Name"
+            android:text="De La Salle University"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="@color/white"
+            android:textSize="16dp"
+            android:hint="User Name"
+            android:text="#K Followers"/>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greystory"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/des_img"
+            android:drawablePadding="10dp"
+            android:text="Description"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"/>
+
+        <EditText
+            android:paddingLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:lines="5"
+            android:textSize="15dp"
+            android:text="@string/social_txt"
+            android:background="@drawable/message_bg"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/link_img"
+            android:drawablePadding="10dp"
+            android:text="Link"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:text="www.salle.com"/>
+
+
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:textStyle="bold"
+                android:background="@drawable/unfoll_btn"/>
+
+            <Button
+                android:layout_marginLeft="30dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:textStyle="bold"
+                android:background="@drawable/shere_btn"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,9 @@
         <activity android:name=".floatdepart.QRActivity"/>
         <activity android:name=".notify.FriendActivity"/>
         <activity android:name=".notify.FriIndiviReq"/>
+        <activity android:name=".follow.CreateSocial"/>
+        <activity android:name=".follow.SocialFollow"/>
+        <activity android:name=".follow.SocialProfile"/>
         <activity
             android:name=".Qr"
             android:label="@string/title_activity_qr"

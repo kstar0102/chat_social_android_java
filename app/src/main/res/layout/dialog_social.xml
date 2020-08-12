@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <Button
+        android:paddingLeft="20dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/chat_search"
+        android:id="@+id/dialog_addfriend"
+        android:text="   Search"
+        android:textSize="16dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:textSize="16dp"
+        android:paddingLeft="17dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/chat_ping"
+        android:id="@+id/diglog_creatgroup"
+        android:text="   Pin Top"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:textSize="16dp"
+        android:paddingLeft="17dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/report_icon"
+        android:id="@+id/dialog_creatsocial"
+        android:text="   Report"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:textSize="16dp"
+        android:paddingLeft="20dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/unfollow_icon"
+        android:id="@+id/dialog_qr"
+        android:text="   unfollow"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:divider="@null"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="16dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/social_notify"
+            android:id="@+id/dialog_broadcast"
+            android:text="   Notification"
+            android:background="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+
+        <Switch
+            android:layout_marginLeft="10dp"
+            android:layout_width="40dp"
+            android:layout_height="20dp"/>
+    </LinearLayout>
+
+
+    <Button
+        android:textSize="16dp"
+        android:paddingLeft="20dp"
+        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/social_volum"
+        android:id="@+id/dialog_customer"
+        android:text="   Notice"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

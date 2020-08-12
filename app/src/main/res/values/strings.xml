@@ -60,6 +60,7 @@
     <string name="image_update">Image updated</string>
     <string name="image_fail">Failed to upload image</string>
     <string name="statue">Statue</string>
+    <string name="social_txt" translatable="false">De La Salle University, also known simply     as La Salle and abbreviated as DLSU, is  a private, Catholic research university run  by the De La Salle Brothers located in Taft  Avenue, Malate, Manila, Philippines.</string>
     <string name="name">Name</string>
     <string name="plz_name">Please write your name</string>
     <string name="error">Error occurred</string>

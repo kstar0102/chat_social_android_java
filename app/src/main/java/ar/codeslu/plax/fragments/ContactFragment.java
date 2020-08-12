@@ -22,6 +22,7 @@ import ar.codeslu.plax.models.BroadModel;
 import ar.codeslu.plax.models.DocmentModel;
 
 public class ContactFragment extends Fragment {
+
     final String[] orderedData = new String[]{"Ann Carroll", "Carol Clark", "Janet Fowler", "Jason Boyd", "Jeffery Nicholas Dunn"};
     public static ContactFragment newInstance() {
         ContactFragment fragment = new ContactFragment();
