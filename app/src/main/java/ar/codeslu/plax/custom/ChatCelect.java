@@ -78,19 +78,19 @@ public class ChatCelect extends Dialog {
         try
         {
             if (Global.blockList.contains(friendid)) {
-                block.setText(R.string.unblock);
+                block.setText(    R.string.unblock);
                 blook = true;
             } else {
-                block.setText(R.string.block);
+                block.setText("    Block");
                 blook = false;
 
             }
 
             if (Global.mutelist.contains(friendid)) {
-                mute.setText(R.string.unmute);
+                mute.setText(    R.string.unmute);
                 mutt = true;
             } else {
-                mute.setText(R.string.mute);
+                mute.setText("    Unread");
                 mutt = false;
 
             }
@@ -109,145 +109,146 @@ public class ChatCelect extends Dialog {
         mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
         mBlock = FirebaseDatabase.getInstance().getReference(Global.BLOCK);
         mMute = FirebaseDatabase.getInstance().getReference(Global.MUTE);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Chats.refreshL();
-                            ((AppBack) c.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
-                            ((AppBack) c.getApplication()).getchatsdb(friendid);
 
-                            Global.messG.clear();
-                            deletebyId(friendid);
-
-                            //local store
-                            ((AppBack) c.getApplication()).setchatsdb(friendid);
-                            ((AppBack) c.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                            Toast.makeText(c, R.string.chat_dee, Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(c, R.string.error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dismiss();
-            }
-        });
-
-        mute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                if (Global.check_int(c)) {
-                    if (!mutt) {
-                        ((AppBack) c.getApplication()).getMute();
-                        Global.mutelist.add(friendid);
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.mutelist);
-                        mMute.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) c.getApplication()).setMute();
-                                Toast.makeText(c, c.getString(R.string.add_mute), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-
-                    } else {
-                        ((AppBack) c.getApplication()).getMute();
-
-                        if (Global.mutelist.contains(friendid))
-                            Global.mutelist.remove(friendid);
-
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.mutelist);
-                        mMute.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) c.getApplication()).setMute();
-                                Toast.makeText(c, c.getString(R.string.re_mute), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                    }
-
-                } else {
-                    Toast.makeText(c, c.getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-
-        block.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                if (Global.check_int(c)) {
-                    if (!blook) {
-
-                        ((AppBack) c.getApplication()).getBlock();
-                        Global.blockList.add(friendid);
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.blockList);
-                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) c.getApplication()).setBlock();
-                                Toast.makeText(c, c.getString(R.string.add_blok), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                    } else {
-                        ((AppBack) c.getApplication()).getBlock();
-
-                        if (Global.blockList.contains(friendid))
-                            Global.blockList.remove(friendid);
-
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.blockList);
-                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) c.getApplication()).setBlock();
-                                Toast.makeText(c, c.getString(R.string.re_blok), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-
-                    }
-
-                } else {
-                    Toast.makeText(c, c.getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-        });
+//        delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Chats.refreshL();
+//                            ((AppBack) c.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
+//                            ((AppBack) c.getApplication()).getchatsdb(friendid);
+//
+//                            Global.messG.clear();
+//                            deletebyId(friendid);
+//
+//                            //local store
+//                            ((AppBack) c.getApplication()).setchatsdb(friendid);
+//                            ((AppBack) c.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
+//                            Toast.makeText(c, R.string.chat_dee, Toast.LENGTH_SHORT).show();
+//                        } else
+//                            Toast.makeText(c, R.string.error, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                dismiss();
+//            }
+//        });
+//
+//        mute.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dismiss();
+//                if (Global.check_int(c)) {
+//                    if (!mutt) {
+//                        ((AppBack) c.getApplication()).getMute();
+//                        Global.mutelist.add(friendid);
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("list", Global.mutelist);
+//                        mMute.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                ((AppBack) c.getApplication()).setMute();
+//                                Toast.makeText(c, c.getString(R.string.add_mute), Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                });
+//
+//                    } else {
+//                        ((AppBack) c.getApplication()).getMute();
+//
+//                        if (Global.mutelist.contains(friendid))
+//                            Global.mutelist.remove(friendid);
+//
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("list", Global.mutelist);
+//                        mMute.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                ((AppBack) c.getApplication()).setMute();
+//                                Toast.makeText(c, c.getString(R.string.re_mute), Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                });
+//                    }
+//
+//                } else {
+//                    Toast.makeText(c, c.getString(R.string.check_int), Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        });
+//
+//        block.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dismiss();
+//                if (Global.check_int(c)) {
+//                    if (!blook) {
+//
+//                        ((AppBack) c.getApplication()).getBlock();
+//                        Global.blockList.add(friendid);
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("list", Global.blockList);
+//                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                ((AppBack) c.getApplication()).setBlock();
+//                                Toast.makeText(c, c.getString(R.string.add_blok), Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                });
+//                    } else {
+//                        ((AppBack) c.getApplication()).getBlock();
+//
+//                        if (Global.blockList.contains(friendid))
+//                            Global.blockList.remove(friendid);
+//
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("list", Global.blockList);
+//                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                ((AppBack) c.getApplication()).setBlock();
+//                                Toast.makeText(c, c.getString(R.string.re_blok), Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(c, c.getString(R.string.error), Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                });
+//
+//                    }
+//
+//                } else {
+//                    Toast.makeText(c, c.getString(R.string.check_int), Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//            }
+//        });
     }
 
     public void deletebyId(String Fid) {

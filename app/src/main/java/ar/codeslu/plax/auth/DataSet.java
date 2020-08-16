@@ -140,7 +140,7 @@ public class DataSet extends AppCompatActivity {
                     }
                     startActivity(new Intent(DataSet.this, MainActivity.class));
                     finish();
-                    Toast.makeText(DataSet.this, R.string.signin_succ, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(DataSet.this, R.string.signin_succ, Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
 
@@ -175,13 +175,14 @@ public class DataSet extends AppCompatActivity {
                         map.put("statue", statueS);
                         map.put("avatar", avaS);
                         map.put("id", mAuth.getCurrentUser().getUid());
+
                         mData.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     startActivity(new Intent(DataSet.this, MainActivity.class));
                                     finish();
-                                    Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
 
                                 } else
                                     Toast.makeText(DataSet.this, R.string.error, Toast.LENGTH_SHORT).show();
@@ -210,14 +211,12 @@ public class DataSet extends AppCompatActivity {
                         StorageReference riversRef = mStorageRef.child(Global.AvatarS + "/Ava_" + mAuth.getCurrentUser().getUid() + ".jpg");
                         UploadTask uploadTask = riversRef.putBytes(thumbData);
 
-
                         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                                 if (!task.isSuccessful()) {
                                     throw task.getException();
                                 }
-
                                 // Continue with the task to get the download URL
                                 return riversRef.getDownloadUrl();
                             }
@@ -238,7 +237,7 @@ public class DataSet extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 startActivity(new Intent(DataSet.this, MainActivity.class));
                                                 finish();
-                                                Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(DataSet.this, R.string.signup_succ, Toast.LENGTH_SHORT).show();
                                             } else
                                                 Toast.makeText(DataSet.this, R.string.error, Toast.LENGTH_SHORT).show();
                                         }

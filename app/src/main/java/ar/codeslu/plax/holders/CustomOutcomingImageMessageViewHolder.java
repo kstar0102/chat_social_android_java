@@ -217,6 +217,7 @@ public class CustomOutcomingImageMessageViewHolder
             time.setText("  " + timee);
         else
             time.setText(" " + timee + " (" + message.getStatus() + ")");
+
         time.setTextSize(10);
 
         //retry adapt

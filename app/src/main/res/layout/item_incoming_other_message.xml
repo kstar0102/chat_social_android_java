@@ -231,14 +231,7 @@
             </LinearLayout>
 
         </com.google.android.flexbox.FlexboxLayout>
-        <ImageView
-            android:layout_width="25dp"
-            android:id="@+id/react"
-            android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
-            android:layout_height="25dp"
-            android:src="@drawable/emoji_blue"
-            android:layout_marginStart="8dp"
-            android:layout_gravity="center_vertical|start" />
+
     </LinearLayout>
     <LinearLayout
         android:id="@+id/replyb"

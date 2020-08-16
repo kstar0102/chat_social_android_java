@@ -135,7 +135,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/play_w" />
+                        android:src="@drawable/voice_play_icon" />
 
                     <ProgressBar
                         android:layout_width="40dp"
@@ -373,7 +373,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/play_b" />
+                        android:src="@drawable/voice_play_icon" />
                     <ProgressBar
                         android:layout_width="40dp"
                         android:layout_height="40dp"

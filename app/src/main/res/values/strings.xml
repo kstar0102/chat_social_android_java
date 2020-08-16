@@ -116,10 +116,10 @@
     <string name="mss_dlt">Message Deleted</string>
     <string name="notcontact">It seems that this number is not in your contacts </string>
     <string name="add_contact">Add Contact</string>
-    <string name="block">Block</string>
+    <string name="block">  Block</string>
     <string name="unblock">Unblock</string>
     <string name="deletechat">Delete Chat</string>
-    <string name="mute">Mute</string>
+    <string name="mute">  Unread</string>
     <string name="unmute">Unmute</string>
     <string name="chat_dee">Chat Deleted</string>
     <string name="call_dee">Call logs Deleted</string>

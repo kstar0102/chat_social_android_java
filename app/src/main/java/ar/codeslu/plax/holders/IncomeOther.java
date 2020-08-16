@@ -284,86 +284,87 @@ public class IncomeOther
         }
 
         //react
-        ImageView react = itemView.findViewById(R.id.react);
+//        ImageView react = itemView.findViewById(R.id.react);
+//
+//        if (message.isDeleted() || !message.isChat()) {
+//            react.setVisibility(View.GONE);
+//        } else {
+//            if (!Global.currblocked && !Global.blockedLocal)
+//                react.setVisibility(View.VISIBLE);
+//            else
+//                react.setVisibility(View.GONE);
+//        }
+//
+//        switch (message.getReact()) {
+//            case "like":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.like));
+//                break;
+//            case "funny":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.funny));
+//                break;
+//            case "love":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.love));
+//                break;
+//            case "sad":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.sad));
+//                break;
+//            case "angry":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.angry));
+//                break;
+//            case "no":
+//                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.emoji_blue));
+//                break;
+//        }
+//
+//        react.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (Global.check_int(Global.conA)) {
+//                    String text = "";
+//                    try {
+//                        if (message.getText() != null)
+//                            text = message.getText();
+//
+//
+//                    } catch (NullPointerException e) {
+//                        text = "";
+//                    }
+//
+//                    ReactCustom cdd = new ReactCustom(Global.chatactivity, message.getId(), message.getMessid(), text);
+//                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+//                    cdd.show();
+//                } else
+//                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        react.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//
+//                if (Global.check_int(Global.conA)) {
+//                    String text = "";
+//                    try {
+//                        if (message.getText() != null)
+//                            text = message.getText();
+//
+//
+//                    } catch (NullPointerException e) {
+//                        text = "";
+//                    }
+//
+//                    ReactCustom cdd = new ReactCustom(Global.chatactivity, message.getId(), message.getMessid(), text);
+//                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+//                    cdd.show();
+//                } else
+//                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
+//
+//                return true;
+//            }
+//        });
 
-        if (message.isDeleted() || !message.isChat()) {
-            react.setVisibility(View.GONE);
-        } else {
-            if (!Global.currblocked && !Global.blockedLocal)
-                react.setVisibility(View.VISIBLE);
-            else
-                react.setVisibility(View.GONE);
-        }
-
-        switch (message.getReact()) {
-            case "like":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.like));
-                break;
-            case "funny":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.funny));
-                break;
-            case "love":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.love));
-                break;
-            case "sad":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.sad));
-                break;
-            case "angry":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.angry));
-                break;
-            case "no":
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.emoji_blue));
-                break;
-        }
-
-        react.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Global.check_int(Global.conA)) {
-                    String text = "";
-                    try {
-                        if (message.getText() != null)
-                            text = message.getText();
-
-
-                    } catch (NullPointerException e) {
-                        text = "";
-                    }
-
-                    ReactCustom cdd = new ReactCustom(Global.chatactivity, message.getId(), message.getMessid(), text);
-                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
-                    cdd.show();
-                } else
-                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-            }
-        });
-        react.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-
-                if (Global.check_int(Global.conA)) {
-                    String text = "";
-                    try {
-                        if (message.getText() != null)
-                            text = message.getText();
-
-
-                    } catch (NullPointerException e) {
-                        text = "";
-                    }
-
-                    ReactCustom cdd = new ReactCustom(Global.chatactivity, message.getId(), message.getMessid(), text);
-                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
-                    cdd.show();
-                } else
-                    Toast.makeText(Global.conA, Global.conA.getResources().getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-
-                return true;
-            }
-        });
-//view init
+        //view init
         mPlayMedia = itemView.findViewById(R.id.play);
         mPauseMedia = itemView.findViewById(R.id.pause);
         mMediaSeekBar = (SeekBar) itemView.findViewById(R.id.media_seekbar);
@@ -401,7 +402,7 @@ public class IncomeOther
 //            bubble.setBackground(ContextCompat.getDrawable(Global.conA, R.drawable.shape_incoming_message_d));
 //        } else {
             play.setImageResource(R.drawable.download_b);
-            mPlayMedia.setImageResource(R.drawable.play_b);
+            mPlayMedia.setImageResource(R.drawable.voice_play_icon);
             mPauseMedia.setImageResource(R.drawable.pause_b);
             mRunTime.setTextColor(Global.conA.getResources().getColor(R.color.black));
             mTotalTime.setTextColor(Global.conA.getResources().getColor(R.color.black));

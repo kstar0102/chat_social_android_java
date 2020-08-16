@@ -11,18 +11,20 @@
     android:layout_gravity="end|center_vertical"
     android:gravity="end|center_vertical">
 
+    <ImageView
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:id="@+id/userAvaChecked"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/janate"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/all"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/react"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical|end"
-            android:src="@drawable/emoji_blue" />
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@id/bubble"
@@ -61,17 +63,18 @@
 
         <com.stfalcon.chatkit.link.AutoLinkTextView
             android:id="@+id/replytext"
-            android:layout_margin="7dp"
-            android:autoLink="web"
-            android:textColor="@color/white"
-            android:linksClickable="true"
-            android:textSize="17sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignWithParentIfMissing="true"/>
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_margin="7dp"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/check_send_out"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="end|center_vertical"
@@ -121,5 +124,12 @@
             android:layout_gravity="center_vertical|end" />
     </LinearLayout>
 
+    <ImageView
+        android:visibility="visible"
+        android:layout_marginTop="3dp"
+        android:id="@+id/userAva"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/janate"/>
 
 </LinearLayout>

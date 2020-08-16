@@ -417,6 +417,7 @@ public class TinyDB {
         Gson gson = new Gson();
 
         ArrayList<String> objStrings = getListString(key);
+        Log.e("tindy json", key);
         ArrayList<UserData> objects =  new ArrayList<UserData>();
 
         for(String jObjString : objStrings){

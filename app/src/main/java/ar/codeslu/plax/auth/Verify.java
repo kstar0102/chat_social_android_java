@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
@@ -87,6 +88,7 @@ public class Verify extends AppCompatActivity {
         wrongbtn = findViewById(R.id.wrongnumber);
         phonenumber1 = findViewById(R.id.phoneNumber_txt_1);
         phonenumber2 = findViewById(R.id.phoneNumber_txt_2);
+
 
         if (getIntent() != null){
             number = getIntent().getExtras().getString("mobile");

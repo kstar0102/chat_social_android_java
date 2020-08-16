@@ -7,6 +7,8 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:layout_marginTop="10dp"
         android:background="@color/white"
         android:id="@+id/chat_doc"
@@ -30,64 +32,105 @@
             android:textColor="@color/black"/>
     </LinearLayout>
 
-    <Button
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/chat_search"
-        android:id="@+id/chat_search_btn"
-        android:text="   Search chat history"
+    <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/chat_delete"
-        android:id="@+id/chat_delete_btn"
-        android:text="   Delete chat history"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/chat_search"
+            android:id="@+id/chat_search_btn"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="   Search chat history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+    </LinearLayout>
 
-    <Button
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/chat_image"
-        android:id="@+id/chat_background_btn"
-        android:text="   Chat background"
+    <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/chat_ping"
-        android:id="@+id/chat_ping_btn"
-        android:text="   PING"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/chat_delete"
+            android:background="?android:attr/selectableItemBackground"
+            android:id="@+id/chat_delete_btn"
+            android:text="   Delete chat history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+    </LinearLayout>
 
-    <Button
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/chat_voice"
-        android:id="@+id/chat_notice_btn"
-        android:text="   Notice"
+    <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content">
+
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/chat_image"
+            android:background="?android:attr/selectableItemBackground"
+            android:id="@+id/chat_background_btn"
+            android:text="   Chat background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="19dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/chat_ping"
+            android:background="?android:attr/selectableItemBackground"
+            android:id="@+id/chat_ping_btn"
+            android:text="   PING"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:textSize="16dp"
+            android:paddingLeft="21dp"
+            android:textAlignment="textStart"
+            android:drawableLeft="@drawable/chat_voice"
+            android:background="?android:attr/selectableItemBackground"
+            android:id="@+id/chat_notice_btn"
+            android:text="    Notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
 
 </LinearLayout>

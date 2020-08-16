@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -49,6 +50,7 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:layout_weight="4"
                     android:id="@+id/search_edit"
                     android:drawableLeft="@drawable/broad_search_img"
                     android:drawablePadding="15dp"
@@ -56,12 +58,14 @@
                     android:hint="Phone/username"
                     android:layout_marginLeft="20dp"
                     android:background="@drawable/search_bg"
-                    android:layout_width="330dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="40dp"/>
 
                 <ImageView
+                    android:background="@color/white"
+                    android:layout_weight="1"
                     android:id="@+id/next_btn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="30dp"
                     android:src="@drawable/go_next"
                     android:layout_gravity="center"/>
@@ -162,162 +166,23 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/numberlayout"
+            android:id="@+id/search_layout"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/janate"
-                    android:layout_marginLeft="10dp"/>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="60dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:text="Janet Fowler"
-                        android:textSize="17dp"
-                        android:layout_marginLeft="10dp"/>
-
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+ 123456789012"
-                        android:textSize="15dp"
-                        android:layout_marginLeft="10dp"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/numberAdd"
-                    android:layout_width="80dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimary"
-                    android:text="Add"
-                    android:textColor="@color/white"
-                    android:drawableLeft="@drawable/add_person"
-                    android:paddingLeft="@dimen/h5"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/jason"
-                    android:layout_marginLeft="10dp"/>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="60dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="17dp"
-                        android:text="Jason Boyd"
-                        android:layout_marginLeft="10dp"/>
-
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+ 123456789012"
-                        android:textSize="15dp"
-                        android:layout_marginLeft="10dp"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/numberAdd1"
-                    android:layout_width="80dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimary"
-                    android:text="Add"
-                    android:textColor="@color/white"
-                    android:drawableLeft="@drawable/add_person"
-                    android:paddingLeft="@dimen/h5"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
             android:visibility="gone"
-            android:id="@+id/namelayout"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
+            <ListView
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/janate"
-                    android:layout_marginLeft="10dp"/>
-
-                <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="60dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:text="Janet Fowler"
-                        android:textSize="17dp"
-                        android:layout_marginLeft="10dp"/>
-
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="janet123"
-                        android:textSize="15dp"
-                        android:layout_marginLeft="10dp"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/nameAdd"
-                    android:layout_width="80dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimary"
-                    android:text="Add"
-                    android:textColor="@color/white"
-                    android:drawableLeft="@drawable/add_person"
-                    android:paddingLeft="@dimen/h5"/>
-
-            </LinearLayout>
-
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:clickable="true"
+                android:scrollbarStyle="outsideOverlay" />
         </LinearLayout>
+
 
     </LinearLayout>
 

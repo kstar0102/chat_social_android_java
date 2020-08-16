@@ -25,6 +25,16 @@
     android:gravity="end|center_vertical"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <ImageView
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:id="@+id/userAvaChecked"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/janate"/>
+
         <LinearLayout
             android:id="@+id/playerFull"
             android:layout_gravity="end|center_vertical"
@@ -270,7 +280,6 @@
             android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             />
 
         <ProgressBar
@@ -307,6 +316,12 @@
             android:layout_gravity="center_vertical|end" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_marginTop="3dp"
+        android:id="@+id/userAva"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/janate"/>
 
 
 </LinearLayout>

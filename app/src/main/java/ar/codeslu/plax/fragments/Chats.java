@@ -178,34 +178,34 @@ public class Chats extends Fragment
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 WindowManager.LayoutParams abc= dialog.getWindow().getAttributes();
                 abc.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                abc.x = 100;   //x position
-                abc.y = 360;   //y position
+                abc.x = 50;   //x position
+                abc.y = 400;   //y position
                 dialog.show();
                 Window window = dialog.getWindow();
-                window.setLayout(700, LinearLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout(900, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                 addFriendBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Dexter.withActivity(mActivity).withPermissions(Manifest.permission.READ_CONTACTS)
-//                            .withListener(new MultiplePermissionsListener() {
-//                                @Override
-//                                public void onPermissionsChecked(MultiplePermissionsReport report) {
-//
-//                                    if (report.areAllPermissionsGranted())
-//                                        startActivity(new Intent(mActivity, Contacts.class));
-//                                    else
-//                                        Toast.makeText(mActivity, mActivity.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
-//                                }
-//                                @Override
-//                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//
-//                                    token.continuePermissionRequest();
-//
-//                                }
-//                        }).check();
-                        Intent intent = new Intent(getActivity(), AddFriend.class);
-                        startActivity(intent);
+                        Dexter.withActivity(mActivity).withPermissions(Manifest.permission.READ_CONTACTS)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                    if (report.areAllPermissionsGranted())
+                                        startActivity(new Intent(mActivity, AddFriend.class));
+                                    else
+                                        Toast.makeText(mActivity, mActivity.getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
+                                }
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                                    token.continuePermissionRequest();
+
+                                }
+                        }).check();
+//                        Intent intent = new Intent(getActivity(), AddFriend.class);
+//                        startActivity(intent);
                     }
                 });
 
@@ -273,28 +273,28 @@ public class Chats extends Fragment
             if (((AppBack) mActivity.getApplication()).shared().getBoolean("hinter" + mAuth.getCurrentUser().getUid(), true)) {
                 ((AppBack) mActivity.getApplication()).editSharePrefs().putBoolean("hinter" + mAuth.getCurrentUser().getUid(), false);
                 ((AppBack) mActivity.getApplication()).editSharePrefs().apply();
-                view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        new MaterialTapTargetPrompt.Builder(mActivity)
-                            .setTarget(R.id.fab)
-                            .setBackgroundColour(ContextCompat.getColor(getContext(), R.color.colorPrimary))
-                            .setPrimaryText(getString(R.string.contacts))
-                            .setSecondaryText(getString(R.string.you_can_hint))
-                            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                                @Override
-                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                                        prompt.finish();
-                                        ((AppBack) mActivity.getApplication()).editSharePrefs().putBoolean("hinter" + mAuth.getCurrentUser().getUid(), false);
-                                        ((AppBack) mActivity.getApplication()).editSharePrefs().apply();
-                                    }
-                                }
-                            })
-                            .show();
-                    }
-                });
+//                view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    @Override
+//                    public void onGlobalLayout() {
+//                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                        new MaterialTapTargetPrompt.Builder(mActivity)
+//                            .setTarget(R.id.fab)
+//                            .setBackgroundColour(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+//                            .setPrimaryText(getString(R.string.contacts))
+//                            .setSecondaryText(getString(R.string.you_can_hint))
+//                            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+//                                @Override
+//                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+//                                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+//                                        prompt.finish();
+//                                        ((AppBack) mActivity.getApplication()).editSharePrefs().putBoolean("hinter" + mAuth.getCurrentUser().getUid(), false);
+//                                        ((AppBack) mActivity.getApplication()).editSharePrefs().apply();
+//                                    }
+//                                }
+//                            })
+//                            .show();
+//                    }
+//                });
             }
 
             getChats();

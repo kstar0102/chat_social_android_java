@@ -9,19 +9,30 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialogM"
         android:orientation="vertical" >
-        <Button
-            android:id="@+id/deletechat"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_delete"
-            android:text="   Delete chat"
-            android:textSize="13dp"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
 
         <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/deletechat"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_delete"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="   Delete chat"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:dividerHeight="0dp"
+            android:background="@color/white"
+            android:divider="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -30,79 +41,123 @@
                 android:paddingLeft="20dp"
                 android:textAlignment="textStart"
                 android:drawableLeft="@drawable/long_nitification"
+                android:background="?android:attr/selectableItemBackground"
                 android:text="   Notification"
                 android:textSize="13dp"
-                android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:layout_marginLeft="40dp"
+
+                android:background="@color/white"
+                android:layout_marginLeft="30dp"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/long_add"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_add"
-            android:text="   Add to contacts"
-            android:textSize="13dp"
+        <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/mute"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_unread"
-            android:text="   Unread"
-            android:textSize="13dp"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
+            <Button
+                android:id="@+id/long_add"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_add"
+                android:background="?android:attr/selectableItemBackground"
+                android:backgroundTint="@color/white"
+                android:text="   Add to contacts"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/long_ping"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_ping"
-            android:text="   PING Top"
-            android:textSize="13dp"
+        <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/block"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_block"
-            android:text="   Block"
-            android:textSize="13dp"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
+            <Button
+                android:id="@+id/mute"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_unread"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="   Unread"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/long_archive"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:drawableLeft="@drawable/long_archive"
-            android:text="   Archive"
-            android:textSize="13dp"
+        <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"/>
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/long_ping"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_ping"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="   PING Top"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/block"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_block"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="   Block"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/long_archive"
+                android:paddingLeft="20dp"
+                android:textAlignment="textStart"
+                android:drawableLeft="@drawable/long_archive"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="   Archive"
+                android:textSize="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

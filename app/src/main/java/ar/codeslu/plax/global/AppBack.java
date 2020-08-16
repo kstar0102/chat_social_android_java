@@ -454,8 +454,9 @@ public class AppBack extends Application {
     }
 
     public void getContacts() {
-        if(mAuth.getCurrentUser() != null)
-        Global.contactsG = tinydb.getListConatcts(mAuth.getCurrentUser().getUid() + "C");
+        if(mAuth.getCurrentUser() != null){
+            Global.contactsG = tinydb.getListConatcts(mAuth.getCurrentUser().getUid() + "C");
+        }
         else
             Global.contactsG = new ArrayList<>();
     }

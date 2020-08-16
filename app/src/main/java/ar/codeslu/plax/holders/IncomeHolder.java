@@ -175,7 +175,6 @@ public class IncomeHolder extends MessagesListAdapter.IncomingMessageViewHolder<
         } else {
             forward.setVisibility(View.GONE);
             call.setVisibility(View.GONE);
-
         }
         userava = itemView.findViewById(R.id.messAva);
         if (message.isChat()) {

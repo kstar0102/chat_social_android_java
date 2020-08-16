@@ -69,73 +69,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="20dp"
         android:layout_alignParentEnd="true"/>
-    <LinearLayout
 
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/notcontact"
-        android:background="@drawable/over"
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="45dp"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/close"
-            android:src="@drawable/ic_close"
-            android:layout_gravity="end"
-            android:layout_margin="5dp"/>
-        <com.vanniktech.emoji.EmojiTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/notcontact"
-            android:textColor="#fff"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/addcontact"
-            android:background="@drawable/button_message_background"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="@string/add_contact"
-            android:textColor="#fff"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/block"
-            android:background="@drawable/button_message_background"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="@string/block"
-            android:textColor="#fff"
-            android:paddingEnd="50dp"
-            android:paddingStart="50dp"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            />
-    </LinearLayout>
-    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/blocked"
@@ -143,6 +78,7 @@
         android:background="@color/colorPrimary"
         android:padding="8dp"
         android:layout_height="wrap_content">
+
         <com.vanniktech.emoji.EmojiTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -152,7 +88,9 @@
             android:textColor="#fff"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:id="@+id/reply"
         android:layout_alignParentBottom="true"
@@ -164,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <com.vanniktech.emoji.EmojiTextView
                 android:layout_width="match_parent"
                 android:id="@+id/replyU"
@@ -174,6 +113,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -197,102 +137,121 @@
             />
     </LinearLayout>
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:orientation="horizontal"
-       android:id="@+id/textbar"
-       android:background="@color/white"
-       android:layout_alignBottom="@+id/messagesList"
-       android:layout_alignParentBottom="true"
-       android:layout_height="wrap_content">
-       <com.devlomi.record_view.RecordButton
-           android:id="@+id/voice"
-           android:layout_marginStart="3dp"
-           android:layout_width="34dp"
-           android:layout_gravity="bottom"
-           android:layout_height="34dp"
-           android:background="@drawable/circle_b"
-           android:scaleType="centerInside"
-           android:layout_margin="5dp"
-           app:mic_icon="@drawable/recv_ic_mic_white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/messagesList"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/messagebox"
             android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/round_w"
+            android:id="@+id/textbar"
+            android:background="@color/white"
             android:layout_height="wrap_content">
 
-            <com.vanniktech.emoji.EmojiEditText
-                android:id="@+id/messageInput"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/emoji"
+                android:src="@drawable/chat_moji_icon"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="bottom"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/black"
-                android:hint="Type a message"
-                android:maxHeight="220dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:id="@+id/messagebox"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/round_w"
-                android:imeOptions="actionSend"
-                android:singleLine="false"
-                android:isScrollContainer="true"
-                android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"/>
+                android:layout_height="wrap_content">
+
+                <com.vanniktech.emoji.EmojiEditText
+                    android:id="@+id/messageInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textColor="@color/black"
+                    android:hint="Type a message"
+                    android:maxHeight="220dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@drawable/round_w"
+                    android:imeOptions="actionSend"
+                    android:singleLine="false"
+                    android:isScrollContainer="true"
+                    android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </RelativeLayout>
+
+            <com.devlomi.record_view.RecordView
+                android:id="@+id/record_view"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:background="@drawable/round_w"
+                android:layout_height="wrap_content"
+                app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+                app:slide_to_cancel_arrow_color="#000000"
+                app:slide_to_cancel_bounds="8dp"
+                app:slide_to_cancel_margin_right="10dp"
+                app:slide_to_cancel_text="@string/SLC"
+                app:counter_time_color="#ff0000"
+                />
+
+
+            <com.devlomi.record_view.RecordButton
+                android:id="@+id/voice"
+                android:layout_marginLeft="3dp"
+                android:layout_width="38dp"
+                android:layout_gravity="bottom"
+                android:layout_height="38dp"
+                android:scaleType="center"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/circle_b"
+                app:mic_icon="@drawable/recv_ic_mic_white" />
+
+            <ImageView
+                android:id="@+id/attachmentButton"
+                android:src="@drawable/add_file_image"
+                android:layout_margin="1dp"
+                android:background="@drawable/circle"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="bottom"/>
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/send"
+                android:layout_margin="5dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:paddingStart="4dp"
+                android:background="@drawable/send_img"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="bottom"/>
+
         </LinearLayout>
+    </LinearLayout>
 
 
-       <com.devlomi.record_view.RecordView
-           android:id="@+id/record_view"
-           android:layout_weight="1"
-           android:layout_gravity="center_vertical"
-           android:gravity="center_vertical"
-           android:layout_width="match_parent"
-           android:background="@drawable/round_w"
-           android:layout_height="wrap_content"
-           app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
-           app:slide_to_cancel_arrow_color="#000000"
-           app:slide_to_cancel_bounds="8dp"
-           app:slide_to_cancel_margin_right="10dp"
-           app:slide_to_cancel_text="@string/SLC"
-           app:counter_time_color="#ff0000"
-           />
-
-       <ImageView
-           android:id="@+id/emoji"
-           android:src="@drawable/chat_moji_icon"
-           android:layout_marginBottom="1dp"
-           android:layout_marginRight="5dp"
-           android:layout_width="38dp"
-           android:layout_height="38dp"
-           android:layout_gravity="bottom"/>
-
-       <ImageView
-           android:id="@+id/attachmentButton"
-           android:src="@drawable/add_file_image"
-           android:layout_margin="1dp"
-           android:background="@drawable/circle"
-           android:layout_width="38dp"
-           android:layout_height="38dp"
-           android:layout_gravity="bottom"/>
-       <ImageView
-           android:id="@+id/send"
-           android:src="@drawable/send_w"
-           android:layout_margin="5dp"
-           android:paddingBottom="4dp"
-           android:paddingTop="4dp"
-           android:paddingStart="4dp"
-           android:background="@drawable/circle_b"
-           android:layout_width="34dp"
-           android:layout_height="34dp"
-           android:layout_gravity="bottom"/>
-
-   </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/connectE"

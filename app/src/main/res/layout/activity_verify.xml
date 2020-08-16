@@ -8,208 +8,214 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context="ar.codeslu.plax.auth.Verify">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="25dp"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_marginTop="70dp"
-            android:src="@drawable/login_logo"
-            android:layout_gravity="center"
-            android:layout_width="150dp"
-            android:layout_height="120dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_marginTop="50dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp"
-                android:textAlignment="textEnd"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="@string/verify_txt"/>
-
-            <TextView
-                android:id="@+id/phoneNumber_txt_1"
-                android:layout_weight="1"
-                android:layout_marginTop="50dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp"
-                android:textAlignment="textStart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="123456789012"/>
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:textSize="15dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:text="Waiting to automatically detect an SMS sent to"/>
-
-        <LinearLayout
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                android:text="+ "
-                android:layout_marginLeft="80dp"/>
-
-            <TextView
-                android:id="@+id/phoneNumber_txt_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                android:text="123456789012"/>
-
-            <TextView
-                android:id="@+id/wrongnumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blue"
-                android:textSize="15dp"
-                android:layout_marginLeft="35dp"
-                android:text="Wrong number?"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="25dp"
+            android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp">
+            <ImageView
+                android:layout_marginTop="40dp"
+                android:src="@drawable/login_logo"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="120dp"/>
 
             <LinearLayout
-                android:id="@+id/linlay1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_login"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15dp"
+                    android:textAlignment="textEnd"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/verify_txt"/>
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/et_bg_blue"
-                        android:id="@+id/verifyE"
-                        android:singleLine="true"
-                        android:fontFamily="sans-serif-light"
-                        android:paddingStart="15dp"
-                        android:inputType="number"
-                        android:textColorHint="@color/colorPrimary"
-                        android:paddingEnd="15dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/phoneNumber_txt_1"
+                    android:layout_weight="1"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15dp"
+                    android:textAlignment="textStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123456789012"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_below="@+id/linne"
-                        android:id="@+id/txtR"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/black"
-                        android:layout_height="wrap_content"
-                        android:text="Enter 6-digit code"/>
-
-                </LinearLayout>
-
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:textSize="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:text="Waiting to automatically detect an SMS sent to"/>
 
             <LinearLayout
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:layout_below="@+id/linlay1"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="+ "
+                    android:layout_marginLeft="80dp"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:background="@color/colorPrimary"
-                        android:fontFamily="sans-serif-medium"
-                        android:paddingStart="70dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingEnd="70dp"
-                        android:text="@string/next"
-                        android:id="@+id/nextV"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/phoneNumber_txt_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="123456789012"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_below="@+id/linne"
-                        android:id="@+id/tick"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:layout_height="wrap_content"/>
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:id="@+id/resend"
-                        android:layout_marginStart="10dp"
-                        android:layout_gravity="center"
-                        android:tint="@color/colorPrimary"
-                        android:src="@drawable/ic_resend"/>
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/wrongnumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blue"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="35dp"
+                    android:text="Wrong number?"/>
 
             </LinearLayout>
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp">
 
+                    <LinearLayout
+                        android:id="@+id/linlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_login"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:layout_gravity="center"
+                                android:layout_width="200dp"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp"
+                                android:id="@+id/verifyE"
+                                android:singleLine="true"
+                                android:fontFamily="sans-serif-light"
+                                android:inputType="number"
+                                android:textAlignment="center"
+                                android:backgroundTint="@color/colorPrimary"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_below="@+id/linne"
+                                android:id="@+id/txtR"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:textColor="@color/black"
+                                android:layout_height="wrap_content"
+                                android:text="Enter 6-digit code"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="50dp"
+                        android:layout_below="@+id/linlay1"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:background="@color/colorPrimary"
+                                android:fontFamily="sans-serif-medium"
+                                android:paddingStart="70dp"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:paddingEnd="70dp"
+                                android:text="@string/next"
+                                android:id="@+id/nextV"
+                                android:textAllCaps="false"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_below="@+id/linne"
+                                android:id="@+id/tick"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_marginStart="10dp"
+                                android:textColor="@color/colorPrimary"
+                                android:layout_height="wrap_content"/>
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:id="@+id/resend"
+                                android:layout_marginStart="10dp"
+                                android:layout_gravity="center"
+                                android:tint="@color/colorPrimary"
+                                android:src="@drawable/ic_resend"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
     </ScrollView>
+
+
+
 
 </LinearLayout>

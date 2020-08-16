@@ -21,6 +21,7 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -93,8 +95,6 @@ public class Contacts extends AppCompatActivity {
         Global.currentactivity = this;
 
         mAuth = FirebaseAuth.getInstance();
-
-
         myData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         //loader
         if (Global.DARKSTATE) {
@@ -129,10 +129,10 @@ public class Contacts extends AppCompatActivity {
 
         contactNum.setVisibility(View.GONE);
 
-if(mAuth.getCurrentUser() != null)
-        ((AppBack) getApplication()).getContacts();
-else
-    Global.contactsG = new ArrayList<>();
+        if(mAuth.getCurrentUser() != null)
+                ((AppBack) getApplication()).getContacts();
+        else
+            Global.contactsG = new ArrayList<>();
 
         localContacts = new ArrayList<>();
         searchL = new ArrayList<>();
@@ -146,6 +146,7 @@ else
         //custom recyclerview
         mUserList.setIndexBarTextColor(R.color.white);
         mUserList.setIndexBarColor(R.color.colorPrimaryDark2awy);
+
         //dark mode init
         if (mAuth.getCurrentUser() != null) {
             if (!((AppBack) getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
@@ -172,6 +173,7 @@ else
         refresh = viewS.findViewById(R.id.refreshC);
         refresh.setFocusableInTouchMode(false);
         refresh.setFocusable(false);
+
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,6 +190,7 @@ else
                 }
             }
         });
+
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -201,16 +204,38 @@ else
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 filter(editable.toString());
 
             }
         });
+
         invitecontact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 startActivity(new Intent(Contacts.this,Invite.class));
 
+            }
+        });
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDbRef = mDatabase.getReference("Users");
+        mDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    UserData userData = child.getValue(UserData.class);
+                    Global.contactsG.add(userData);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAGerror", "Failed to read value.", error.toException());
             }
         });
 
@@ -223,7 +248,6 @@ else
                         if (report.areAllPermissionsGranted()) {
                             if (Global.check_int(Contacts.this))
                                 Global.contactsG.clear();
-
 
                             if (Global.nameLocal == null || Global.nameLocal.isEmpty()) {
                                 myData.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -244,8 +268,6 @@ else
                                 getContactList();
                         } else
                             Toast.makeText(Contacts.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
-
-
                     }
 
                     @Override
@@ -255,6 +277,7 @@ else
 
                     }
                 }).check();
+
         try {
             if (mAuth.getCurrentUser() != null) {
                 if (!((AppBack) Global.mainActivity.getApplication()).shared().getBoolean("dark" + mAuth.getCurrentUser().getUid(), false)) {
@@ -273,7 +296,6 @@ else
         } catch (NullPointerException e) {
 
         }
-
     }
 
     private void getContactList() {
@@ -295,7 +317,9 @@ else
                     if (!String.valueOf(phone.charAt(0)).equals("+"))
                         phone = ISOPrefix + phone;
                     if(phone.length()>0) {
-                        if (!Global.phoneLocal.equals(phone) && !localContacts.contains(phone) && !phone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
+                        if (!Global.phoneLocal.equals(phone)
+                                && !localContacts.contains(phone)
+                                && !phone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
                             if (!phone.contains(".") && !phone.contains("#") && !phone.contains("$") && !phone.contains("[") && !phone.contains("]"))
                                 localContacts.add(phone);
                         }
@@ -305,7 +329,6 @@ else
         }
 
         runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
                 if (Global.check_int(Contacts.this)) {
@@ -355,13 +378,9 @@ else
                             contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contact));
                         else
                             contactNum.setText(Global.contactsG.size() + " " + getResources().getString(R.string.contacts));
-
-
                     }
                     mUserListAdapter.notifyDataSetChanged();
-
                 }
-
             }
         });
 
@@ -388,6 +407,7 @@ else
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                         if (childSnapshot.child("phone").getValue() != null) {
                             phone = childSnapshot.child("phone").getValue().toString();
+                            Log.e("phone-data", phone );
                             dialog.dismiss();
                         }
                         name = getContactName(phone, Contacts.this);
@@ -560,17 +580,25 @@ else
     }
 
     private void filter(String text) {
+
         ArrayList<UserData> filteredList = new ArrayList<>();
 
-        for (UserData item : Global.contactsG) {
-            if (item.getNameL().toLowerCase().contains(text.toLowerCase()))
-                filteredList.add(item);
-
-            else if (item.getPhone().toLowerCase().contains(text.toLowerCase()))
-                filteredList.add(item);
-
-
+        for(int i = 0; i < Global.contactsG.size(); i++){
+            Log.e("TAGname", Global.contactsG.get(i).getPhone().toLowerCase());
+//            if (Global.contactsG.get(i).getNameL().toLowerCase().contains(text.toLowerCase()))
+//                filteredList.add(Global.contactsG.get(i));
+//
+//            if (Global.contactsG.get(i).getPhone().toLowerCase().contains(text.toLowerCase()))
+//                filteredList.add(Global.contactsG.get(i));
         }
+
+//        for (UserData item : Global.contactsG) {
+//            if (item.getNameL().toLowerCase().contains(text.toLowerCase()))
+//                filteredList.add(item);
+//
+//            else if (item.getPhone().toLowerCase().contains(text.toLowerCase()))
+//                filteredList.add(item);
+//        }
 
         mUserListAdapter.filterList(filteredList);
     }

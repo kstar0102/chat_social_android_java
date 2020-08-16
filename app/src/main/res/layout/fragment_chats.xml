@@ -10,11 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greystory" />
-
         <com.stfalcon.chatkit.dialogs.DialogsList
             android:id="@+id/dialogsList"
             android:layout_width="match_parent"

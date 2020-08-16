@@ -172,6 +172,7 @@ public class Profile extends AppCompatActivity {
         }
 
         if (Global.check_int(Profile.this)) {
+
             query = mData.child(id);
             child = query.addValueEventListener(new ValueEventListener() {
                 @Override

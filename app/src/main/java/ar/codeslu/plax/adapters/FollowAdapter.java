@@ -25,11 +25,11 @@ public class FollowAdapter extends FragmentStatePagerAdapter {
                 Chats chat = new Chats();
                 return chat;
             case 1:
-                FriendFragment friendFragment = new FriendFragment();
-                return friendFragment;
-            case 2:
-                Chats chat1 = new Chats();
+              Chats chat1 = new Chats();
                 return chat1;
+            case 2:
+                Chats chat2 = new Chats();
+                return chat2;
             default:
                 return null;
         }

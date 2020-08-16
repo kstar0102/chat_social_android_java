@@ -178,6 +178,7 @@ public class MessagesListAdapter<MESSAGE extends IMessage>
 
         if (!items.isEmpty()) {
             int lastItemPosition = items.size() - 1;
+            Log.e("lastItemPosition ", String.valueOf(lastItemPosition));
             Date lastItem = (Date) items.get(lastItemPosition).item;
             if (DateFormatter.isSameDay(messages.get(0).getCreatedAt(), lastItem)) {
                 items.remove(lastItemPosition);
@@ -584,7 +585,7 @@ public class MessagesListAdapter<MESSAGE extends IMessage>
     }
 
     @SuppressWarnings("unchecked")
-    private int getMessagePositionById(String id) {
+    public int getMessagePositionById(String id) {
         for (int i = 0; i < items.size(); i++) {
             Wrapper wrapper = items.get(i);
             if (wrapper.item instanceof IMessage) {

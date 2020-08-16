@@ -23,11 +23,18 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.link.AutoLinkMode;
 import com.stfalcon.chatkit.link.AutoLinkOnClickListener;
 import com.stfalcon.chatkit.link.AutoLinkTextView;
@@ -44,6 +51,7 @@ import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.global.Global;
+import ar.codeslu.plax.lists.UserData;
 
 /**
  * Created by CodeSlu on 01/02/19.
@@ -51,13 +59,19 @@ import ar.codeslu.plax.global.Global;
 
 public class OutcomeHolder
         extends MessagesListAdapter.OutcomingMessageViewHolder<Message> {
+    ValueEventListener child;
+    Query query;
+    FirebaseAuth mAuth;
+    DatabaseReference mData;
     private ImageView retry;
     private ProgressBar sending;
     private LinearLayout ly;
     private  AutoLinkTextView autoLinkTextView;
-    ImageView forward, call;
-    LinearLayout replyb;
+    ImageView forward, call, userAva, checkImg;
+    LinearLayout replyb, sendChecklay;
     private  AutoLinkTextView replyText;
+
+    public static Date last_read_date = null;
 
     public OutcomeHolder(View itemView, Object payload) {
         super(itemView);
@@ -70,18 +84,16 @@ public class OutcomeHolder
 
         forward = itemView.findViewById(R.id.forward);
         call = itemView.findViewById(R.id.call);
-
-
-
-
+        userAva = itemView.findViewById(R.id.userAva);
+        checkImg = itemView.findViewById(R.id.userAvaChecked);
+        sendChecklay = itemView.findViewById(R.id.check_send_out);
         ////reply
 
         replyb = itemView.findViewById(R.id.replyb);
         replyText = itemView.findViewById(R.id.replytext);
 
         try {
-            if(!message.getReply().isEmpty() && !message.isDeleted())
-            {
+            if(!message.getReply().isEmpty() && !message.isDeleted()){
                 replyb.setVisibility(View.VISIBLE);
                 replyText.addAutoLinkMode(
                         AutoLinkMode.MODE_PHONE,
@@ -91,6 +103,7 @@ public class OutcomeHolder
                 replyText.setUrlModeColor(ContextCompat.getColor(Global.conA, R.color.white));
                 replyText.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
                 replyText.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
+
                 if (message.getReply() != null) {
                     replyText.setAutoLinkText(message.getReply());
                     replyText.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
@@ -185,41 +198,11 @@ public class OutcomeHolder
 
         }
         //react
-        ImageView react = itemView.findViewById(R.id.react);
         ly = itemView.findViewById(R.id.all);
-        if (message.isDeleted()) {
-            react.setVisibility(View.GONE);
-        } else {
-            react.setVisibility(View.VISIBLE);
-        }
-        switch (message.getReact()) {
-            case "like":
-                react.setVisibility(View.VISIBLE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.like));
-                break;
-            case "funny":
-                react.setVisibility(View.VISIBLE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.funny));
-                break;
-            case "love":
-                react.setVisibility(View.VISIBLE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.love));
-                break;
-            case "sad":
-                react.setVisibility(View.VISIBLE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.sad));
-                break;
-            case "angry":
-                react.setVisibility(View.VISIBLE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.angry));
-                break;
-            case "no":
-                react.setVisibility(View.GONE);
-                react.setImageDrawable(Global.conA.getResources().getDrawable(R.drawable.emoji_blue));
-                break;
-        }
+
         //retry adapt
         retry = itemView.findViewById(R.id.retry);
+
         sending = itemView.findViewById(R.id.sending);
         if (message.getStatus().equals("X"))
         {
@@ -227,6 +210,7 @@ public class OutcomeHolder
             sending.setVisibility(View.GONE);
 
         }
+
         else if(message.getStatus().equals(".."))
         {
             retry.setVisibility(View.GONE);
@@ -247,6 +231,7 @@ public class OutcomeHolder
         autoLinkTextView.setUrlModeColor(ContextCompat.getColor(Global.conA, R.color.white));
         autoLinkTextView.setEmailModeColor(ContextCompat.getColor(Global.conA, R.color.white));
         autoLinkTextView.setSelectedStateColor(ContextCompat.getColor(Global.conA, R.color.white));
+
         if (message.getText() != null) {
             autoLinkTextView.setAutoLinkText(message.getText());
             autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
@@ -311,8 +296,17 @@ public class OutcomeHolder
             String timee = format.format(date);
             if(!message.isChat())
                 time.setText("  " + timee);
+
             else
-                time.setText(" " + timee + " (" + message.getStatus() + ")");
+//                time.setText(" " + timee + " (" + message.getStatus() + ")");
+                time.setText("  " + timee);
+
+            if(message.getStatus().equals("..")){
+                time.setText(" " + timee + "...");
+            }
+
+
+
             time.setTextSize(10);
             if (message.isDeleted()) {
                 time.setVisibility(View.GONE);
@@ -358,6 +352,7 @@ public class OutcomeHolder
                 cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
                 cdd.show();
             });
+
             autoLinkTextView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -369,13 +364,55 @@ public class OutcomeHolder
                     abc.gravity = Gravity.BOTTOM | Gravity.RIGHT;
                     abc.x = 20;   //x position
                     abc.y = itemView.getScrollY() + 200;   //y position
-                    Log.e("y:", String.valueOf(abc.y));
                     cdd.show();
                     return true;
                 }
             });
 
         }
+
+        userAva.setVisibility(View.GONE);
+
+        if( (last_read_date == null || last_read_date.before(message.getCreatedAt())) && message.getStatue().equals("R✔")){
+            last_read_date = message.getCreatedAt();
+        }
+        if (last_read_date !=null && last_read_date.equals(message.getCreatedAt())){
+            userAva.setVisibility(View.VISIBLE);
+        }
+//        query = mData.child(id);
+//        child = query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if(mAuth.getCurrentUser()!=null) {
+//
+//                    if (dataSnapshot.exists()) {
+//                        String statueT = "";
+//                        UserData userData = dataSnapshot.getValue(UserData.class);
+//
+//                        if (userData.getAvatar() != null) {
+//                            String ava = userData.getAvatar();
+//                            Global.avaLocal = ava;
+//                            if (ava.equals("no")) {
+//                                Picasso.get()
+//                                        .load(R.drawable.profile)
+//                                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+//                                        .into(userAva);
+//                            } else {
+//                                Picasso.get()
+//                                        .load(ava)
+//                                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+//                                        .into(userAva);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
     }
 }

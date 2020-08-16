@@ -81,6 +81,8 @@ import nl.changer.audiowife.AudioWife;
 
 import com.stfalcon.chatkit.me.Message;
 
+import ar.codeslu.plax.holders.OutcomeHolder;
+
 import static android.content.Context.POWER_SERVICE;
 
 
@@ -100,7 +102,7 @@ public class OutcomeOther
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     //view
-    private ImageView play;
+    private ImageView play, checkImg, userAva;
     //download
     private String fileName;
     private static String url, lat, lng;
@@ -136,6 +138,8 @@ public class OutcomeOther
 
         replyb = itemView.findViewById(R.id.replyb);
         replyText = itemView.findViewById(R.id.replytext);
+        userAva = itemView.findViewById(R.id.userAva);
+        checkImg = itemView.findViewById(R.id.userAvaChecked);
 
         replyb.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -300,7 +304,15 @@ public class OutcomeOther
         if (!message.isChat())
             time.setText("  " + timee);
         else
-            time.setText(" " + timee + " (" + message.getStatus() + ")");
+//            time.setText(" " + timee + " (" + message.getStatus() + ")");
+            time.setText("  " + timee);
+
+        if (message.getStatus().equals("R✔"))
+        {
+            checkImg.setVisibility(View.VISIBLE);
+            userAva.setVisibility(View.GONE);
+        }
+
         time.setTextSize(10);
         TextView duration = itemView.findViewById(R.id.recordduration);
         play = itemView.findViewById(R.id.playV);
@@ -735,6 +747,16 @@ Log.wtf("Mapp",url);
                     return true;
                 }
             });
+        }
+
+        checkImg.setVisibility(View.GONE);
+        userAva.setVisibility(View.GONE);
+
+        if( (OutcomeHolder.last_read_date == null || OutcomeHolder.last_read_date.before(message.getCreatedAt())) && message.getStatue().equals("R✔")){
+            OutcomeHolder.last_read_date = message.getCreatedAt();
+        }
+        if (OutcomeHolder.last_read_date !=null && OutcomeHolder.last_read_date.equals(message.getCreatedAt())){
+            userAva.setVisibility(View.VISIBLE);
         }
 
 

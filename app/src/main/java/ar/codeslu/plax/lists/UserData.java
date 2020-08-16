@@ -5,7 +5,7 @@ package ar.codeslu.plax.lists;
  */
 
 public class UserData  {
-    private  String name,nameL, statue, avatar, phone, lastOn,id;
+    private  String name, nameL, statue, avatar, phone, lastOn, id;
     private boolean online,screen;
     private long time,timeC;
 

@@ -217,6 +217,7 @@ public class Chat extends AppCompatActivity
     boolean typingR, recordingR = false;
     int code = 0;
     String input;
+
     //voice record
     private MediaRecorder mRecorder;
     private long recordTime = 0;
@@ -249,8 +250,6 @@ public class Chat extends AppCompatActivity
     Runnable runnable;
     //exist
     ImageView close;
-    Button block, addcontact;
-    LinearLayout existlay;
     ImageView downdown;
     //get Message query
     Query query;
@@ -316,13 +315,8 @@ public class Chat extends AppCompatActivity
         Global.currname = "";
         //media picker
         mediaPicker = MediaPicker.from(this).to(this);
+        params = new PhotoParams.Builder() .type(MediaPicker.Type.VIDEO).duration(5).facing(false).highQuality(true).build();
 
-        params = new PhotoParams.Builder()
-                .type(MediaPicker.Type.VIDEO)
-                .duration(5)
-                .facing(false)
-                .highQuality(true)
-                .build();
         //firebase
         mAuth = FirebaseAuth.getInstance();
         mData = FirebaseDatabase.getInstance().getReference(Global.CHATS);
@@ -359,11 +353,7 @@ public class Chat extends AppCompatActivity
 
 
         //exist
-        block = findViewById(R.id.block);
-        addcontact = findViewById(R.id.addcontact);
         close = findViewById(R.id.close);
-        existlay = findViewById(R.id.notcontact);
-        existlay.setVisibility(View.GONE);
         downdown = findViewById(R.id.downdown);
         downdown.setVisibility(View.GONE);
         overdark.setVisibility(View.GONE);
@@ -376,7 +366,6 @@ public class Chat extends AppCompatActivity
             }
         });
 
-
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.int_ID));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -388,7 +377,8 @@ public class Chat extends AppCompatActivity
             }
 
         });
-//set Wallpapers
+
+        //set Wallpapers
         if (!((AppBack) getApplication()).shared().getString("wall", "no").equals("no")) {
             String pathW = ((AppBack) getApplication()).shared().getString("wall", "no");
             File f = new File(getRealPathFromURI(Uri.parse(pathW)));
@@ -415,10 +405,13 @@ public class Chat extends AppCompatActivity
         cdd = new AttachMenu(this);
         cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+        cdd.requestWindowFeature(Window.FEATURE_NO_TITLE);
         WindowManager.LayoutParams abc= cdd.getWindow().getAttributes();
         abc.gravity = Gravity.BOTTOM;
 
         cdd.show();
+        Window window = cdd.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         //menu inti
         btnI = cdd.findViewById(R.id.gallery);
@@ -544,6 +537,7 @@ public class Chat extends AppCompatActivity
                 }
             }
         }
+
         //fcm notify
         fcm = Global.getFCMservies();
         Global.currentactivity = this;
@@ -551,6 +545,7 @@ public class Chat extends AppCompatActivity
         ((AppBack) this.getApplication()).startOnline();
 
         chatBack_Btn = findViewById(R.id.chatBackBtn);
+
         chatBack_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -558,7 +553,7 @@ public class Chat extends AppCompatActivity
             }
         });
 
-//toolbar
+        //toolbar
         //Actionbar init
         toolbar = (Toolbar) findViewById(R.id.chatbar);
         toolbar.setPadding(0, 0, 0, 0);
@@ -597,17 +592,17 @@ public class Chat extends AppCompatActivity
                 WindowManager.LayoutParams abc= dialog.getWindow().getAttributes();
                 abc.gravity = Gravity.TOP | Gravity.RIGHT;
                 abc.x = 20;   //x position
-                abc.y = 160    ;   //y position
+                abc.y = 180    ;   //y position
                 dialog.show();
                 Window window = dialog.getWindow();
-                window.setLayout(700, LinearLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout(800, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
 
-//emoji keyboard
+        //emoji keyboard
         emojiPopup = EmojiPopup.Builder.fromRootView(ly).build(message);
 
-//downloader
+        //downloader
         // Enabling database for resume support even after the application is killed:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
@@ -616,6 +611,7 @@ public class Chat extends AppCompatActivity
         //encryption
 
         voice.setRecordView(recordView);
+
         if (getIntent() != null) {
             Intent intent = getIntent();
             friendId = intent.getExtras().getString("id");
@@ -649,10 +645,12 @@ public class Chat extends AppCompatActivity
             //number for checking the contact
             Global.currphone = intent.getExtras().getString("phone");
         }
+
         //save message
         preferences = getSharedPreferences("messagebox", Context.MODE_PRIVATE);
         editor = preferences.edit();
-//retrive message
+
+        //retrive message
         SharedPreferences preferences = getSharedPreferences("messagebox", Context.MODE_PRIVATE);
         message.setText(preferences.getString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), ""));
         //toolbar data get
@@ -670,18 +668,18 @@ public class Chat extends AppCompatActivity
                 readM();
             }
         }
+
         name.setText(Global.currname);
+
         if (String.valueOf(Global.currAva).equals("no")) {
             Picasso.get()
                     .load(R.drawable.profile)
                     .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-
                     .into(ava);
         } else {
             Picasso.get()
                     .load(Global.currAva)
                     .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-
                     .into(ava);
         }
         state.setVisibility(View.GONE);
@@ -690,8 +688,8 @@ public class Chat extends AppCompatActivity
         mapp.put("typing", false);
         mapp.put("audio", false);
         type.child(mAuth.getCurrentUser().getUid()).child(friendId).onDisconnect().updateChildren(mapp);
-//typing
 
+        //typing
         Global.currFid = friendId;
         Query query = type.child(friendId).child(mAuth.getCurrentUser().getUid());
         query.keepSynced(true);
@@ -720,7 +718,7 @@ public class Chat extends AppCompatActivity
         });
 
 
-// user if blocked
+        // user if blocked
         ((AppBack) getApplication()).getBlockCurr(friendId);
         ((AppBack) getApplication()).getBlock();
 
@@ -815,7 +813,9 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
         mylist = new ArrayList<>();
+
         myData = FirebaseDatabase.getInstance().getReference(Global.USERS);
         Query query1 = myData.child(mAuth.getCurrentUser().getUid());
         query1.keepSynced(true);
@@ -871,6 +871,7 @@ public class Chat extends AppCompatActivity
                 canScroll = false;
             }
         });
+
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             messagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
@@ -897,9 +898,7 @@ public class Chat extends AppCompatActivity
                     } else {
                         canScroll = true;
                         downdown.setVisibility(View.VISIBLE);
-
                     }
-
                 }
             });
         }
@@ -907,7 +906,6 @@ public class Chat extends AppCompatActivity
 
         //output
         imageLoader = new ImageLoader() {
-
             @Override
             public void loadImage(final ImageView imageView, final String url, Object payload) {
                 if (!url.contains(".png")) {
@@ -930,6 +928,7 @@ public class Chat extends AppCompatActivity
 
         //get messages
         getChats();
+
         //typing
         if (message.getText().toString().isEmpty()) {
             add.setVisibility(View.VISIBLE);
@@ -940,6 +939,7 @@ public class Chat extends AppCompatActivity
             send.setEnabled(true);
             send.setVisibility(View.VISIBLE);
         }
+
         message.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -1037,6 +1037,7 @@ public class Chat extends AppCompatActivity
                          chat.updatedialog(Chat.this);
 
 
+                        Log.e("step_1", "step_2");
                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                         messagesAdapter.notifyDataSetChanged();
                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1054,6 +1055,7 @@ public class Chat extends AppCompatActivity
                     Snackbar.make(ly, R.string.empty_mess, Snackbar.LENGTH_SHORT).show();
             }
         });
+
         message.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -1119,6 +1121,7 @@ public class Chat extends AppCompatActivity
                                          chat.updatedialog(Chat.this);
 
 
+                                        Log.e("step_1", "step_3");
                                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1143,6 +1146,7 @@ public class Chat extends AppCompatActivity
                 return false;
             }
         });
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1156,6 +1160,7 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
         btnI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1167,6 +1172,7 @@ public class Chat extends AppCompatActivity
                     Toast.makeText(Chat.this, R.string.wait, Toast.LENGTH_SHORT).show();
             }
         });
+
         btnF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1187,6 +1193,7 @@ public class Chat extends AppCompatActivity
             }
 
         });
+
         btnVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1198,6 +1205,7 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
         btnV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1210,6 +1218,7 @@ public class Chat extends AppCompatActivity
                 startActivityForResult(intent3, Constant.REQUEST_CODE_PICK_AUDIO);
             }
         });
+
         btnS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1224,6 +1233,7 @@ public class Chat extends AppCompatActivity
                         .launchCamera(Chat.this);
             }
         });
+
         emoji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1236,6 +1246,7 @@ public class Chat extends AppCompatActivity
                 }
             }
         });
+
         btnL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1301,6 +1312,7 @@ public class Chat extends AppCompatActivity
                                         Global.Dialogid = friendId;
                                         Global.DialogM = messageLocal;
                                          chat.updatedialog(Chat.this);
+                                        Log.e("step_1", "step_4");
                                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1329,6 +1341,7 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1346,16 +1359,17 @@ public class Chat extends AppCompatActivity
         recordView.setVisibility(View.GONE);
         messagebox.setVisibility(View.VISIBLE);
         add.setVisibility(View.VISIBLE);
+
         recordView.setOnRecordListener(new OnRecordListener() {
             @Override
             public void onStart() {
-
                 Dexter.withActivity(Chat.this)
-                        .withPermissions(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withPermissions(Manifest.permission.RECORD_AUDIO
+                                , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                , Manifest.permission.READ_EXTERNAL_STORAGE)
                         .withListener(new MultiplePermissionsListener() {
                             @Override
                             public void onPermissionsChecked(MultiplePermissionsReport report) {
-
                                 if (report.areAllPermissionsGranted()) {
                                     //Start Recording..
                                     recordView.setVisibility(View.VISIBLE);
@@ -1364,13 +1378,10 @@ public class Chat extends AppCompatActivity
                                     startRecording();
                                 } else
                                     Toast.makeText(Chat.this, getString(R.string.acc_per), Toast.LENGTH_SHORT).show();
-
-
                             }
 
                             @Override
                             public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-
                                 token.continuePermissionRequest();
 
                             }
@@ -1398,11 +1409,9 @@ public class Chat extends AppCompatActivity
                         stopRecording(true);
                         Uri uri = Uri.parse("file://" + mOutputFile.getAbsolutePath());
                         setResult(Activity.RESULT_OK, new Intent().setData(uri));
-
                         uploadV(uri, recordTime);
                     } catch (NullPointerException e) {
                         stopAT();
-
                     }
                 }
             }
@@ -1426,7 +1435,9 @@ public class Chat extends AppCompatActivity
 
             }
         });
+
         voice.setListenForRecord(true);
+
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
             public void onAnimationEnd() {
@@ -1435,6 +1446,7 @@ public class Chat extends AppCompatActivity
                 add.setVisibility(View.VISIBLE);
             }
         });
+
         //get realtime time
         h.postDelayed(runnable = new Runnable() {
             public void run() {
@@ -1443,79 +1455,6 @@ public class Chat extends AppCompatActivity
                 h.postDelayed(runnable, TIMEUPDATE);
             }
         }, TIMEUPDATE);
-        //all exist layout elements
-        block.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Global.check_int(Chat.this)) {
-                    if (!Global.blockedLocal) {
-                        ((AppBack) getApplication()).getBlock();
-                        Global.blockList.add(friendId);
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.blockList);
-                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) getApplication()).setBlock();
-                                Toast.makeText(Chat.this, getString(R.string.add_blok), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Chat.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                    } else {
-                        ((AppBack) getApplication()).getBlock();
-
-                        if (Global.blockList.contains(friendId))
-                            Global.blockList.remove(friendId);
-
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("list", Global.blockList);
-                        mBlock.child(mAuth.getCurrentUser().getUid()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                ((AppBack) getApplication()).setBlock();
-                                Toast.makeText(Chat.this, getString(R.string.re_blok), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Chat.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                    }
-
-
-                } else {
-                    Toast.makeText(Chat.this, getString(R.string.check_int), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-        addcontact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent addContactIntent = new Intent(Intent.ACTION_INSERT);
-                addContactIntent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-                addContactIntent.putExtra(ContactsContract.Intents.Insert.PHONE, Global.currphone);
-                addContactIntent.putExtra(ContactsContract.Intents.Insert.NAME, Global.currname);
-                startActivity(addContactIntent);
-            }
-        });
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                existlay.setVisibility(View.GONE);
-                editor.putBoolean("close_" + friendId + "_" + mAuth.getCurrentUser().getUid(), true);
-                editor.apply();
-            }
-        });
 
         //check contact exist
         Dexter.withActivity(Chat.this).withPermissions(Manifest.permission.READ_CONTACTS).withListener(new MultiplePermissionsListener() {
@@ -1645,8 +1584,11 @@ public class Chat extends AppCompatActivity
             @Override
             public void run() {
                 ArrayList<Message> messages = MessageData.getMessages();
-//                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+                System.out.println(String.valueOf(lastLoadedDate));
+                Log.e("step_1", "step_5");
                 messagesAdapter.addToEnd(messages, false);
+
             }
         }, 1000);
     }
@@ -1691,6 +1633,7 @@ public class Chat extends AppCompatActivity
                             return false;
                     }
                 });
+
         messagesAdapter = new MessagesListAdapter<>(mAuth.getCurrentUser().getUid(), holdersConfig, imageLoader);
         messagesAdapter.setLoadMoreListener(this);
         messagesAdapter.setDateHeadersFormatter(new DateFormatter.Formatter() {
@@ -1711,7 +1654,7 @@ public class Chat extends AppCompatActivity
                 new MessagesListAdapter.OnMessageViewClickListener<Message>() {
                     @Override
                     public void onMessageViewClick(View view, Message message) {
-//todo
+        //todo
                     }
                 });
         messagesList.setAdapter(messagesAdapter);
@@ -1854,6 +1797,8 @@ public class Chat extends AppCompatActivity
         initAdapter();
         //just init because of the first time offline started chat
         messagesAdapter.clear();
+
+        Log.e("step_1", "step_6");
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
 
@@ -1867,8 +1812,6 @@ public class Chat extends AppCompatActivity
                     Global.messG.clear();
                     ((AppBack) getApplication()).setchatsdb(friendId);
                     messagesAdapter.notifyDataSetChanged();
-
-
                 }
             }
 
@@ -1881,9 +1824,12 @@ public class Chat extends AppCompatActivity
         if (!Global.check_int(Chat.this)) {
             ((AppBack) getApplication()).getchatsdb(friendId);
             //update the list
+
             messagesAdapter.clear();
+            Log.e("step_1", "step_7");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
+
         }
         child = query.addChildEventListener(new ChildEventListener() {
             @Override
@@ -1912,6 +1858,7 @@ public class Chat extends AppCompatActivity
 
                                 //update the list
                                 messagesAdapter.clear();
+                                Log.e("step_1", "step_8");
                                 messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                 messagesAdapter.notifyDataSetChanged();
                                 messagesList.scrollBy(0, 0);
@@ -1942,6 +1889,7 @@ public class Chat extends AppCompatActivity
                     ((AppBack) getApplication()).setchatsdb(friendId);
 
                     messagesAdapter.clear();
+                    Log.e("step_1", "step_9");
                     messagesAdapter.addToEnd(MessageData.getMessages(), true);
                     messagesAdapter.notifyDataSetChanged();
                     messagesList.scrollBy(0, 0);
@@ -1964,6 +1912,7 @@ public class Chat extends AppCompatActivity
                     ((AppBack) getApplication()).setchatsdb(friendId);
 
                     messagesAdapter.clear();
+                    Log.e("step_1", "step_10");
                     messagesAdapter.addToEnd(MessageData.getMessages(), true);
                     messagesAdapter.notifyDataSetChanged();
                     messagesList.scrollBy(0, 0);
@@ -1993,9 +1942,11 @@ public class Chat extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     OnlineGetter getter = ds.getValue(OnlineGetter.class);
+                    System.out.println(String.valueOf(getter));
                     try {
-                        if (getter != null && getter.getStatue().equals("D✔"))
+                        if (getter != null && getter.getStatue().equals("D✔")){
                             ds.child("statue").getRef().setValue("R✔");
+                        }
                     } catch (NullPointerException e) {
                     }
                 }
@@ -2165,6 +2116,7 @@ public class Chat extends AppCompatActivity
                             Global.Dialogid = friendId;
                             Global.DialogM = messageLocal;
                              chat.updatedialog(Chat.this);
+                            Log.e("step_1", "step_11");
                             messagesAdapter.addToEnd(MessageData.getMessages(), true);
                             messagesAdapter.notifyDataSetChanged();
                             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2270,6 +2222,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
          chat.updatedialog(Chat.this);
+        Log.e("step_1", "step_12");
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2360,6 +2313,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
          chat.updatedialog(Chat.this);
+        Log.e("step_1", "step_13");
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2516,7 +2470,9 @@ public class Chat extends AppCompatActivity
         imageA.add(messidL);
         String locall = encryption.encryptOrNull("file://" + path);
         messagesAdapter.clear();
-        messageLocal = new MessageIn(locall, "image", messidL, "..", mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no", encryption.encryptOrNull(Global.avaLocal), true, false, false, "");
+        messageLocal = new MessageIn(locall, "image", messidL, "..",
+                mAuth.getCurrentUser().getUid(), System.currentTimeMillis(), false, false, "no",
+                encryption.encryptOrNull(Global.avaLocal), true, false, false, "");
         try {
             Global.messG.add(messageLocal);
             //local store
@@ -2543,6 +2499,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
          chat.updatedialog(Chat.this);
+        Log.e("step_1", "step_14");
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -3008,8 +2965,6 @@ public class Chat extends AppCompatActivity
     @Override
     public void onResume() {
         open = true;
-
-
         try {
             if(shakeDetector != null)
                 shakeDetector.start(getBaseContext());
@@ -3150,9 +3105,8 @@ public class Chat extends AppCompatActivity
         }
 
     }
-//mwe ga?ne ga gob da ni gga.il hae ra.o. seng pul la..i?o/ihlkj
-    private void sendMessNotify(final String message, final String Mid) {
 
+    private void sendMessNotify(final String message, final String Mid) {
 
         DatabaseReference mTokenget = FirebaseDatabase.getInstance().getReference(Global.tokens);
         mTokenget.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -3259,11 +3213,6 @@ public class Chat extends AppCompatActivity
 
     public void contactExistsLay(boolean exist) {
         boolean check = preferences.getBoolean("close_" + friendId + "_" + mAuth.getCurrentUser().getUid(), false);
-        if (!exist && !check)
-            existlay.setVisibility(View.VISIBLE);
-        else
-            existlay.setVisibility(View.GONE);
-
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -3331,15 +3280,16 @@ public class Chat extends AppCompatActivity
 
                     //todo when add retry after online
                     //put to retry
-//                    ((AppBack) getApplication()).getRetry(friendId);
-//                    Global.messG.get(i).setStatue("..");
-//                    Global.retryM.add(Global.messG.get(i));
-//                    ((AppBack) getApplication()).setRetry(friendId);
+                    ((AppBack) getApplication()).getRetry(friendId);
+                    Global.messG.get(i).setStatue("..");
+                    Global.retryM.add(Global.messG.get(i));
+                    ((AppBack) getApplication()).setRetry(friendId);
                 }
             }
             ((AppBack) getApplication()).setchatsdb(friendId);
 
             messagesAdapter.clear();
+            Log.e("step_1", "step_15");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
         }
@@ -3348,11 +3298,6 @@ public class Chat extends AppCompatActivity
     }
 
     public void blockView() {
-        if (!Global.blockedLocal)
-            block.setText(getResources().getString(R.string.block));
-        else
-            block.setText(getResources().getString(R.string.unblock));
-
         try {
             if (Global.currphone != null) {
                 if (!Global.blockedLocal && !Global.currblocked && !Global.currphone.equals("t88848992hisuseri9483828snothereri9949ghtnow009933")) {
@@ -3451,7 +3396,9 @@ public class Chat extends AppCompatActivity
                 if (direction == 8) {
 
                     try {
-                        if (messagesAdapter.halbins2(Global.messG.get(position).getMessId()) != null && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("..") && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("X")) {
+                        if (messagesAdapter.halbins2(Global.messG.get(position).getMessId()) != null
+                                && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("..")
+                                && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("X")) {
                             replyM = messagesAdapter.halbins2(Global.messG.get(position).getMessId());
                             replyBollean = true;
                             replyLy.setVisibility(View.VISIBLE);
@@ -3503,7 +3450,9 @@ public class Chat extends AppCompatActivity
 
                 } else if (direction == 4) {
                     try {
-                        if (messagesAdapter.halbins2(Global.messG.get(position).getMessId()) != null && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("..") && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("X")) {
+                        if (messagesAdapter.halbins2(Global.messG.get(position).getMessId()) != null
+                                && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("..")
+                                && !messagesAdapter.halbins2(Global.messG.get(position).getMessId()).getStatus().equals("X")) {
                             Global.forwardMessage = messagesAdapter.halbins2(Global.messG.get(position).getMessId());
                             startActivity(new Intent(Chat.this, Forward.class));
                         } else
@@ -3730,6 +3679,7 @@ public class Chat extends AppCompatActivity
             chat.updatedialog(Chat.this);
 
 
+            Log.e("step_1", "step_1");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -3789,10 +3739,10 @@ public class Chat extends AppCompatActivity
         }
     }
 
-
     public static void replyMOut(Message message, Context con) {
         try {
-            if (message != null && !message.getStatus().equals("..") && !message.getStatus().equals("X")) {
+            if (message != null && !message.getStatus().equals("..")
+                    && !message.getStatus().equals("X")) {
                 replyM = message;
                 replyBollean = true;
                 replyLy.setVisibility(View.VISIBLE);
@@ -3870,8 +3820,7 @@ public class Chat extends AppCompatActivity
     }
 
     public void onShakeDelete() {
-        ShakeOptions options = new ShakeOptions()
-                .background(false)
+        ShakeOptions options = new ShakeOptions().background(false)
                 .interval(1000)
                 .shakeCount(2)
                 .sensibility(2.0f);
