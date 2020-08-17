@@ -64,10 +64,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ar.codeslu.plax.Chat;
-import ar.codeslu.plax.Contacts;
-import ar.codeslu.plax.Groups.AddGroup;
-import ar.codeslu.plax.MainActivity;
-import ar.codeslu.plax.Qr;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.ChatCelect;
 import ar.codeslu.plax.datasetters.DialogData;
@@ -317,8 +313,8 @@ public class Chats extends Fragment
         if (mAuth.getCurrentUser() != null) {
             if (isAdded()) {
                 ((AppBack) mActivity.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                    shortcuts();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                    shortcuts();
             }
         }
         mData = FirebaseDatabase.getInstance().getReference(Global.CHATS).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -422,8 +418,8 @@ public class Chats extends Fragment
                                 if (mAuth.getCurrentUser() != null) {
                                     if (isAdded()) {
                                         ((AppBack) mActivity.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                                            shortcuts();
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                                            shortcuts();
                                     }
                                 }
                                 //update the list
@@ -472,8 +468,8 @@ public class Chats extends Fragment
                                 if (mAuth.getCurrentUser() != null) {
                                     if (isAdded()) {
                                         ((AppBack) mActivity.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                                            shortcuts();
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                                            shortcuts();
                                     }
                                 }
                                 dialogsAdapter.notifyDataSetChanged();
@@ -481,8 +477,8 @@ public class Chats extends Fragment
                                 if (mAuth.getCurrentUser() != null) {
                                     if (isAdded()) {
                                         ((AppBack) mActivity.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                                            shortcuts();
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                                            shortcuts();
                                     }
                                 }
 
@@ -535,8 +531,8 @@ public class Chats extends Fragment
                         if (mAuth.getCurrentUser() != null) {
                             if (isAdded()) {
                                 ((AppBack) mActivity.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                                    shortcuts();
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+////                                    shortcuts();
                             }
                         }
                         dialogsAdapter.clear();
@@ -686,8 +682,8 @@ public class Chats extends Fragment
         if (mAuth.getCurrentUser() != null) {
             if (isAdded()) {
                 ((AppBack) mActivity.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                    shortcuts();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                    shortcuts();
             }
         }
         dialogsAdapter.notifyDataSetChanged();
@@ -695,8 +691,8 @@ public class Chats extends Fragment
 
         if (mAuth.getCurrentUser() != null) {
             ((AppBack) conn.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                shortcuts();
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+//                shortcuts();
         }
 
         //update the list
@@ -784,95 +780,95 @@ public class Chats extends Fragment
 
     List<ShortcutInfo> listS;
 
-    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void shortcuts() {
-        try {
-            ((AppBack) mActivity.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
-            ((AppBack) mActivity.getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
-            listS = new ArrayList<>();
-            ShortcutManager shortcutManager = mActivity.getSystemService(ShortcutManager.class);
-            Intent intent = new Intent(mActivity, MainActivity.class);
-            intent.putExtra("codetawgeh", 3);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Intent.ACTION_VIEW);
-            ShortcutInfo dynamicShortcut1 = new ShortcutInfo.Builder(mActivity, "addstory")
-                    .setShortLabel(getString(R.string.stories))
-                    .setLongLabel(getString(R.string.stories))
-                    .setIcon(Icon.createWithResource(mActivity, R.drawable.stories))
-                    .setIntent(intent)
-                    .setRank(3)
-                    .build();
-            if (Global.diaGGG.size() > 0) {
-                Intent intentG = new Intent(mActivity, MainActivity.class);
-                intentG.putExtra("name", Global.diaGGG.get(Global.diaGGG.size() - 1).getName());
-                intentG.putExtra("id", Global.diaGGG.get(Global.diaGGG.size() - 1).getId());
-                intentG.putExtra("ava", Global.diaGGG.get(Global.diaGGG.size() - 1).getAvatar());
-                intentG.putExtra("codetawgeh", 2);
-                intentG.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intentG.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intentG.setAction(Intent.ACTION_VIEW);
-                if(!Global.diaGGG.get(Global.diaGGG.size() - 1).getName().isEmpty()) {
-                    ShortcutInfo dynamicShortcut2 = new ShortcutInfo.Builder(mActivity, "group")
-                            .setShortLabel(Global.diaGGG.get(Global.diaGGG.size() - 1).getName())
-                            .setLongLabel(Global.diaGGG.get(Global.diaGGG.size() - 1).getName())
-                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_group_b))
-                            .setIntent(intentG)
-                            .setRank(2)
-                            .build();
-                    listS.add(dynamicShortcut2);
-                }
-            }
-            if (Global.diaG.size() > 0) {
-                Intent intentU1 = new Intent(mActivity, MainActivity.class);
-                intentU1.putExtra("name", Global.diaG.get(Global.diaG.size() - 1).getName());
-                intentU1.putExtra("id", Global.diaG.get(Global.diaG.size() - 1).getId());
-                intentU1.putExtra("ava", Global.diaG.get(Global.diaG.size() - 1).getAvatar());
-                intentU1.putExtra("codetawgeh", 1);
-                intentU1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intentU1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intentU1.setAction(Intent.ACTION_VIEW);
-                if(!Global.diaG.get(Global.diaG.size() - 1).getName().isEmpty()) {
-
-                    ShortcutInfo dynamicShortcut3 = new ShortcutInfo.Builder(mActivity, "user1")
-                            .setShortLabel(Global.diaG.get(Global.diaG.size() - 1).getName())
-                            .setLongLabel(Global.diaG.get(Global.diaG.size() - 1).getName())
-                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_person_b))
-                            .setIntent(intentU1)
-                            .setRank(0)
-                            .build();
-                    listS.add(dynamicShortcut3);
-                }
-
-            }
-            if (Global.diaG.size() > 1) {
-                Intent intentU2 = new Intent(mActivity, MainActivity.class);
-                intentU2.putExtra("name", Global.diaG.get(Global.diaG.size() - 2).getName());
-                intentU2.putExtra("id", Global.diaG.get(Global.diaG.size() - 2).getId());
-                intentU2.putExtra("ava", Global.diaG.get(Global.diaG.size() - 2).getAvatar());
-                intentU2.putExtra("codetawgeh", 1);
-                intentU2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intentU2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intentU2.setAction(Intent.ACTION_VIEW);
-                if(!Global.diaG.get(Global.diaG.size() - 2).getName().isEmpty()) {
-
-                    ShortcutInfo dynamicShortcut4 = new ShortcutInfo.Builder(mActivity, "user2")
-                            .setShortLabel(Global.diaG.get(Global.diaG.size() - 2).getName())
-                            .setLongLabel(Global.diaG.get(Global.diaG.size() - 2).getName())
-                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_person_b))
-                            .setIntent(intentU2)
-                            .setRank(1)
-                            .build();
-                    listS.add(dynamicShortcut4);
-                }
-
-            }
-            listS.add(dynamicShortcut1);
-            shortcutManager.setDynamicShortcuts(listS);
-        } catch (NullPointerException e) {
-
-        }
-
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+//    private void shortcuts() {
+//        try {
+//            ((AppBack) mActivity.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
+//            ((AppBack) mActivity.getApplication()).getdialogdbG(mAuth.getCurrentUser().getUid());
+//            listS = new ArrayList<>();
+//            ShortcutManager shortcutManager = mActivity.getSystemService(ShortcutManager.class);
+//            Intent intent = new Intent(mActivity, MainActivity.class);
+//            intent.putExtra("codetawgeh", 3);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.setAction(Intent.ACTION_VIEW);
+//            ShortcutInfo dynamicShortcut1 = new ShortcutInfo.Builder(mActivity, "addstory")
+//                    .setShortLabel(getString(R.string.stories))
+//                    .setLongLabel(getString(R.string.stories))
+//                    .setIcon(Icon.createWithResource(mActivity, R.drawable.stories))
+//                    .setIntent(intent)
+//                    .setRank(3)
+//                    .build();
+//            if (Global.diaGGG.size() > 0) {
+//                Intent intentG = new Intent(mActivity, MainActivity.class);
+//                intentG.putExtra("name", Global.diaGGG.get(Global.diaGGG.size() - 1).getName());
+//                intentG.putExtra("id", Global.diaGGG.get(Global.diaGGG.size() - 1).getId());
+//                intentG.putExtra("ava", Global.diaGGG.get(Global.diaGGG.size() - 1).getAvatar());
+//                intentG.putExtra("codetawgeh", 2);
+//                intentG.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intentG.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intentG.setAction(Intent.ACTION_VIEW);
+//                if(!Global.diaGGG.get(Global.diaGGG.size() - 1).getName().isEmpty()) {
+//                    ShortcutInfo dynamicShortcut2 = new ShortcutInfo.Builder(mActivity, "group")
+//                            .setShortLabel(Global.diaGGG.get(Global.diaGGG.size() - 1).getName())
+//                            .setLongLabel(Global.diaGGG.get(Global.diaGGG.size() - 1).getName())
+//                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_group_b))
+//                            .setIntent(intentG)
+//                            .setRank(2)
+//                            .build();
+//                    listS.add(dynamicShortcut2);
+//                }
+//            }
+//            if (Global.diaG.size() > 0) {
+//                Intent intentU1 = new Intent(mActivity, MainActivity.class);
+//                intentU1.putExtra("name", Global.diaG.get(Global.diaG.size() - 1).getName());
+//                intentU1.putExtra("id", Global.diaG.get(Global.diaG.size() - 1).getId());
+//                intentU1.putExtra("ava", Global.diaG.get(Global.diaG.size() - 1).getAvatar());
+//                intentU1.putExtra("codetawgeh", 1);
+//                intentU1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intentU1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intentU1.setAction(Intent.ACTION_VIEW);
+//                if(!Global.diaG.get(Global.diaG.size() - 1).getName().isEmpty()) {
+//
+//                    ShortcutInfo dynamicShortcut3 = new ShortcutInfo.Builder(mActivity, "user1")
+//                            .setShortLabel(Global.diaG.get(Global.diaG.size() - 1).getName())
+//                            .setLongLabel(Global.diaG.get(Global.diaG.size() - 1).getName())
+//                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_person_b))
+//                            .setIntent(intentU1)
+//                            .setRank(0)
+//                            .build();
+//                    listS.add(dynamicShortcut3);
+//                }
+//
+//            }
+//            if (Global.diaG.size() > 1) {
+//                Intent intentU2 = new Intent(mActivity, MainActivity.class);
+//                intentU2.putExtra("name", Global.diaG.get(Global.diaG.size() - 2).getName());
+//                intentU2.putExtra("id", Global.diaG.get(Global.diaG.size() - 2).getId());
+//                intentU2.putExtra("ava", Global.diaG.get(Global.diaG.size() - 2).getAvatar());
+//                intentU2.putExtra("codetawgeh", 1);
+//                intentU2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intentU2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intentU2.setAction(Intent.ACTION_VIEW);
+//                if(!Global.diaG.get(Global.diaG.size() - 2).getName().isEmpty()) {
+//
+//                    ShortcutInfo dynamicShortcut4 = new ShortcutInfo.Builder(mActivity, "user2")
+//                            .setShortLabel(Global.diaG.get(Global.diaG.size() - 2).getName())
+//                            .setLongLabel(Global.diaG.get(Global.diaG.size() - 2).getName())
+//                            .setIcon(Icon.createWithResource(mActivity, R.drawable.ic_person_b))
+//                            .setIntent(intentU2)
+//                            .setRank(1)
+//                            .build();
+//                    listS.add(dynamicShortcut4);
+//                }
+//
+//            }
+//            listS.add(dynamicShortcut1);
+//            shortcutManager.setDynamicShortcuts(listS);
+//        } catch (NullPointerException e) {
+//
+//        }
+//
+//    }
 
 }

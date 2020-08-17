@@ -1034,10 +1034,8 @@ public class Chat extends AppCompatActivity
                         Global.Dialogonelist = tempoo;
                         Global.Dialogid = friendId;
                         Global.DialogM = messageLocal;
-                         chat.updatedialog(Chat.this);
+                        chat.updatedialog(Chat.this);
 
-
-                        Log.e("step_1", "step_2");
                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                         messagesAdapter.notifyDataSetChanged();
                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1118,10 +1116,8 @@ public class Chat extends AppCompatActivity
                                         Global.Dialogonelist = tempoo;
                                         Global.Dialogid = friendId;
                                         Global.DialogM = messageLocal;
-                                         chat.updatedialog(Chat.this);
+                                        chat.updatedialog(Chat.this);
 
-
-                                        Log.e("step_1", "step_3");
                                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1311,8 +1307,8 @@ public class Chat extends AppCompatActivity
                                         Global.Dialogonelist = tempoo;
                                         Global.Dialogid = friendId;
                                         Global.DialogM = messageLocal;
-                                         chat.updatedialog(Chat.this);
-                                        Log.e("step_1", "step_4");
+                                        chat.updatedialog(Chat.this);
+
                                         messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                         messagesAdapter.notifyDataSetChanged();
                                         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -1586,9 +1582,7 @@ public class Chat extends AppCompatActivity
                 ArrayList<Message> messages = MessageData.getMessages();
                 lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
                 System.out.println(String.valueOf(lastLoadedDate));
-                Log.e("step_1", "step_5");
                 messagesAdapter.addToEnd(messages, false);
-
             }
         }, 1000);
     }
@@ -1798,7 +1792,6 @@ public class Chat extends AppCompatActivity
         //just init because of the first time offline started chat
         messagesAdapter.clear();
 
-        Log.e("step_1", "step_6");
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
 
@@ -1826,7 +1819,6 @@ public class Chat extends AppCompatActivity
             //update the list
 
             messagesAdapter.clear();
-            Log.e("step_1", "step_7");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
 
@@ -1858,7 +1850,6 @@ public class Chat extends AppCompatActivity
 
                                 //update the list
                                 messagesAdapter.clear();
-                                Log.e("step_1", "step_8");
                                 messagesAdapter.addToEnd(MessageData.getMessages(), true);
                                 messagesAdapter.notifyDataSetChanged();
                                 messagesList.scrollBy(0, 0);
@@ -1889,7 +1880,6 @@ public class Chat extends AppCompatActivity
                     ((AppBack) getApplication()).setchatsdb(friendId);
 
                     messagesAdapter.clear();
-                    Log.e("step_1", "step_9");
                     messagesAdapter.addToEnd(MessageData.getMessages(), true);
                     messagesAdapter.notifyDataSetChanged();
                     messagesList.scrollBy(0, 0);
@@ -1912,7 +1902,6 @@ public class Chat extends AppCompatActivity
                     ((AppBack) getApplication()).setchatsdb(friendId);
 
                     messagesAdapter.clear();
-                    Log.e("step_1", "step_10");
                     messagesAdapter.addToEnd(MessageData.getMessages(), true);
                     messagesAdapter.notifyDataSetChanged();
                     messagesList.scrollBy(0, 0);
@@ -2115,8 +2104,7 @@ public class Chat extends AppCompatActivity
                             Global.Dialogonelist = tempoo;
                             Global.Dialogid = friendId;
                             Global.DialogM = messageLocal;
-                             chat.updatedialog(Chat.this);
-                            Log.e("step_1", "step_11");
+                            chat.updatedialog(Chat.this);
                             messagesAdapter.addToEnd(MessageData.getMessages(), true);
                             messagesAdapter.notifyDataSetChanged();
                             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2221,8 +2209,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogonelist = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-         chat.updatedialog(Chat.this);
-        Log.e("step_1", "step_12");
+        chat.updatedialog(Chat.this);
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2312,8 +2299,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogonelist = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-         chat.updatedialog(Chat.this);
-        Log.e("step_1", "step_13");
+        chat.updatedialog(Chat.this);
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -2498,8 +2484,7 @@ public class Chat extends AppCompatActivity
         Global.Dialogonelist = tempoo;
         Global.Dialogid = friendId;
         Global.DialogM = messageLocal;
-         chat.updatedialog(Chat.this);
-        Log.e("step_1", "step_14");
+        chat.updatedialog(Chat.this);
         messagesAdapter.addToEnd(MessageData.getMessages(), true);
         messagesAdapter.notifyDataSetChanged();
         messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);
@@ -3289,7 +3274,6 @@ public class Chat extends AppCompatActivity
             ((AppBack) getApplication()).setchatsdb(friendId);
 
             messagesAdapter.clear();
-            Log.e("step_1", "step_15");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
         }
@@ -3677,9 +3661,6 @@ public class Chat extends AppCompatActivity
             Global.Dialogid = friendId;
             Global.DialogM = messageLocal;
             chat.updatedialog(Chat.this);
-
-
-            Log.e("step_1", "step_1");
             messagesAdapter.addToEnd(MessageData.getMessages(), true);
             messagesAdapter.notifyDataSetChanged();
             messagesList.getLayoutManager().smoothScrollToPosition(messagesList, null, 0);

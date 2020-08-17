@@ -47,7 +47,6 @@ import java.util.List;
 
 import com.stfalcon.chatkit.me.Message;
 
-import ar.codeslu.plax.MainActivity;
 import ar.codeslu.plax.R;
 import ar.codeslu.plax.custom.MessageSelectD;
 import ar.codeslu.plax.global.Global;

@@ -17,12 +17,13 @@
             android:layout_height="@dimen/dialog_avatar_height"
             android:layout_margin="16dp"
             android:scaleType="fitXY"
-            app:riv_corner_radius_bottom_left="20dip"
-            app:riv_corner_radius_bottom_right="20dip"
-            app:riv_corner_radius_top_left="20dip"
-            app:riv_corner_radius_top_right="20dp"
+            app:riv_corner_radius_bottom_left="40dip"
+            app:riv_corner_radius_bottom_right="40dip"
+            app:riv_corner_radius_top_left="40dip"
+            app:riv_corner_radius_top_right="40dip"
             app:riv_mutate_background="true"
             app:riv_oval="false"/>
+
         <com.vanniktech.emoji.EmojiTextView
             android:id="@id/dialogName"
             android:layout_width="match_parent"

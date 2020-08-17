@@ -110,31 +110,31 @@ public class ChatCelect extends Dialog {
         mBlock = FirebaseDatabase.getInstance().getReference(Global.BLOCK);
         mMute = FirebaseDatabase.getInstance().getReference(Global.MUTE);
 
-//        delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Chats.refreshL();
-//                            ((AppBack) c.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
-//                            ((AppBack) c.getApplication()).getchatsdb(friendid);
-//
-//                            Global.messG.clear();
-//                            deletebyId(friendid);
-//
-//                            //local store
-//                            ((AppBack) c.getApplication()).setchatsdb(friendid);
-//                            ((AppBack) c.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
-//                            Toast.makeText(c, R.string.chat_dee, Toast.LENGTH_SHORT).show();
-//                        } else
-//                            Toast.makeText(c, R.string.error, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                dismiss();
-//            }
-//        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mData.child(mAuth.getCurrentUser().getUid()).child(friendid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Chats.refreshL();
+                            ((AppBack) c.getApplication()).getdialogdb(mAuth.getCurrentUser().getUid());
+                            ((AppBack) c.getApplication()).getchatsdb(friendid);
+
+                            Global.messG.clear();
+                            deletebyId(friendid);
+
+                            //local store
+                            ((AppBack) c.getApplication()).setchatsdb(friendid);
+                            ((AppBack) c.getApplication()).setdialogdb(mAuth.getCurrentUser().getUid());
+                            Toast.makeText(c, R.string.chat_dee, Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(c, R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dismiss();
+            }
+        });
 //
 //        mute.setOnClickListener(new View.OnClickListener() {
 //            @Override
