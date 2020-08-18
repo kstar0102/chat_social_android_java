@@ -23,6 +23,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -546,7 +547,7 @@ public class DialogsListAdapter<DIALOG extends IDialog>
         protected EmojiTextView tvName;
         protected TextView tvDate;
         protected RoundedImageView ivAvatar;
-        protected RoundedImageView ivLastMessageUser;
+        protected RoundedImageView ivLastMessageUser, statusCheck;
         protected EmojiTextView tvLastMessage;
         protected TextView tvBubble;
         protected ViewGroup dividerContainer;
@@ -565,7 +566,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
             ivAvatar =  itemView.findViewById(R.id.dialogAvatar);
             dividerContainer = (ViewGroup) itemView.findViewById(R.id.dialogDividerContainer);
             divider = itemView.findViewById(R.id.dialogDivider);
-
         }
 
         private void applyStyle() {
@@ -663,6 +663,7 @@ public class DialogsListAdapter<DIALOG extends IDialog>
 
         @Override
         public void onBind(final DIALOG dialog) {
+
             if (dialog.getUnreadCount() > 0) {
                 applyUnreadStyle();
             } else {

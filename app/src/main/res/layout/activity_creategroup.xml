@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:background="@color/white"
+            android:background="@color/general_white"
             android:textSize="20dp"
             android:hint="User Name"
             android:text="New Group"/>

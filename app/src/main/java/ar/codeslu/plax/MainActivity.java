@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity{
     tabLayout.addTab(tabLayout.newTab().setText("Notification"));
     tabLayout.addTab(tabLayout.newTab().setText("Follow"));
     tabLayout.getTabAt(0).setIcon(R.drawable.selected1);
-    tabLayout.getTabAt(1).setIcon(R.drawable.users);
+    tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
     tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
     tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity{
         {
           case 0:
             tab.setIcon(R.drawable.selected1);
-            tabLayout.getTabAt(1).setIcon(R.drawable.users);
+            tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
             tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
             tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
 

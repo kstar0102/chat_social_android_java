@@ -20,7 +20,7 @@ public class DialogHolder extends DialogsListAdapter.DialogViewHolder<DefaultDia
 
     FirebaseAuth mAuth;
     RoundedImageView ava;
-    CircleImageView checkonline;
+    CircleImageView checkonline, statuscheck;
     ImageView mute, block;
 
     public DialogHolder(View itemView) {
@@ -36,6 +36,11 @@ public class DialogHolder extends DialogsListAdapter.DialogViewHolder<DefaultDia
         mute = itemView.findViewById(R.id.mute);
         block = itemView.findViewById(R.id.block);
         checkonline = itemView.findViewById(R.id.dialogUnreadcheck);
+        statuscheck = itemView.findViewById(R.id.statuscheck);
+
+        if (!Global.onstate) {
+            statuscheck.setImageResource(R.color.red);
+        }
 
         try {
             if (Global.mutelist.contains(dialog.getId()))

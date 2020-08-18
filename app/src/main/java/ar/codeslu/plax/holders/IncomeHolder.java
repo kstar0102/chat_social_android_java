@@ -57,7 +57,6 @@ import com.stfalcon.chatkit.me.Message;
 public class IncomeHolder extends MessagesListAdapter.IncomingMessageViewHolder<Message> {
 
     AutoLinkTextView autoLinkTextView;
-    RoundedImageView userava;
     ImageView forward, call;
     LinearLayout replyb;
     private  AutoLinkTextView replyText;
@@ -176,40 +175,40 @@ public class IncomeHolder extends MessagesListAdapter.IncomingMessageViewHolder<
             forward.setVisibility(View.GONE);
             call.setVisibility(View.GONE);
         }
-        userava = itemView.findViewById(R.id.messAva);
-        if (message.isChat()) {
-            if (String.valueOf(Global.currAva).equals("no")) {
-                Picasso.get()
-                        .load(R.drawable.profile)
-                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-                        .into(userava);
-            } else {
-                Picasso.get()
-                        .load(Global.currAva)
-                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-
-                        .into(userava);
-            }
-        } else {
-            if (Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
-
-                if (message.getAvatar().equals("no")) {
-                    Picasso.get()
-                            .load(R.drawable.profile)
-                            .placeholder(R.drawable.placeholder_gray)
-                            .error(R.drawable.errorimg)
-                            .into(userava);
-
-                } else {
-                    userava.setImageResource(0);
-                    Picasso.get()
-                            .load(message.getAvatar())
-                            //  .networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE)
-                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-                            .into(userava);
-                }
-            }
-        }
+//        userava = itemView.findViewById(R.id.messAva);
+//        if (message.isChat()) {
+//            if (String.valueOf(Global.currAva).equals("no")) {
+//                Picasso.get()
+//                        .load(R.drawable.profile)
+//                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+//                        .into(userava);
+//            } else {
+//                Picasso.get()
+//                        .load(Global.currAva)
+//                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+//
+//                        .into(userava);
+//            }
+//        } else {
+//            if (Global.currGUsersAva.size() > 0 && Global.currGUsers.size() > 0) {
+//
+//                if (message.getAvatar().equals("no")) {
+//                    Picasso.get()
+//                            .load(R.drawable.profile)
+//                            .placeholder(R.drawable.placeholder_gray)
+//                            .error(R.drawable.errorimg)
+//                            .into(userava);
+//
+//                } else {
+//                    userava.setImageResource(0);
+//                    Picasso.get()
+//                            .load(message.getAvatar())
+//                            //  .networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE)
+//                            .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+//                            .into(userava);
+//                }
+//            }
+//        }
 
         //react
 //        ImageView react = itemView.findViewById(R.id.react);

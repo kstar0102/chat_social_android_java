@@ -37,7 +37,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="70dp"
-        app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/float_btn"
+        android:backgroundTint="@color/colorPrimary"
         tools:ignore="VectorDrawableCompat" />
 </FrameLayout>

@@ -378,40 +378,19 @@ public class OutcomeHolder
         if (last_read_date !=null && last_read_date.equals(message.getCreatedAt())){
             userAva.setVisibility(View.VISIBLE);
         }
-//        query = mData.child(id);
-//        child = query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if(mAuth.getCurrentUser()!=null) {
-//
-//                    if (dataSnapshot.exists()) {
-//                        String statueT = "";
-//                        UserData userData = dataSnapshot.getValue(UserData.class);
-//
-//                        if (userData.getAvatar() != null) {
-//                            String ava = userData.getAvatar();
-//                            Global.avaLocal = ava;
-//                            if (ava.equals("no")) {
-//                                Picasso.get()
-//                                        .load(R.drawable.profile)
-//                                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-//                                        .into(userAva);
-//                            } else {
-//                                Picasso.get()
-//                                        .load(ava)
-//                                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
-//                                        .into(userAva);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+
+        if (String.valueOf(Global.currAva).equals("no")) {
+                Picasso.get()
+                        .load(R.drawable.profile)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+                        .into(userAva);
+            } else {
+                Picasso.get()
+                        .load(Global.currAva)
+                        .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
+
+                        .into(userAva);
+            }
 
     }
 }

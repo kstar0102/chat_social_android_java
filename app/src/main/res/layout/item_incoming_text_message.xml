@@ -14,20 +14,6 @@
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/messAva"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="start|bottom"
-            android:layout_marginEnd="8dp"
-            android:gravity="start"
-            android:scaleType="fitXY"
-            app:riv_corner_radius_bottom_left="15dip"
-            app:riv_corner_radius_bottom_right="15dip"
-            app:riv_corner_radius_top_left="15dip"
-            app:riv_corner_radius_top_right="15dp"
-            app:riv_mutate_background="true"
-            app:riv_oval="false" />
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@id/bubble"

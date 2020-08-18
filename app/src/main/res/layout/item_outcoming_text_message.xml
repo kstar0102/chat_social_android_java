@@ -1,6 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/message_outcoming_bubble_margin_left"
@@ -87,7 +88,7 @@
             android:textAlignment="center"
             android:gravity="center_vertical|end"
             android:layout_gravity="end|center_vertical"
-            />
+            tools:ignore="RtlCompat" />
         <ProgressBar
             android:id="@+id/sending"
             android:layout_width="20dp"
@@ -124,12 +125,18 @@
             android:layout_gravity="center_vertical|end" />
     </LinearLayout>
 
-    <ImageView
-        android:visibility="visible"
-        android:layout_marginTop="3dp"
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/userAva"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/janate"/>
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/janate"
+        android:scaleType="fitXY"
+        app:riv_corner_radius_bottom_left="15dip"
+        app:riv_corner_radius_bottom_right="15dip"
+        app:riv_corner_radius_top_left="15dip"
+        app:riv_corner_radius_top_right="15dp"
+        app:riv_mutate_background="true"
+        app:riv_oval="false" />
 
 </LinearLayout>

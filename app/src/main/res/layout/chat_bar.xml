@@ -20,7 +20,7 @@
         app:civ_border_color="@color/white"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/dialogUnreadcheck"
+        android:id="@+id/statuImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/avaC"

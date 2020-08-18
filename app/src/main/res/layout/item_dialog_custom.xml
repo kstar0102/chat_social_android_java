@@ -107,7 +107,7 @@
         </RelativeLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/dialogUnreadcheck"
+            android:id="@+id/statuscheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/dialogAvatarC"

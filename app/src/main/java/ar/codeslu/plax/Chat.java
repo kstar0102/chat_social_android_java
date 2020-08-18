@@ -233,7 +233,7 @@ public class Chat extends AppCompatActivity
     //toolbar
     Toolbar toolbar;
     CircleImageView ava;
-    ImageView callA, callV, chatmenu, chatBack_Btn;
+    ImageView callA, callV, chatmenu, chatBack_Btn, statuImg;
     EmojiTextView name, state;
     //check online
     DatabaseReference mUserDB, mBlock, myBlock;
@@ -333,7 +333,7 @@ public class Chat extends AppCompatActivity
         ly = findViewById(R.id.lyC);
         blocked = findViewById(R.id.blocked);
         add = findViewById(R.id.attachmentButton);
-        voice = findViewById(R.id.voice);
+//        voice = findViewById(R.id.voice);
         send = findViewById(R.id.send);
         textbar = findViewById(R.id.textbar);
         bg = findViewById(R.id.bg);
@@ -570,6 +570,7 @@ public class Chat extends AppCompatActivity
         name = viewS.findViewById(R.id.nameC);
         state = viewS.findViewById(R.id.stateC);
         ava = viewS.findViewById(R.id.avaC);
+        statuImg = viewS.findViewById(R.id.statuImg);
         callA = viewS.findViewById(R.id.callAC);
         callV = viewS.findViewById(R.id.callVC);
         chatmenu = viewS.findViewById(R.id.chatmenu);
@@ -595,7 +596,7 @@ public class Chat extends AppCompatActivity
                 abc.y = 180    ;   //y position
                 dialog.show();
                 Window window = dialog.getWindow();
-                window.setLayout(800, LinearLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout(750, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
 
@@ -610,7 +611,7 @@ public class Chat extends AppCompatActivity
         PRDownloader.initialize(getApplicationContext(), config);
         //encryption
 
-        voice.setRecordView(recordView);
+//        voice.setRecordView(recordView);
 
         if (getIntent() != null) {
             Intent intent = getIntent();
@@ -1432,7 +1433,7 @@ public class Chat extends AppCompatActivity
             }
         });
 
-        voice.setListenForRecord(true);
+//        voice.setListenForRecord(true);
 
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
@@ -2177,7 +2178,6 @@ public class Chat extends AppCompatActivity
                     }
                 }).check();
 
-
     }
 
     public void uploadV(Uri linkL, final long time) {
@@ -2899,6 +2899,7 @@ public class Chat extends AppCompatActivity
             else
                 state.setText(getResources().getString(R.string.online));
         } else {
+            statuImg.setImageResource(R.color.red);
             state.setText(AppBack.getTimeAgo(Global.currtime, Chat.this));
             final ExecutorService es = Executors.newCachedThreadPool();
             ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
