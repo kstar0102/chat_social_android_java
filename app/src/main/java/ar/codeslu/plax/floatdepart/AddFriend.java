@@ -2,6 +2,8 @@ package ar.codeslu.plax.floatdepart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 import ar.codeslu.plax.Chat;
 import ar.codeslu.plax.R;
+import ar.codeslu.plax.adapters.ContactsU;
 import ar.codeslu.plax.adapters.SearchAdapter;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.UserData;
@@ -31,11 +34,11 @@ import com.google.firebase.database.ChildEventListener;
 import com.stfalcon.chatkit.me.UserIn;
 
 public class AddFriend extends AppCompatActivity {
-     ImageView backbtn, nextbtn;
+     ImageView backbtn;
      EditText searchEdit;
      LinearLayout friendBtn, contactBtn, BtnLayout, searchlayout;
      ListView listView;
-     Button friendAdd;
+    private ContactsU mUserListAdapter;
     ArrayList Listitem=new ArrayList<>();
     ArrayList<UserIn> userList = new ArrayList<UserIn>();
     @Override
@@ -47,7 +50,6 @@ public class AddFriend extends AppCompatActivity {
         searchEdit = findViewById(R.id.search_edit);
         friendBtn = findViewById(R.id.friendBtn);
         contactBtn = findViewById(R.id.contact_btn);
-        nextbtn = findViewById(R.id.next_btn);
         BtnLayout = findViewById(R.id.BtnLayout);
         searchlayout = findViewById(R.id.search_layout);
         listView = findViewById(R.id.listView);
@@ -85,19 +87,23 @@ public class AddFriend extends AppCompatActivity {
         };
         mDbRef.addChildEventListener(childEventListener);
         listView.setAdapter(myAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("position", String.valueOf(position));
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-        });
 
-        nextbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 System.out.println(searchEdit.getText().toString());
                 String string = searchEdit.getText().toString();
+                Log.e("textchange", String.valueOf(string.length()));
 
                 for(int i = 0; i < userList.size(); i++){
                     if(userList.get(i).getPhone().contains(string)){
@@ -106,6 +112,11 @@ public class AddFriend extends AppCompatActivity {
                 }
                 BtnLayout.setVisibility(View.GONE);
                 searchlayout.setVisibility(View.VISIBLE);
+
+                if(string.length() == 0){
+                    BtnLayout.setVisibility(View.VISIBLE);
+                    searchlayout.setVisibility(View.GONE);
+                }
             }
         });
 

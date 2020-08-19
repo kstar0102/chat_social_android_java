@@ -6,7 +6,10 @@
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="false" />
-    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -33,29 +36,30 @@
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".profile.AccountProfile"/>
-        <activity android:name=".profile.SavedProfile"/>
-        <activity android:name=".floatdepart.BroadcastActivity"/>
-        <activity android:name=".floatdepart.BroadSend"/>
-        <activity android:name=".floatdepart.CreateGroup"/>
-        <activity android:name=".floatdepart.AddFriend"/>
-        <activity android:name=".floatdepart.RequestNumber"/>
-        <activity android:name=".floatdepart.QRActivity"/>
-        <activity android:name=".notify.FriendActivity"/>
-        <activity android:name=".notify.FriIndiviReq"/>
-        <activity android:name=".follow.CreateSocial"/>
-        <activity android:name=".follow.SocialFollow"/>
-        <activity android:name=".follow.SocialProfile"/>
+
+        <activity android:name=".profile.AccountProfile" />
+        <activity android:name=".profile.SavedProfile" />
+        <activity android:name=".floatdepart.BroadcastActivity" />
+        <activity android:name=".floatdepart.BroadSend" />
+        <activity android:name=".floatdepart.CreateGroup" />
+        <activity android:name=".floatdepart.AddFriend" />
+        <activity android:name=".floatdepart.RequestNumber" />
+        <activity android:name=".floatdepart.QRActivity" />
+        <activity android:name=".notify.FriendActivity" />
+        <activity android:name=".notify.FriIndiviReq" />
+        <activity android:name=".follow.CreateSocial" />
+        <activity android:name=".follow.SocialFollow" />
+        <activity android:name=".follow.SocialProfile" />
         <activity
             android:name=".Qr"
             android:label="@string/title_activity_qr"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".story.Archieve"
             android:label="@string/title_activity_archieve"
@@ -130,14 +134,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Forward"
             android:label="@string/forward"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".story.StoryPlayer"
             android:screenOrientation="fullSensor" />
@@ -183,35 +185,33 @@
             android:parentActivityName=".Setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity">
-
-        </activity>
-
+            tools:ignore="LockedOrientationActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-<!--            <intent-filter>-->
-<!--                <action android:name="ar.codeslu.plax.OPEN_DYNAMIC_SHORTCUT" />-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="ar.codeslu.plax.OPEN_DYNAMIC_SHORTCUT" /> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        
-        <activity android:name=".auth.EmailLogin"/>
-        <activity android:name=".auth.EmailVerifyAcitivity"/>
-        <activity android:name=".Splash"
+        <activity android:name=".auth.EmailLogin" />
+        <activity android:name=".auth.EmailVerifyAcitivity" />
+        <activity
+            android:name=".Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".auth.PolicyActivity"/>
-
+        <activity android:name=".auth.PolicyActivity" />
         <activity
             android:name=".auth.Login"
             android:configChanges="keyboardHidden|orientation|screenSize"

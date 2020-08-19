@@ -16,7 +16,7 @@
 
 <!--    login-->
     <string name="phoneNum_txt" translatable="false">Enter your phone number</string>
-    <string name="verify_txt" translatable="false">Verify + </string>
+    <string name="verify_txt" translatable="false">Verify  </string>
 
 <!---Mapbox -->
     <string name="mapbox_access_token" translatable="false">MAPBOX_ACCESS_TOKEN</string>

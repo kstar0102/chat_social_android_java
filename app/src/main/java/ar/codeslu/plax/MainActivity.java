@@ -1,6 +1,7 @@
 package ar.codeslu.plax;
 
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
@@ -68,7 +70,6 @@ import ar.codeslu.plax.auth.Login;
 import ar.codeslu.plax.auth.PolicyActivity;
 import ar.codeslu.plax.fragments.Calls;
 import ar.codeslu.plax.fragments.Chats;
-import ar.codeslu.plax.fragments.Groups;
 import ar.codeslu.plax.global.AppBack;
 import ar.codeslu.plax.global.Global;
 import ar.codeslu.plax.lists.UserData;
@@ -82,6 +83,7 @@ import me.leolin.shortcutbadger.ShortcutBadger;
  * Created by CodeSlu
  */
 public class MainActivity extends AppCompatActivity{
+
   //Firebase
   FirebaseAuth mAuth;
   DatabaseReference mData, mChats, mGroups, mCalls;
@@ -95,7 +97,6 @@ public class MainActivity extends AppCompatActivity{
   //Fragments
   Calls calls;
   Chats chats;
-  Groups groups;
   //Shared pref
   SharedPreferences preferences;
   SharedPreferences.Editor editor;
@@ -134,46 +135,112 @@ public class MainActivity extends AppCompatActivity{
     vp = findViewById(R.id.Vp);
 
     TabLayout tabLayout = findViewById(R.id.main_tab_layout);
-    tabLayout.addTab(tabLayout.newTab().setText("Chat"));
+    tabLayout.addTab(tabLayout.newTab().setText("CHAT"));
     tabLayout.addTab(tabLayout.newTab().setText("Friend"));
-    tabLayout.addTab(tabLayout.newTab().setText("Notification"));
+    tabLayout.addTab(tabLayout.newTab().setText("NOTIFICATOIN"));
     tabLayout.addTab(tabLayout.newTab().setText("Follow"));
     tabLayout.getTabAt(0).setIcon(R.drawable.selected1);
     tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
     tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
     tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
     MainAdapter mainAdapter = new MainAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
     vp.setAdapter(mainAdapter);
-
     vp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+    TabLayout.Tab tab1 = tabLayout.getTabAt(2);
+    tabLayout.getTabAt(2).setCustomView(R.layout.badged_tab);
+    TextView t1 = (TextView) tab1.getCustomView().findViewWithTag("tab_id");
+
+    TabLayout.Tab tab0 = tabLayout.getTabAt(0);
+    tabLayout.getTabAt(0).setCustomView(R.layout.badged_tab0);
+    TextView t0 = (TextView) tab0.getCustomView().findViewWithTag("chat_tag");
+    t0.setTextColor(getResources().getColor(R.color.selectBadge));
+
+    if(tab0 != null && tab0.getCustomView() != null) {
+      TextView b = (TextView) tab0.getCustomView().findViewById(R.id.badge);
+      View v = tab0.getCustomView().findViewById(R.id.badgeCotainer);
+      if(b != null) {
+        b.setText("1");
+        v.setVisibility(View.GONE);
+      }
+
+      if(v != null) {
+        v.setVisibility(View.GONE);
+      }
+    }
+
+    if(tab1 != null && tab1.getCustomView() != null) {
+      TextView b = (TextView) tab1.getCustomView().findViewById(R.id.badge);
+      if(b != null) {
+        b.setText("2");
+      }
+      View v = tab1.getCustomView().findViewById(R.id.badgeCotainer);
+      if(v != null) {
+        v.setVisibility(View.VISIBLE);
+      }
+    }
+
+    if (!Global.check_int(Global.currentactivity)){
+      Global.currentactivity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          int count = 0;
+          for (int j = 0; j < Global.diaG.size(); j++) {
+            count += Global.diaG.get(j).getNoOfUnread();
+          }
+          Log.e("badgenumber", String.valueOf(count));
+//          try {
+//              if (count == 0)
+//                  meowBottomNavigation.setCount(0, "empty");
+//              else if (count > 99)
+//                  meowBottomNavigation.setCount(0, String.valueOf(99));
+//              else
+//                  meowBottomNavigation.setCount(0, String.valueOf(count));
+//          } catch (NullPointerException e) {
+//
+//          }
+        }
+      });
+
+    }
+
     tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+      @SuppressLint("ResourceAsColor")
       @Override
       public void onTabSelected(TabLayout.Tab tab) {
         vp.setCurrentItem(tab.getPosition());
+
         switch (tab.getPosition())
         {
           case 0:
             tab.setIcon(R.drawable.selected1);
+            t1.setTextColor(getResources().getColor(R.color.unselectBadge));
+            t0.setTextColor(getResources().getColor(R.color.selectBadge));
             tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
             tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
             tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
-
             break;
           case 1:
+            t1.setTextColor(getResources().getColor(R.color.unselectBadge));
+            t0.setTextColor(getResources().getColor(R.color.unselectBadge));
             tab.setIcon(R.drawable.selected2);
             tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
             tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
             tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
             break;
           case 2:
-            tab.setIcon(R.drawable.selected3);
+            tab1.setIcon(R.drawable.selected3);
             tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
             tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
             tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
+
+            t1.setTextColor(getResources().getColor(R.color.selectBadge));
+            t0.setTextColor(getResources().getColor(R.color.unselectBadge));
             break;
           case 3:
+            t1.setTextColor(getResources().getColor(R.color.unselectBadge));
+            t0.setTextColor(getResources().getColor(R.color.unselectBadge));
             tab.setIcon(R.drawable.selected4);
             tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
             tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
@@ -190,6 +257,8 @@ public class MainActivity extends AppCompatActivity{
 
       }
     });
+
+
 
     if (mAuth.getCurrentUser() != null){
       checkData();

@@ -126,6 +126,7 @@ dependencies {
     implementation 'ja.burhanrashid52:photoeditor:0.4.0'
     implementation 'com.github.safetysystemtechnology:android-shake-detector:v1.2'
     implementation 'com.github.richimf:Alphabetik:1.0.3'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
 
     implementation('com.github.ozodrukh:CircularReveal:1.1.1@aar') {
         transitive = true;
