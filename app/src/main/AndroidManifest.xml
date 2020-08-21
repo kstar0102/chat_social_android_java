@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ar.codeslu.plax">
+    package="com.codeslutest.plax">
 
     <uses-feature
         android:name="android.hardware.microphone"
@@ -31,7 +31,7 @@
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
 
     <application
-        android:name=".global.AppBack"
+        android:name="com.codeslutest.plax.global.AppBack"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -41,153 +41,153 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".profile.AccountProfile" />
-        <activity android:name=".profile.SavedProfile" />
-        <activity android:name=".floatdepart.BroadcastActivity" />
-        <activity android:name=".floatdepart.BroadSend" />
-        <activity android:name=".floatdepart.CreateGroup" />
-        <activity android:name=".floatdepart.AddFriend" />
-        <activity android:name=".floatdepart.RequestNumber" />
-        <activity android:name=".floatdepart.QRActivity" />
-        <activity android:name=".notify.FriendActivity" />
-        <activity android:name=".notify.FriIndiviReq" />
-        <activity android:name=".follow.CreateSocial" />
-        <activity android:name=".follow.SocialFollow" />
-        <activity android:name=".follow.SocialProfile" />
+        <activity android:name="com.codeslutest.plax.profile.AccountProfile" />
+        <activity android:name="com.codeslutest.plax.profile.SavedProfile" />
+        <activity android:name="com.codeslutest.plax.floatdepart.BroadcastActivity" />
+        <activity android:name="com.codeslutest.plax.floatdepart.BroadSend" />
+        <activity android:name="com.codeslutest.plax.floatdepart.CreateGroup" />
+        <activity android:name="com.codeslutest.plax.floatdepart.AddFriend" />
+        <activity android:name="com.codeslutest.plax.floatdepart.RequestNumber" />
+        <activity android:name="com.codeslutest.plax.floatdepart.QRActivity" />
+        <activity android:name="com.codeslutest.plax.notify.FriendActivity" />
+        <activity android:name="com.codeslutest.plax.notify.FriIndiviReq" />
+        <activity android:name="com.codeslutest.plax.follow.CreateSocial" />
+        <activity android:name="com.codeslutest.plax.follow.SocialFollow" />
+        <activity android:name="com.codeslutest.plax.follow.SocialProfile" />
         <activity
-            android:name=".Qr"
+            android:name="com.codeslutest.plax.Qr"
             android:label="@string/title_activity_qr"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".story.Archieve"
+            android:name="com.codeslutest.plax.story.Archieve"
             android:label="@string/title_activity_archieve"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Invite"
+            android:name="com.codeslutest.plax.Invite"
             android:label="@string/title_activity_invite"
             android:launchMode="singleTop"
-            android:parentActivityName=".Contacts"
+            android:parentActivityName="com.codeslutest.plax.Contacts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".auth.VerifyDelete"
+            android:name="com.codeslutest.plax.auth.VerifyDelete"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".Favourite"
+            android:name="com.codeslutest.plax.Favourite"
             android:label="@string/title_activity_favourite"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Mute"
+            android:name="com.codeslutest.plax.Mute"
             android:label="@string/title_activity_mute"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Block"
+            android:name="com.codeslutest.plax.Block"
             android:label="@string/title_activity_block"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".settingsitems.CallsSetting"
+            android:name="com.codeslutest.plax.settingsitems.CallsSetting"
             android:label="@string/title_activity_calls_setting"
             android:launchMode="singleTop"
-            android:parentActivityName=".Setting"
+            android:parentActivityName="com.codeslutest.plax.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".story.EditStory"
+            android:name="com.codeslutest.plax.story.EditStory"
             android:label="@string/title_activity_edit_story"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".calls.CallingActivityVideo"
+            android:name="com.codeslutest.plax.calls.CallingActivityVideo"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/FullScreenVideoTheme" />
         <activity
-            android:name=".calls.CallingActivity"
+            android:name="com.codeslutest.plax.calls.CallingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".calls.IncAudioActivity"
+            android:name="com.codeslutest.plax.calls.IncAudioActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".calls.IncCallActivity"
+            android:name="com.codeslutest.plax.calls.IncCallActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".Groups.AddUserGroup"
+            android:name="com.codeslutest.plax.Groups.AddUserGroup"
             android:label="@string/title_activity_add_user_group"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Forward"
+            android:name="com.codeslutest.plax.Forward"
             android:label="@string/forward"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".story.StoryPlayer"
+            android:name="com.codeslutest.plax.story.StoryPlayer"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".Groups.ProfileGroup"
+            android:name="com.codeslutest.plax.Groups.ProfileGroup"
             android:launchMode="singleTop"
-            android:parentActivityName=".Groups.Group" />
+            android:parentActivityName="com.codeslutest.plax.Groups.Group" />
         <activity
-            android:name=".Groups.Group"
+            android:name="com.codeslutest.plax.Groups.Group"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.codeslutest.plax.MainActivity" />
         <activity
-            android:name=".Groups.AddGroup"
+            android:name="com.codeslutest.plax.Groups.AddGroup"
             android:label="@string/title_activity_add_group"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".settingsitems.NotifSetting"
+            android:name="com.codeslutest.plax.settingsitems.NotifSetting"
             android:label="@string/title_activity_notif_setting"
             android:launchMode="singleTop"
-            android:parentActivityName=".Setting"
+            android:parentActivityName="com.codeslutest.plax.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LockScreen" />
+        <activity android:name="com.codeslutest.plax.LockScreen" />
         <activity
-            android:name=".settingsitems.SecuSetting"
+            android:name="com.codeslutest.plax.settingsitems.SecuSetting"
             android:label="@string/title_activity_secu_setting"
             android:launchMode="singleTop"
-            android:parentActivityName=".Setting"
+            android:parentActivityName="com.codeslutest.plax.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".settingsitems.TestWall"
+            android:name="com.codeslutest.plax.settingsitems.TestWall"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".settingsitems.ChatSettings"
+            android:name="com.codeslutest.plax.settingsitems.ChatSettings"
             android:label="@string/chatss"
             android:launchMode="singleTop"
-            android:parentActivityName=".Setting"
+            android:parentActivityName="com.codeslutest.plax.Setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.codeslutest.plax.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -200,10 +200,10 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".auth.EmailLogin" />
-        <activity android:name=".auth.EmailVerifyAcitivity" />
+        <activity android:name="com.codeslutest.plax.auth.EmailLogin" />
+        <activity android:name="com.codeslutest.plax.auth.EmailVerifyAcitivity" />
         <activity
-            android:name=".Splash"
+            android:name="com.codeslutest.plax.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -211,24 +211,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".auth.PolicyActivity" />
+        <activity android:name="com.codeslutest.plax.auth.PolicyActivity" />
         <activity
-            android:name=".auth.Login"
+            android:name="com.codeslutest.plax.auth.Login"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".profile.Profile"
+            android:name="com.codeslutest.plax.profile.Profile"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".auth.Verify"
+            android:name="com.codeslutest.plax.auth.Verify"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".auth.DataSet"
+            android:name="com.codeslutest.plax.auth.DataSet"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop" />
         <activity
@@ -236,19 +236,19 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".EditProfile"
+            android:name="com.codeslutest.plax.EditProfile"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop" />
         <activity
-            android:name=".Contacts"
+            android:name="com.codeslutest.plax.Contacts"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.codeslutest.plax.MainActivity" />
         <activity
-            android:name=".Chat"
+            android:name="com.codeslutest.plax.Chat"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.codeslutest.plax.MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -258,7 +258,7 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <service
-            android:name=".notify.FCMR"
+            android:name="com.codeslutest.plax.notify.FCMR"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -266,7 +266,7 @@
         </service>
 
         <receiver
-            android:name=".global.CheckConnectivity"
+            android:name="com.codeslutest.plax.global.CheckConnectivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -287,31 +287,31 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Map"
+            android:name="com.codeslutest.plax.Map"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map"
             android:launchMode="singleTop" />
         <activity
-            android:name=".mediachat.VideoA"
+            android:name="com.codeslutest.plax.mediachat.VideoA"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".Chat" />
+            android:parentActivityName="com.codeslutest.plax.Chat" />
         <activity
-            android:name=".mediachat.Photoa"
+            android:name="com.codeslutest.plax.mediachat.Photoa"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".Chat" />
+            android:parentActivityName="com.codeslutest.plax.Chat" />
         <activity
-            android:name=".story.AddStory"
+            android:name="com.codeslutest.plax.story.AddStory"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".Setting"
+            android:name="com.codeslutest.plax.Setting"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_setting"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.codeslutest.plax.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme" />
     </application>

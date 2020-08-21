@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="ar.codeslu.plax.auth.Verify">
+    tools:context="com.codeslutest.plax.auth.Verify">
 
     <ScrollView
         android:layout_width="match_parent"

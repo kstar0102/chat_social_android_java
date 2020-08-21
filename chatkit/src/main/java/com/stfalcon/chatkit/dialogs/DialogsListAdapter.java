@@ -600,7 +600,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
                     ivLastMessageUser.getLayoutParams().width = dialogStyle.getDialogMessageAvatarWidth();
                     ivLastMessageUser.getLayoutParams().height = dialogStyle.getDialogMessageAvatarHeight();
                 }
-
                 //Unread bubble
                 if (tvBubble != null) {
                     GradientDrawable bgShape = (GradientDrawable) tvBubble.getBackground();
@@ -612,7 +611,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
                 }
             }
         }
-
 
         private void applyDefaultStyle() {
             if (dialogStyle != null) {
