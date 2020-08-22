@@ -18,7 +18,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
-                android:src="@drawable/chat_back_img"/>
+                android:src="@drawable/ic_back_svg"/>
 
             <TextView
                 android:layout_marginLeft="10dp"
@@ -48,7 +48,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userPic"
-                android:src="@drawable/socal2"
+                android:src="@drawable/social2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 />

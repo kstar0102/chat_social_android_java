@@ -987,7 +987,7 @@ public class Chat extends AppCompatActivity
                     editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
                     editor.apply();
                     if (emojiPopup.isShowing()) {
-                        emoji.setImageResource(R.drawable.chat_moji_icon);
+                        emoji.setImageResource(R.drawable.ic_chat_moji_icon);
                         emojiPopup.dismiss();
                     }
 
@@ -1069,7 +1069,7 @@ public class Chat extends AppCompatActivity
                                     editor.putString("chatM_" + friendId + "_" + mAuth.getCurrentUser().getUid(), message.getText().toString());
                                     editor.apply();
                                     if (emojiPopup.isShowing()) {
-                                        emoji.setImageResource(R.drawable.chat_moji_icon);
+                                        emoji.setImageResource(R.drawable.ic_chat_moji_icon);
                                         emojiPopup.dismiss();
                                     }
                                     if (!replyBollean) {
@@ -1235,7 +1235,7 @@ public class Chat extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (emojiPopup.isShowing()) {
-                    emoji.setImageResource(R.drawable.chat_moji_icon);
+                    emoji.setImageResource(R.drawable.ic_chat_moji_icon);
                     emojiPopup.dismiss();
                 } else {
                     emoji.setImageResource(R.drawable.ic_keyboard);
@@ -1345,7 +1345,7 @@ public class Chat extends AppCompatActivity
                 cdd.dismiss();
                 isHidden = true;
                 if (emojiPopup.isShowing()) {
-                    emoji.setImageResource(R.drawable.chat_moji_icon);
+                    emoji.setImageResource(R.drawable.ic_chat_moji_icon);
                     emojiPopup.dismiss();
                 }
 

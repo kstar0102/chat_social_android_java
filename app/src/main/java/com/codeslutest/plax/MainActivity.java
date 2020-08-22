@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity{
     tabLayout.addTab(tabLayout.newTab().setText("Friend"));
     tabLayout.addTab(tabLayout.newTab().setText("NOTIFICATOIN"));
     tabLayout.addTab(tabLayout.newTab().setText("Follow"));
-    tabLayout.getTabAt(0).setIcon(R.drawable.selected1);
-    tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-    tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
-    tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
+    tabLayout.getTabAt(0).setIcon(R.drawable.ic_s1);
+    tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+    tabLayout.getTabAt(2).setIcon(R.drawable.ic_f3);
+    tabLayout.getTabAt(3).setIcon(R.drawable.ic_f4);
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     MainAdapter mainAdapter = new MainAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
     vp.setAdapter(mainAdapter);
@@ -174,26 +174,26 @@ public class MainActivity extends AppCompatActivity{
         switch (tab.getPosition())
         {
           case 0:
-            tab.setIcon(R.drawable.selected1);
+            tab.setIcon(R.drawable.ic_s1);
             t1.setTextColor(getResources().getColor(R.color.unselectBadge));
             t0.setTextColor(getResources().getColor(R.color.selectBadge));
-            tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-            tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
-            tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_f3);
+            tabLayout.getTabAt(3).setIcon(R.drawable.ic_f4);
             break;
           case 1:
             t1.setTextColor(getResources().getColor(R.color.unselectBadge));
             t0.setTextColor(getResources().getColor(R.color.unselectBadge));
-            tab.setIcon(R.drawable.selected2);
-            tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
-            tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
-            tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
+            tab.setIcon(R.drawable.ic_s2);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_f1);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_f3);
+            tabLayout.getTabAt(3).setIcon(R.drawable.ic_f4);
             break;
           case 2:
-            tab1.setIcon(R.drawable.selected3);
-            tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
-            tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-            tabLayout.getTabAt(3).setIcon(R.drawable.follow_icon);
+            tab1.setIcon(R.drawable.ic_s3);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_f1);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+            tabLayout.getTabAt(3).setIcon(R.drawable.ic_f4);
 
             t1.setTextColor(getResources().getColor(R.color.selectBadge));
             t0.setTextColor(getResources().getColor(R.color.unselectBadge));
@@ -201,13 +201,14 @@ public class MainActivity extends AppCompatActivity{
           case 3:
             t1.setTextColor(getResources().getColor(R.color.unselectBadge));
             t0.setTextColor(getResources().getColor(R.color.unselectBadge));
-            tab.setIcon(R.drawable.selected4);
-            tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
-            tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-            tabLayout.getTabAt(2).setIcon(R.drawable.notification_icon);
+            tab.setIcon(R.drawable.ic_s4);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_f1);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_f3);
             break;
         }
       }
+
       @Override
       public void onTabUnselected(TabLayout.Tab tab) {
 
@@ -217,8 +218,6 @@ public class MainActivity extends AppCompatActivity{
 
       }
     });
-
-
 
     if (mAuth.getCurrentUser() != null){
       checkData();

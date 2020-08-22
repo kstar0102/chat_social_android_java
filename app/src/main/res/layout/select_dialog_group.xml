@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/selecticon"/>
+            android:src="@drawable/logo"/>
         <Button
             android:id="@+id/mkadmin"
             android:layout_width="150dp"

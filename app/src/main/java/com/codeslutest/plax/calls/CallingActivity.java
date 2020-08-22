@@ -318,8 +318,8 @@ public class CallingActivity extends AppCompatActivity {
                         .error(R.drawable.errorimg)
                         .into(avaI);
                 Picasso.get()
-                        .load(R.drawable.bg)
-                        .placeholder(R.drawable.bg).error(R.drawable.errorimg)
+                        .load(R.drawable.bg2)
+                        .placeholder(R.drawable.bg2).error(R.drawable.errorimg)
 
                         .into(bgI, new com.squareup.picasso.Callback() {
                             @Override
@@ -342,7 +342,7 @@ public class CallingActivity extends AppCompatActivity {
                         .into(avaI);
                 Picasso.get()
                         .load(ava)
-                        .placeholder(R.drawable.bg)
+                        .placeholder(R.drawable.bg2)
                         .error(R.drawable.errorimg)
 
                         .into(bgI, new com.squareup.picasso.Callback() {

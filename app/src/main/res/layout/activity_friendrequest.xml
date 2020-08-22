@@ -17,7 +17,7 @@
                 android:id="@+id/back_btn"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
-                android:src="@drawable/chat_back_img"
+                android:src="@drawable/ic_back_svg"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"/>
 

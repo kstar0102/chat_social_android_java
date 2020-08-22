@@ -91,8 +91,8 @@ Query query;
 
                         .into(img);
                 Picasso.get()
-                        .load(R.drawable.bg)
-                        .placeholder(R.drawable.bg) .error(R.drawable.errorimg)
+                        .load(R.drawable.bg2)
+                        .placeholder(R.drawable.bg2) .error(R.drawable.errorimg)
 
                         .into(bg, new com.squareup.picasso.Callback() {
                             @Override
@@ -114,7 +114,7 @@ Query query;
                         .into(img);
                 Picasso.get()
                         .load(getIntent().getExtras().getString("ava"))
-                        .placeholder(R.drawable.bg) .error(R.drawable.errorimg)
+                        .placeholder(R.drawable.bg2) .error(R.drawable.errorimg)
 
                         .into(bg, new com.squareup.picasso.Callback() {
                             @Override

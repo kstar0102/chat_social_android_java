@@ -46,7 +46,6 @@ public class AddFriend extends AppCompatActivity {
         BtnLayout = findViewById(R.id.BtnLayout);
         searchlayout = findViewById(R.id.search_layout);
         listView = findViewById(R.id.listView);
-
         SearchAdapter myAdapter=new SearchAdapter(AddFriend.this, R.layout.item_search_friend, Listitem);
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDbRef = mDatabase.getReference("Users");
@@ -56,8 +55,8 @@ public class AddFriend extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 UserIn user = dataSnapshot.getValue(UserIn.class);
                 userList.add(user);
+                Log.e("user:", String.valueOf(userList));
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
 
@@ -94,9 +93,7 @@ public class AddFriend extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println(searchEdit.getText().toString());
                 String string = searchEdit.getText().toString();
-                Log.e("textchange", String.valueOf(string.length()));
 
                 for(int i = 0; i < userList.size(); i++){
                     if(userList.get(i).getPhone().contains(string)){

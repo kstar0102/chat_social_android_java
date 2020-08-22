@@ -85,13 +85,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
 
     public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
 
-        int[] stickerList = new int[]{R.drawable.aa, R.drawable.bb,R.drawable.st1,R.drawable.st2,R.drawable.st3,R.drawable.st4,R.drawable.st5,R.drawable.st6,R.drawable.st7,R.drawable.st8,
-                R.drawable.st9,R.drawable.st10,R.drawable.st11,R.drawable.st12,R.drawable.st13,R.drawable.st14,R.drawable.st15,R.drawable.st16,R.drawable.st17,R.drawable.st18,R.drawable.st19,
-                R.drawable.st20,R.drawable.st21,R.drawable.st22,R.drawable.st23,R.drawable.st24,R.drawable.st25,R.drawable.st26,R.drawable.st27,R.drawable.st28,R.drawable.st29,R.drawable.st30,R.drawable.st31,R.drawable.st32,
-                R.drawable.st33,R.drawable.st34,R.drawable.st35,R.drawable.st36,R.drawable.st37,R.drawable.st38,R.drawable.st39,R.drawable.st40,R.drawable.st41,R.drawable.st42,
-                R.drawable.st43,R.drawable.st44,R.drawable.st45,R.drawable.st46,R.drawable.st47,R.drawable.st48,R.drawable.st49,R.drawable.st50,R.drawable.st51,
-                R.drawable.st52,R.drawable.st53,R.drawable.st54,R.drawable.st55,R.drawable.st56,R.drawable.st57,R.drawable.st58,R.drawable.st59,R.drawable.st60,R.drawable.st61,
-                R.drawable.st62,R.drawable.st63,R.drawable.st64,R.drawable.st65,R.drawable.st66,R.drawable.st67,R.drawable.st68,R.drawable.st69
+        int[] stickerList = new int[]{R.drawable.aa, R.drawable.bb
         };
 
         @Override

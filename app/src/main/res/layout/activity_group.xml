@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/lyC"
-    android:layout_height="wrap_content"
-    tools:context="ar.codeslu.plax.Groups.Group">
+    android:layout_height="wrap_content">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -190,7 +189,7 @@
             android:layout_width="34dp"
             android:layout_gravity="bottom"
             android:layout_height="34dp"
-            android:background="@drawable/circle_b"
+            android:background="@drawable/ic_circle_b"
             android:scaleType="centerInside"
             android:layout_margin="5dp"
             app:mic_icon="@drawable/recv_ic_mic_white" />
@@ -201,7 +200,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:paddingStart="4dp"
-            android:background="@drawable/circle_b"
+            android:background="@drawable/send_img"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_gravity="bottom"/>

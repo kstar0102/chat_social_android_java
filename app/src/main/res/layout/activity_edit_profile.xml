@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/lyEdit"
-    android:background="@drawable/bg"
+    android:background="@drawable/bg2"
     tools:context="com.codeslutest.plax.auth.DataSet">
     <LinearLayout
         android:layout_width="match_parent"

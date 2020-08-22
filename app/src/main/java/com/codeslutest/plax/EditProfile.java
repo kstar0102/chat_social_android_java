@@ -120,7 +120,7 @@ public class  EditProfile extends AppCompatActivity {
 
                         .into(avatar);
                 Picasso.get()
-                        .load(R.drawable.bg)
+                        .load(R.drawable.bg2)
                         .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
 
                         .into(new Target() {
@@ -627,7 +627,7 @@ catch (NullPointerException e)
 
                             .into(avatar);
                     Picasso.get()
-                            .load(R.drawable.bg)
+                            .load(R.drawable.bg2)
                             .placeholder(R.drawable.placeholder_gray) .error(R.drawable.errorimg)
 
                             .into(new Target() {

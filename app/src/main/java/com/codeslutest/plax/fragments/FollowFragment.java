@@ -40,7 +40,7 @@ public class FollowFragment extends Fragment {
         creatSocialBtn = view.findViewById(R.id.add_social);
 
         Listitem.add(new MessageModel("Chemical Group", "New idea", R.drawable.socal1));
-        Listitem.add(new MessageModel("De la salla", "Everything are here", R.drawable.socal2));
+        Listitem.add(new MessageModel("De la salla", "Everything are here", R.drawable.social2));
 
         FollowFragAdapter myAdapter=new FollowFragAdapter(getActivity(),R.layout.item_follow_custom, Listitem);
         listView.setAdapter(myAdapter);

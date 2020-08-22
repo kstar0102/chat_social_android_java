@@ -3,14 +3,14 @@
     <item
         android:title="Chat"
         android:id="@+id/chatId"
-        android:icon="@drawable/chat_icon"/>
+        android:icon="@drawable/ic_f1"/>
     <item android:title="Frined"
         android:id="@+id/friendId"
-        android:icon="@drawable/friend_icon"/>
+        android:icon="@drawable/ic_f2"/>
     <item android:title="Notification"
         android:id="@+id/notificaitonId"
-        android:icon="@drawable/notification_icon"/>
+        android:icon="@drawable/ic_f3"/>
     <item android:title="Follow"
         android:id="@+id/followId"
-        android:icon="@drawable/follow_icon"/>
+        android:icon="@drawable/ic_f4"/>
 </menu>

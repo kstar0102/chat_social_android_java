@@ -43,7 +43,7 @@ public class Nofragment extends Fragment {
         badge.setText("5");
 
         Notifimodel notifimodel1 = new Notifimodel("Chemical Group", "Invited you to follow Chemical group", "Yesterday", R.drawable.socal1);
-        Notifimodel notifimodel2 = new Notifimodel("De la Salle", "New post by Jone", "Mon", R.drawable.socal2);
+        Notifimodel notifimodel2 = new Notifimodel("De la Salle", "New post by Jone", "Mon", R.drawable.social2);
         Notifimodel notifimodel3 = new Notifimodel("New Social Group", "You Posted New Social Group", "Mon", R.drawable.social3);
 
         ArrayList<Object> notify = new ArrayList<>();

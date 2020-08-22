@@ -174,7 +174,7 @@ public class Profile extends AppCompatActivity {
                                 String ava = userData.getAvatar();
                                 if (ava.equals("no")) {
                                     Picasso.get()
-                                            .load(R.drawable.bg)
+                                            .load(R.drawable.bg2)
                                             .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
 
                                             .into(bg);
@@ -208,7 +208,7 @@ public class Profile extends AppCompatActivity {
                 statueE.setText(statueS);
                 if (avaS.equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.bg)
+                            .load(R.drawable.bg2)
                             .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
 
                             .into(bg);
@@ -231,7 +231,7 @@ public class Profile extends AppCompatActivity {
                 statueE.setText(statueS);
                 if (avaS.equals("no")) {
                     Picasso.get()
-                            .load(R.drawable.bg)
+                            .load(R.drawable.bg2)
                             .placeholder(R.drawable.placeholder_gray).error(R.drawable.errorimg)
 
                             .into(bg);

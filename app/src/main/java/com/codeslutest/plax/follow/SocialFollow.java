@@ -39,9 +39,9 @@ public class SocialFollow extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
         tabLayout.addTab(tabLayout.newTab().setText("Followers"));
         tabLayout.addTab(tabLayout.newTab().setText("Creator"));
-        tabLayout.getTabAt(0).setIcon(R.drawable.selected1);
-        tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-        tabLayout.getTabAt(2).setIcon(R.drawable.chat_icon);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_s1);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_f1);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         social_profile = findViewById(R.id.social_profile);
 
@@ -56,20 +56,20 @@ public class SocialFollow extends AppCompatActivity {
                 switch (tab.getPosition())
                 {
                     case 0:
-                        tab.setIcon(R.drawable.selected1);
-                        tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
-                        tabLayout.getTabAt(2).setIcon(R.drawable.chat_icon);
+                        tab.setIcon(R.drawable.ic_s1);
+                        tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
+                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_f1);
 
                         break;
                     case 1:
-                        tab.setIcon(R.drawable.selected2);
-                        tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
-                        tabLayout.getTabAt(2).setIcon(R.drawable.chat_icon);
+                        tab.setIcon(R.drawable.ic_s2);
+                        tabLayout.getTabAt(0).setIcon(R.drawable.ic_f1);
+                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_f1);
                         break;
                     case 2:
-                        tab.setIcon(R.drawable.selected1);
-                        tabLayout.getTabAt(0).setIcon(R.drawable.chat_icon);
-                        tabLayout.getTabAt(1).setIcon(R.drawable.friend_icon);
+                        tab.setIcon(R.drawable.ic_s1);
+                        tabLayout.getTabAt(0).setIcon(R.drawable.ic_f1);
+                        tabLayout.getTabAt(1).setIcon(R.drawable.ic_f2);
                         break;
                 }
             }

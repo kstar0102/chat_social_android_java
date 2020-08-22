@@ -102,7 +102,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginStart="13dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/chat_menu_img"
+        android:src="@drawable/menu_icon"
         android:id="@+id/chatmenu"
         android:layout_gravity="center_vertical"/>
 

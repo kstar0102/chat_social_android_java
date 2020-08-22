@@ -15,7 +15,7 @@
             android:id="@android:id/icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/chat_icon"
+            android:src="@drawable/ic_f1"
             android:scaleType="centerInside" />
 
         <TextView

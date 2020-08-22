@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/lyC"
-    android:layout_height="wrap_content"
-    tools:context="ar.codeslu.plax.Chat">
+    android:layout_height="wrap_content">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -165,7 +164,7 @@
             android:scaleType="centerInside"
             android:layout_marginBottom="1dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/circle_b" />
+            android:background="@drawable/ic_circle_b" />
 
 
 
@@ -220,17 +219,16 @@
 
         <ImageView
             android:id="@+id/emoji"
-            android:src="@drawable/chat_moji_icon"
+            android:src="@drawable/ic_chat_moji_icon"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/circle"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_gravity="bottom"/>
 
         <ImageView
             android:id="@+id/attachmentButton"
-            android:src="@drawable/add_file_image"
+            android:src="@drawable/ic_add_file_image"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="5dp"
             android:layout_width="38dp"
@@ -239,13 +237,10 @@
 
         <ImageView
             android:id="@+id/send"
-            android:layout_margin="5dp"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:paddingStart="4dp"
-            android:background="@drawable/send_img"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_margin="3dp"
+            android:src="@drawable/send_img"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_gravity="bottom"/>
     </LinearLayout>
 
@@ -280,7 +275,7 @@
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/chat_back_img"/>
+            android:src="@drawable/ic_back_svg"/>
 
         <include
             android:id="@+id/chatbar"

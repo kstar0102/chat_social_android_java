@@ -60,7 +60,7 @@ public class MessageSelectD extends Dialog {
 
     private Activity c;
     public Dialog d;
-    private ImageView copy, delete, translate, edit;
+    private LinearLayout copy, delete, translate, edit;
     CircleImageView avatar;
     // private boolean deleted;
     private String messId, friendid, messagetxt, type;

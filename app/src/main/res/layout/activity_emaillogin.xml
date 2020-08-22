@@ -18,11 +18,11 @@
             android:paddingTop="25dp"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="60dp"
                 android:src="@drawable/login_logo"
                 android:layout_gravity="center"
                 android:layout_width="150dp"
-                android:layout_height="120dp"/>
+                android:layout_height="150dp"/>
 
             <ImageView
                 android:layout_marginTop="10dp"
@@ -136,14 +136,12 @@
 
                     <Button
                         android:id="@+id/nextBtn_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_width="140dp"
+                        android:layout_height="35dp"
                         android:layout_below="@+id/linlay1"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="40dp"
                         android:fontFamily="sans-serif-medium"
-                        android:paddingLeft="70dp"
-                        android:paddingRight="70dp"
                         android:text="@string/next"
                         android:background="@color/colorPrimary"
                         android:textColor="@color/white"

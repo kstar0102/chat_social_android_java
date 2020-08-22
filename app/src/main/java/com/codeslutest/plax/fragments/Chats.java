@@ -175,6 +175,7 @@ public class Chats extends Fragment
                 logout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        dialog.dismiss();
                         Intent intent = new Intent(getContext(), PolicyActivity.class);
                         startActivity(intent);
                     }
@@ -183,6 +184,7 @@ public class Chats extends Fragment
                 addFriendBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        dialog.dismiss();
                         Dexter.withActivity(mActivity).withPermissions(Manifest.permission.READ_CONTACTS)
                             .withListener(new MultiplePermissionsListener() {
                                 @Override
@@ -200,8 +202,6 @@ public class Chats extends Fragment
 
                                 }
                         }).check();
-//                        Intent intent = new Intent(getActivity(), AddFriend.class);
-//                        startActivity(intent);
                     }
                 });
 
@@ -226,6 +226,7 @@ public class Chats extends Fragment
 //                        }).check();
                         Intent intent = new Intent(getActivity(), CreateGroup.class);
                         startActivity(intent );
+                        dialog.dismiss();
                     }
                 });
 
@@ -234,6 +235,7 @@ public class Chats extends Fragment
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), QRActivity.class);
                         startActivity(intent);
+                        dialog.dismiss();
                     }
                 });
 
@@ -242,6 +244,7 @@ public class Chats extends Fragment
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), BroadcastActivity.class);
                         startActivity(intent);
+                        dialog.dismiss();
                     }
                 });
 //

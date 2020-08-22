@@ -18,7 +18,7 @@
             android:layout_marginLeft="30dp"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/creatgurop_icon"
+            android:src="@drawable/ic_float_createg"
             android:layout_gravity="center_vertical"/>
 
         <TextView

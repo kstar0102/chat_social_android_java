@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/white"
-    android:orientation="vertical"
-    tools:context="ar.codeslu.plax.auth.Verify">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,11 +18,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="60dp"
                 android:src="@drawable/login_logo"
                 android:layout_gravity="center"
                 android:layout_width="150dp"
-                android:layout_height="120dp"/>
+                android:layout_height="150dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,7 +36,7 @@
 
                 <TextView
                     android:layout_weight="1"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="60dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15dp"
                     android:textAlignment="textEnd"
@@ -48,7 +47,7 @@
                 <TextView
                     android:id="@+id/phoneNumber_txt_1"
                     android:layout_weight="1"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="60dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15dp"
                     android:textAlignment="textStart"
@@ -92,7 +91,7 @@
                     android:id="@+id/wrongnumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/verify"
                     android:textSize="15dp"
                     android:layout_marginLeft="35dp"
                     android:text="Wrong number?"/>

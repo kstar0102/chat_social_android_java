@@ -19,7 +19,7 @@
                 android:id="@+id/back_btn"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
-                android:src="@drawable/chat_back_img"
+                android:src="@drawable/ic_back_svg"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"/>
 
@@ -130,7 +130,7 @@
                     android:layout_width="34dp"
                     android:layout_gravity="bottom"
                     android:layout_height="34dp"
-                    android:background="@drawable/circle_b"
+                    android:background="@drawable/ic_circle_b"
                     android:scaleType="centerInside"
                     android:layout_margin="5dp"
                     app:mic_icon="@drawable/recv_ic_mic_white" />
@@ -185,7 +185,7 @@
 
                 <ImageView
                     android:id="@+id/emoji"
-                    android:src="@drawable/chat_moji_icon"
+                    android:src="@drawable/ic_chat_moji_icon"
                     android:layout_marginBottom="1dp"
                     android:layout_marginRight="5dp"
                     android:layout_width="38dp"
@@ -194,7 +194,7 @@
 
                 <ImageView
                     android:id="@+id/attachmentButton"
-                    android:src="@drawable/add_file_image"
+                    android:src="@drawable/ic_add_file_image"
                     android:layout_margin="1dp"
                     android:background="@drawable/circle"
                     android:layout_width="38dp"
@@ -207,7 +207,7 @@
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp"
                     android:paddingStart="4dp"
-                    android:background="@drawable/circle_b"
+                    android:background="@drawable/send_img"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_gravity="bottom"/>

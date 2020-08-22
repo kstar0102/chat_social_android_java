@@ -22,7 +22,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_gallery"/>
+                android:src="@drawable/ic_add_gallery"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -45,7 +45,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_camera"/>
+                android:src="@drawable/ic_add_camera"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -67,7 +67,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_doc"/>
+                android:src="@drawable/ic_add_doc"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -90,7 +90,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_contact"/>
+                android:src="@drawable/ic_add_contact"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -120,7 +120,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_location"/>
+                android:src="@drawable/ic_add_location"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -143,7 +143,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_event"/>
+                android:src="@drawable/ic_add_event"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -166,7 +166,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_vote"/>
+                android:src="@drawable/ic_add_vote"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -190,7 +190,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chat_add_audio"/>
+                android:src="@drawable/ic_add_audio"/>
             <TextView
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
