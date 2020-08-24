@@ -30,7 +30,7 @@
                     android:id="@+id/social_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/new_social"
+                    android:src="@drawable/social2"
                     android:padding="5dp"/>
 
                 <LinearLayout
@@ -64,10 +64,10 @@
 
             <ImageView
                 android:id="@+id/social_menu"
-                android:layout_width="8dp"
-                android:layout_height="35dp"
+                android:layout_width="5dp"
+                android:layout_height="30dp"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/chat_menu_img"
+                android:src="@drawable/menu_icon"
                 android:layout_gravity="center"/>
 
         </LinearLayout>

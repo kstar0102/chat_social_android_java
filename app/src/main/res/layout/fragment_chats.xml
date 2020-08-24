@@ -2,8 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ar.codeslu.plax.fragments.Chats">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +15,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="50dp"
             app:dialogDateColor="#000"
-            app:dialogUnreadBubbleBackgroundColor="@color/unread_blue"
+            app:dialogUnreadBubbleBackgroundColor="@color/colorPrimary"
             app:dialogUnreadItemBackground="#fdfdfd"
             app:dialogUnreadTitleTextStyle="bold"
             app:reverseLayout="true" />
@@ -26,8 +25,7 @@
             android:id="@+id/sora"
             android:layout_marginTop="40dp"
             android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo"/>
+            android:layout_gravity="center"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

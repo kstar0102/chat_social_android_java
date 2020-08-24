@@ -68,7 +68,8 @@
         <LinearLayout
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/main_txt"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
             android:layout_width="wrap_content"
             android:orientation="horizontal"
             android:layout_height="@dimen/dialog_avatar_height">
@@ -77,14 +78,14 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_ok"/>
+                android:src="@drawable/ic_check_ok"/>
 
             <ImageView
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="30dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_no"/>
+                android:src="@drawable/ic_check_no"/>
         </LinearLayout>
 
 

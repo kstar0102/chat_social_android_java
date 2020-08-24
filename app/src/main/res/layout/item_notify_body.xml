@@ -32,7 +32,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:layout_toEndOf="@+id/dialogAvatarC"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
@@ -43,6 +43,7 @@
                 android:layout_marginTop="7dp">
 
                 <com.vanniktech.emoji.EmojiTextView
+                    android:layout_weight="1"
                     android:id="@id/dialogName"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
@@ -60,6 +61,7 @@
                     android:id="@+id/dialogDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
                     android:text="Yesterday"
                     android:layout_marginLeft="10dp"/>
 

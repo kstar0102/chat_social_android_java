@@ -33,18 +33,87 @@
             android:layout_height="3dp"
             android:background="@color/greystory"
             android:alpha="0.3"/>
-        <Button
-            android:id="@+id/myQR_btn"
-            android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="@drawable/scanqr"/>
 
-        <Button
-            android:id="@+id/scanQR_btn"
+        <LinearLayout
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="@drawable/myqr"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_marginLeft="20dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_qr_my"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="My QR Code"
+                    android:gravity="center_vertical"
+                    android:textSize="22dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="40dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greystory"
+                    android:alpha=".3"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_marginLeft="20dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_qr_scan"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="Scan QR Code"
+                    android:gravity="center_vertical"
+                    android:textSize="22dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="40dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greystory"
+                    android:alpha=".3"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
 
     </LinearLayout>
 

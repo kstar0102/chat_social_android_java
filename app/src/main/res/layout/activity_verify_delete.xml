@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.codeslutest.plax.auth.Verify">
+    tools:context="com.andrew.link.auth.Verify">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"

@@ -28,11 +28,14 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"/>
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:src="@drawable/a"
-                android:layout_gravity="center"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Account"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"/>
 
         </LinearLayout>
@@ -55,23 +58,71 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="75dp"
+                <LinearLayout
                     android:layout_weight="1"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/pro_account"/>
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:layout_weight="1"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/pro_privacy"/>
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_account"/>
 
-                <ImageView
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Account and Security"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_weight="1"
-                    android:layout_width="75dp"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/pro_block"/>
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_privacy"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Privacy and Terms"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_blacked"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Blocked"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -83,23 +134,69 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
+                <LinearLayout
                     android:layout_weight="1"
-                    android:layout_width="75dp"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/pro_switch"/>
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:layout_weight="1"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/pro_language"/>
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_switch"/>
 
-                <ImageView
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Switch Account"/>
+
+                </LinearLayout>
+                <LinearLayout
                     android:layout_weight="1"
-                    android:layout_width="75dp"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/pro_stroage"/>
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_language"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Language"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pro_stroage"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="90dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:text="Stroage and Data"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -120,24 +217,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <ImageView
+            <LinearLayout
                 android:layout_weight="1"
-                android:layout_width="75dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/pro_help"/>
+                android:orientation="vertical">
 
-            <ImageView
-                android:layout_weight="1"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/pro_delete"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profile_help"/>
 
-            <ImageView
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="90dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:text="Help"/>
+
+            </LinearLayout>
+            <LinearLayout
                 android:layout_weight="1"
-                android:layout_width="75dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/pro_change"/>
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pro_delete"/>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="90dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Account"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pro_change"/>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="90dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:text="Change Number"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

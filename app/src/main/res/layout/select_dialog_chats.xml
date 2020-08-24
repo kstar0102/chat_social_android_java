@@ -49,7 +49,6 @@
                 android:textColor="@color/black"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-
                 android:background="@color/white"
                 android:layout_marginLeft="30dp"
                 android:layout_width="50dp"

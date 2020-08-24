@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg2"
-    tools:context="com.codeslutest.plax.auth.DataSet">
+    tools:context="com.andrew.link.auth.DataSet">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"

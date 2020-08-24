@@ -21,35 +21,34 @@
             app:riv_corner_radius_top_left="20dip"
             app:riv_corner_radius_top_right="20dp"
             app:riv_mutate_background="true"
-            app:riv_oval="false"/>
+            app:riv_oval="false" />
 
         <LinearLayout
             android:id="@+id/main_txt"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:layout_toEndOf="@+id/dialogAvatarC"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/dialogAvatarC"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@id/dialogName"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textAlignment="viewStart"
                 android:layout_marginTop="12dp"
                 android:ellipsize="end"
                 android:fontFamily="@string/font_fontFamily_medium"
+                android:gravity="start"
                 android:includeFontPadding="false"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:textAlignment="viewStart" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/dialogName"
-                android:layout_marginTop="7dp"
-                >
+                android:layout_marginTop="7dp">
 
                 <com.vanniktech.emoji.EmojiTextView
                     android:id="@id/dialogLastMessage"
@@ -58,30 +57,30 @@
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
                     android:gravity="top|start"
-                    android:textAlignment="viewStart"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textAlignment="viewStart" />
 
             </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_avatar_height"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/main_txt"
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_height="@dimen/dialog_avatar_height">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/add_btn"
-                android:layout_gravity="center"
                 android:layout_width="90dp"
                 android:layout_height="35dp"
+                android:layout_gravity="center"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/white"
+                android:drawableLeft="@drawable/ic_add_person"
+                android:padding="10dp"
                 android:text="Add"
-                android:drawableLeft="@drawable/add_person"
-                android:padding="10dp"/>
+                android:textColor="@color/white" />
         </LinearLayout>
 
 
@@ -91,15 +90,15 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/dialogAvatarC"
             android:layout_alignBottom="@+id/dialogAvatarC"
-            android:layout_marginEnd="3dp"
             android:layout_marginTop="-1dp"
+            android:layout_marginEnd="3dp"
             android:layout_marginBottom="3dp"
-            android:ellipsize="end"
             android:background="@drawable/online_check_img"
-            android:src="@color/online_color"
+            android:ellipsize="end"
             android:fontFamily="@string/font_fontFamily_medium"
             android:gravity="center"
-            android:lines="1"/>
+            android:lines="1"
+            android:src="@color/online_color" />
 
         <FrameLayout
             android:id="@id/dialogDividerContainer"
@@ -113,7 +112,7 @@
                 android:id="@id/dialogDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/dialog_divider"/>
+                android:background="@color/dialog_divider" />
 
         </FrameLayout>
 

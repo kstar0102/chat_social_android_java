@@ -89,11 +89,25 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/pic5"/>
-            <ImageView
-                android:layout_weight="1"
-                android:layout_width="70dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/pic6"/>
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_group_add_member"/>
+                
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:text="Add New Member"/>
+            </LinearLayout>
             <ImageView
                 android:layout_weight="1"
                 android:layout_width="70dp"

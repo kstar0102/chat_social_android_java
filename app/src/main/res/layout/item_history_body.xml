@@ -59,7 +59,7 @@
                     android:id="@+id/phoneMiss_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/miss_phone"
+                    android:src="@drawable/ic_history_miss"
                     android:layout_gravity="center"
                     android:visibility="gone"
                     android:layout_marginRight="10dp"/>
@@ -68,16 +68,17 @@
                     android:id="@+id/phoneSeen_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/seen_phone"
+                    android:src="@drawable/ic_history_see"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"/>
 
-                <com.vanniktech.emoji.EmojiTextView
+                <TextView
                     android:id="@id/dialogLastMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
+                    android:textColor="@color/greystory"
                     android:gravity="top|start"
                     android:textAlignment="viewStart"
                     android:maxLines="1"/>
@@ -86,21 +87,25 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_marginTop="30dp"
-            android:id="@+id/call_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_toEndOf="@+id/main_txt"
-            android:src="@drawable/call_voice"/>
-        <ImageView
-            android:layout_marginTop="30dp"
-            android:id="@+id/video_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="30dp"
-            android:layout_toEndOf="@+id/call_btn"
-            android:src="@drawable/video_cam"/>
+
+            <ImageView
+                android:layout_marginTop="34dp"
+                android:id="@+id/call_btn"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_toStartOf="@+id/video_btn"
+                android:layout_marginRight="25dp"
+                android:src="@drawable/ic_history_call"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:id="@+id/video_btn"
+                android:layout_width="25dp"
+                android:layout_height="26dp"
+                android:layout_marginRight="25dp"
+                android:src="@drawable/ic_history_video"/>
+
 
 
 

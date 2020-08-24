@@ -63,16 +63,17 @@
             android:paddingLeft="14dp"
             android:textAlignment="textStart"
             android:drawableLeft="@drawable/ic_chat_notification"
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/dialog_broadcast"
             android:text="   Notification"
-            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"/>
 
         <Switch
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="20dp"/>
     </LinearLayout>
 

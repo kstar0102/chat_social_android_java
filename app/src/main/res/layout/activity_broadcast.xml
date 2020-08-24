@@ -47,7 +47,7 @@
                     android:layout_width="120dp"
                     android:layout_height="33dp"
                     android:paddingLeft="5dp"
-                    android:drawableLeft="@drawable/broaddcast_btn"
+                    android:drawableLeft="@drawable/ic_broaddcast_btn"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="24dp"
                     android:background="@drawable/mian_btn_white"

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.codeslutest.plax.auth.Login">
+    tools:context="com.andrew.link.auth.Login">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -116,9 +116,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
+                                android:textAlignment="center"
                                 android:text="LINK will send an SMS to verify your phone number"
                                 android:textColor="@color/black"
-                                android:textSize="13dp" />
+                                android:textSize="12dp" />
 
                             <EditText
                                 android:id="@+id/emailEdittext"

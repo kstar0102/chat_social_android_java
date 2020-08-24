@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context="com.codeslutest.plax.mediachat.VideoA">
+    tools:context="com.andrew.link.mediachat.VideoA">
     <FrameLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"

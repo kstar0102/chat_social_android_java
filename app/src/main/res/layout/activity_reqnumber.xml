@@ -127,7 +127,7 @@
             android:layout_width="170dp"
             android:layout_height="40dp"
             android:text="Send Request"
-            android:drawableLeft="@drawable/add_person"
+            android:drawableLeft="@drawable/ic_add_person"
             android:background="@color/colorPrimary"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"

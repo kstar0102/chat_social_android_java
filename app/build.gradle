@@ -5,7 +5,7 @@ apply plugin: 'io.fabric'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.codeslutest.plax"
+        applicationId "com.andrew.link"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 12

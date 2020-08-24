@@ -30,7 +30,7 @@
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/chat_menu_img"/>
+            android:src="@drawable/menu_icon"/>
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:layout_marginEnd="-6dp"
             android:layout_marginTop="-1dp"
             android:ellipsize="end"
-            android:src="@drawable/profile_camera"
+            android:src="@drawable/ic_profile_camera"
             android:fontFamily="@string/font_fontFamily_medium"
             android:gravity="center"
             android:lines="1"/>
@@ -68,7 +68,7 @@
     <EditText
         android:id="@+id/nameP"
         android:layout_marginTop="10dp"
-        android:drawableRight="@drawable/profile_edit_image"
+        android:drawableRight="@drawable/ic_profile_edittext"
         android:layout_gravity="center"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
     <TextView
         android:id="@+id/profile_txt"
         android:layout_marginTop="20dp"
-        android:drawableRight="@drawable/profile_edit_image"
+        android:drawableRight="@drawable/ic_profile_edittext"
         android:layout_marginLeft="20dp"
         android:layout_width="90dp"
         android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
     <TextView
         android:id="@+id/contact_txt"
         android:layout_marginTop="20dp"
-        android:drawableRight="@drawable/profile_edit_image"
+        android:drawableRight="@drawable/ic_profile_edittext"
         android:layout_marginLeft="20dp"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
 
     <TextView
         android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/profile_phone_image"
+        android:drawableLeft="@drawable/ic_profile_call"
         android:layout_marginLeft="60dp"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
 
     <TextView
         android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/profile_email_image"
+        android:drawableLeft="@drawable/ic_profile_camera"
         android:layout_marginLeft="60dp"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
                 android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/profile_save_image"/>
+                android:src="@drawable/ic_profile_save"/>
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="50dp"
@@ -255,7 +255,7 @@
                 android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/profile_account_image"/>
+                android:src="@drawable/ic_profile_account"/>
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="60dp"
@@ -274,7 +274,7 @@
                 android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/profile_help_image"/>
+                android:src="@drawable/ic_profile_help"/>
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="50dp"

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.codeslutest.plax.auth.Verify">
+    tools:context="com.andrew.link.auth.Verify">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,6 +66,7 @@
                 android:textColor="@color/black"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
+                android:textAlignment="center"
                 android:textSize="13dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

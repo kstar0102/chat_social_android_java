@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.codeslutest.plax">
+    package="com.andrew.link">
 
     <uses-feature
         android:name="android.hardware.microphone"
@@ -31,7 +31,7 @@
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
 
     <application
-        android:name="com.codeslutest.plax.global.AppBack"
+        android:name="com.andrew.link.global.AppBack"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -41,153 +41,153 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.codeslutest.plax.profile.AccountProfile" />
-        <activity android:name="com.codeslutest.plax.profile.SavedProfile" />
-        <activity android:name="com.codeslutest.plax.floatdepart.BroadcastActivity" />
-        <activity android:name="com.codeslutest.plax.floatdepart.BroadSend" />
-        <activity android:name="com.codeslutest.plax.floatdepart.CreateGroup" />
-        <activity android:name="com.codeslutest.plax.floatdepart.AddFriend" />
-        <activity android:name="com.codeslutest.plax.floatdepart.RequestNumber" />
-        <activity android:name="com.codeslutest.plax.floatdepart.QRActivity" />
-        <activity android:name="com.codeslutest.plax.notify.FriendActivity" />
-        <activity android:name="com.codeslutest.plax.notify.FriIndiviReq" />
-        <activity android:name="com.codeslutest.plax.follow.CreateSocial" />
-        <activity android:name="com.codeslutest.plax.follow.SocialFollow" />
-        <activity android:name="com.codeslutest.plax.follow.SocialProfile" />
+        <activity android:name="com.andrew.link.profile.AccountProfile" />
+        <activity android:name="com.andrew.link.profile.SavedProfile" />
+        <activity android:name="com.andrew.link.floatdepart.BroadcastActivity" />
+        <activity android:name="com.andrew.link.floatdepart.BroadSend" />
+        <activity android:name="com.andrew.link.floatdepart.CreateGroup" />
+        <activity android:name="com.andrew.link.floatdepart.AddFriend" />
+        <activity android:name="com.andrew.link.floatdepart.RequestNumber" />
+        <activity android:name="com.andrew.link.floatdepart.QRActivity" />
+        <activity android:name="com.andrew.link.notify.FriendActivity" />
+        <activity android:name="com.andrew.link.notify.FriIndiviReq" />
+        <activity android:name="com.andrew.link.follow.CreateSocial" />
+        <activity android:name="com.andrew.link.follow.SocialFollow" />
+        <activity android:name="com.andrew.link.follow.SocialProfile" />
         <activity
-            android:name="com.codeslutest.plax.Qr"
+            android:name="com.andrew.link.Qr"
             android:label="@string/title_activity_qr"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.story.Archieve"
+            android:name="com.andrew.link.story.Archieve"
             android:label="@string/title_activity_archieve"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.Invite"
+            android:name="com.andrew.link.Invite"
             android:label="@string/title_activity_invite"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Contacts"
+            android:parentActivityName="com.andrew.link.Contacts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.auth.VerifyDelete"
+            android:name="com.andrew.link.auth.VerifyDelete"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.Favourite"
+            android:name="com.andrew.link.Favourite"
             android:label="@string/title_activity_favourite"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.Mute"
+            android:name="com.andrew.link.Mute"
             android:label="@string/title_activity_mute"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.Block"
+            android:name="com.andrew.link.Block"
             android:label="@string/title_activity_block"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.settingsitems.CallsSetting"
+            android:name="com.andrew.link.settingsitems.CallsSetting"
             android:label="@string/title_activity_calls_setting"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Setting"
+            android:parentActivityName="com.andrew.link.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.story.EditStory"
+            android:name="com.andrew.link.story.EditStory"
             android:label="@string/title_activity_edit_story"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.calls.CallingActivityVideo"
+            android:name="com.andrew.link.calls.CallingActivityVideo"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/FullScreenVideoTheme" />
         <activity
-            android:name="com.codeslutest.plax.calls.CallingActivity"
+            android:name="com.andrew.link.calls.CallingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.calls.IncAudioActivity"
+            android:name="com.andrew.link.calls.IncAudioActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.calls.IncCallActivity"
+            android:name="com.andrew.link.calls.IncCallActivity"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.Groups.AddUserGroup"
+            android:name="com.andrew.link.Groups.AddUserGroup"
             android:label="@string/title_activity_add_user_group"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.Forward"
+            android:name="com.andrew.link.Forward"
             android:label="@string/forward"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.story.StoryPlayer"
+            android:name="com.andrew.link.story.StoryPlayer"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.Groups.ProfileGroup"
+            android:name="com.andrew.link.Groups.ProfileGroup"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Groups.Group" />
+            android:parentActivityName="com.andrew.link.Groups.Group" />
         <activity
-            android:name="com.codeslutest.plax.Groups.Group"
+            android:name="com.andrew.link.Groups.Group"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity" />
+            android:parentActivityName="com.andrew.link.MainActivity" />
         <activity
-            android:name="com.codeslutest.plax.Groups.AddGroup"
+            android:name="com.andrew.link.Groups.AddGroup"
             android:label="@string/title_activity_add_group"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.settingsitems.NotifSetting"
+            android:name="com.andrew.link.settingsitems.NotifSetting"
             android:label="@string/title_activity_notif_setting"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Setting"
+            android:parentActivityName="com.andrew.link.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.codeslutest.plax.LockScreen" />
+        <activity android:name="com.andrew.link.LockScreen" />
         <activity
-            android:name="com.codeslutest.plax.settingsitems.SecuSetting"
+            android:name="com.andrew.link.settingsitems.SecuSetting"
             android:label="@string/title_activity_secu_setting"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Setting"
+            android:parentActivityName="com.andrew.link.Setting"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.codeslutest.plax.settingsitems.TestWall"
+            android:name="com.andrew.link.settingsitems.TestWall"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.settingsitems.ChatSettings"
+            android:name="com.andrew.link.settingsitems.ChatSettings"
             android:label="@string/chatss"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Setting"
+            android:parentActivityName="com.andrew.link.Setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"></activity>
         <activity
-            android:name="com.codeslutest.plax.MainActivity"
+            android:name="com.andrew.link.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -200,10 +200,10 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name="com.codeslutest.plax.auth.EmailLogin" />
-        <activity android:name="com.codeslutest.plax.auth.EmailVerifyAcitivity" />
+        <activity android:name="com.andrew.link.auth.EmailLogin" />
+        <activity android:name="com.andrew.link.auth.EmailVerifyAcitivity" />
         <activity
-            android:name="com.codeslutest.plax.Splash"
+            android:name="com.andrew.link.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -211,24 +211,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.codeslutest.plax.auth.PolicyActivity" />
+        <activity android:name="com.andrew.link.auth.PolicyActivity" />
         <activity
-            android:name="com.codeslutest.plax.auth.Login"
+            android:name="com.andrew.link.auth.Login"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.profile.Profile"
+            android:name="com.andrew.link.profile.Profile"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.auth.Verify"
+            android:name="com.andrew.link.auth.Verify"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.auth.DataSet"
+            android:name="com.andrew.link.auth.DataSet"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop" />
         <activity
@@ -236,19 +236,19 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name="com.codeslutest.plax.EditProfile"
+            android:name="com.andrew.link.EditProfile"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.codeslutest.plax.Contacts"
+            android:name="com.andrew.link.Contacts"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity" />
+            android:parentActivityName="com.andrew.link.MainActivity" />
         <activity
-            android:name="com.codeslutest.plax.Chat"
+            android:name="com.andrew.link.Chat"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity" />
+            android:parentActivityName="com.andrew.link.MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -258,7 +258,7 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <service
-            android:name="com.codeslutest.plax.notify.FCMR"
+            android:name="com.andrew.link.notify.FCMR"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -266,7 +266,7 @@
         </service>
 
         <receiver
-            android:name="com.codeslutest.plax.global.CheckConnectivity"
+            android:name="com.andrew.link.global.CheckConnectivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -287,31 +287,31 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.codeslutest.plax.Map"
+            android:name="com.andrew.link.Map"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.codeslutest.plax.mediachat.VideoA"
+            android:name="com.andrew.link.mediachat.VideoA"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Chat" />
+            android:parentActivityName="com.andrew.link.Chat" />
         <activity
-            android:name="com.codeslutest.plax.mediachat.Photoa"
+            android:name="com.andrew.link.mediachat.Photoa"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.Chat" />
+            android:parentActivityName="com.andrew.link.Chat" />
         <activity
-            android:name="com.codeslutest.plax.story.AddStory"
+            android:name="com.andrew.link.story.AddStory"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.codeslutest.plax.Setting"
+            android:name="com.andrew.link.Setting"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_setting"
             android:launchMode="singleTop"
-            android:parentActivityName="com.codeslutest.plax.MainActivity"
+            android:parentActivityName="com.andrew.link.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme" />
     </application>

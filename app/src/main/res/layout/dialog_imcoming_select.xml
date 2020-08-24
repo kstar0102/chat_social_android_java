@@ -185,7 +185,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delete"
+                    android:text="Saved"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"/>
             </LinearLayout>
@@ -204,7 +204,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delete"
+                    android:text="Remind"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"/>
             </LinearLayout>
@@ -223,7 +223,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delete"
+                    android:text="Select All"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"/>
             </LinearLayout>
